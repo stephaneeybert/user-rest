@@ -7,7 +7,6 @@ public final class RESTConstants {
 	public static final String NOT = "not";
     public static final String COUNT = "count";
     public static final String DEPENDENCIES = "dependencies";
-    public static final String META = "meta";
     public static final String RESOURCES = "resources";
 
     public static final String METRICS = "metrics";
