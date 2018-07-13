@@ -76,7 +76,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and().httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint)
 		.and().authorizeRequests()
-        .antMatchers(RESTConstants.SLASH + RESTConstants.API + RESTConstants.SLASH + RESTConstants.META).permitAll()
+        .antMatchers(RESTConstants.SLASH + RESTConstants.API + RESTConstants.SLASH + RESTConstants.ERROR).permitAll()
 		.antMatchers(RESTConstants.SLASH + RESTConstants.API + RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN).permitAll()
 		.antMatchers(RESTConstants.SLASH + RESTConstants.API + "/**").hasRole("ADMIN").anyRequest().authenticated()
 		.and().exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
