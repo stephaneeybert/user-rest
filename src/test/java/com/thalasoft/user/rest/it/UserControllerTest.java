@@ -92,6 +92,23 @@ public class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testCanAccessOpenControllers() throws Exception {
+        this.mockMvc.perform(
+                get("/error").headers(httpHeaders)
+                .accept(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+
+            this.mockMvc.perform(
+                get("/user/login").headers(httpHeaders)
+                .accept(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+    }
+
+    @Test
     public void testPostInvalidUserShouldReturnValidationErrorMessages() throws Exception {
         UserResource faultyUserResource = new UserResource();
         faultyUserResource.setFirstname("Stephane");
