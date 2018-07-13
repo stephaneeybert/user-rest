@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "user-rest",
+                "projectName": "user-rest",
+                "workingDirectory": "/home/stephane/dev/java/projects/user-rest",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "user-rest",
+                "projectName": "user-rest",
+                "workingDirectory": "/home/stephane/dev/java/projects/user-rest",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}
