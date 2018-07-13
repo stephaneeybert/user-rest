@@ -61,8 +61,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-// TODO Allow non https access as the browser non signed certificate warning sucks
-// Maybe someday we'll have a signed certificate...	
+		// TODO For now allow non https access as the browser non signed certificate warning sucks
+		// Maybe someday we'll have a signed certificate...	
 		// http.requiresChannel().antMatchers(RESTConstants.SLASH + RESTConstants.API + "/**").requiresSecure();
 		
 		logger.debug("Configuring web security");
