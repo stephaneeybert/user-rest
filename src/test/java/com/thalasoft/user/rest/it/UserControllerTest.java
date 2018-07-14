@@ -94,14 +94,14 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     public void testCanAccessOpenControllers() throws Exception {
         this.mockMvc.perform(
-                get("/error").headers(httpHeaders)
+                get(RESTConstants.SLASH + RESTConstants.ERROR).headers(httpHeaders)
                 .accept(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
             .andReturn();
 
             this.mockMvc.perform(
-                get("/user/login").headers(httpHeaders)
+                get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN).headers(httpHeaders)
                 .accept(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
