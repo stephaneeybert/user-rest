@@ -16,12 +16,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(classes = { TestConfiguration.class, WebConfiguration.class })
 @RunWith(SpringRunner.class)
-@WebAppConfiguration
 public abstract class AbstractControllerTest {
 
 	@Autowired
