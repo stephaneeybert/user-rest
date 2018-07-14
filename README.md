@@ -16,3 +16,6 @@ The data layer is compatible with MySQL and Oracle
 To run the application
 mvn spring-boot:run
 
+Some example API requests
+curl -H "Accept:application/json" http://localhost:8080/api/error
+
