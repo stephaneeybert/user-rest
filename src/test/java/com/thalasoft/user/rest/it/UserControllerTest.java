@@ -101,7 +101,7 @@ public class UserControllerTest extends BaseControllerTest {
             .andReturn();
 
             this.mockMvc.perform(
-                get("/user/login").headers(httpHeaders)
+                get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN).headers(httpHeaders)
                 .accept(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
