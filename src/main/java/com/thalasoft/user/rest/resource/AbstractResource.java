@@ -2,9 +2,11 @@ package com.thalasoft.user.rest.resource;
 
 import org.springframework.hateoas.ResourceSupport;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.thalasoft.user.data.jpa.domain.AbstractEntity;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AbstractResource extends ResourceSupport {
 
     @JsonProperty("id")

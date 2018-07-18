@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,11 +19,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class JsonConfiguration implements WebMvcConfigurer {
 
-	@Override
+    @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-    	converters.add(mappingJackson2HttpMessageConverter());
+        converters.add(mappingJackson2HttpMessageConverter());
     }
-    
+
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
@@ -40,13 +39,12 @@ public class JsonConfiguration implements WebMvcConfigurer {
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
         objectMapper.registerModule(jodaModule());
         objectMapper.setSerializationInclusion(Include.NON_NULL);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // TODO The test fails when deserializing a json payload that contains the hateoas links, into a userResource, as this one doesn't have accessors for links. How to go ?
         return objectMapper;
     }
-    
-	@Bean
-	public Module jodaModule() {
-		return new JodaModule();
-	}
-    
+
+    @Bean
+    public Module jodaModule() {
+        return new JodaModule();
+    }
+
 }
