@@ -22,7 +22,6 @@ public class ErrorController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void error() {
-        int i = 0; // TODO why is this not called on ?
     }
 
     @RequestMapping(value = "/cannotEncodePassword", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
