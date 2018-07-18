@@ -1,6 +1,6 @@
 package com.thalasoft.user.rest.resource;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 public class UserRoleResource extends AbstractResource {
 

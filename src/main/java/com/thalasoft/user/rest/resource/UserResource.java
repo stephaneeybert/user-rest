@@ -4,9 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.Valid;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 public class UserResource extends AbstractResource {
 
