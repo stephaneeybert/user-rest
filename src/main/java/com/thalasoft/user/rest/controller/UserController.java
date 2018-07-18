@@ -18,8 +18,6 @@ import com.thalasoft.user.rest.service.resource.CredentialsResource;
 import com.thalasoft.user.rest.utils.RESTConstants;
 import com.thalasoft.user.rest.utils.UserDomainConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,8 +40,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Controller
 @RequestMapping(RESTConstants.SLASH + UserDomainConstants.USERS)
 public class UserController {
-
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private TokenAuthenticationService tokenAuthenticationService;
