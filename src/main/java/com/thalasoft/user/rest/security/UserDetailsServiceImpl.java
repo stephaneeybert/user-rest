@@ -4,8 +4,6 @@ import com.thalasoft.user.data.jpa.domain.EmailAddress;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.rest.service.CredentialsService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
-
-	private static Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     @Autowired
     private CredentialsService credentialsService;

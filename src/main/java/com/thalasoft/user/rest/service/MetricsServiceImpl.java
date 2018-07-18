@@ -7,14 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MetricsServiceImpl implements MetricsService {
-
-    private static Logger logger = LoggerFactory.getLogger(MetricsServiceImpl.class);
 
     private Map<String, HashMap<Integer, Integer>> metricsMap;
     private Map<Integer, Integer> statusMetric;

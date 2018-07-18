@@ -3,11 +3,6 @@ package com.thalasoft.user.rest.service;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.jpa.domain.UserRole;
@@ -16,10 +11,11 @@ import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.resource.UserRoleResource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 @Service
 public class ResourceServiceImpl implements ResourceService {
-
-    private static Logger logger = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
     @Autowired 
 	private UserService userService;

@@ -19,6 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(RESTConstants.SLASH + RESTConstants.ERROR)
 public class ErrorController {
 
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void error() {
+        int i = 0; // TODO why is this not called on ?
+    }
+
     @RequestMapping(value = "/cannotEncodePassword", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void errorCannotEncodePasswordException() {
