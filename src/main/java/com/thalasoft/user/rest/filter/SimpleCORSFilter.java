@@ -25,17 +25,18 @@ public class SimpleCORSFilter implements Filter {
 	private static final String ORIGIN = "Origin";
 	private static final String OPTIONS = "OPTIONS";
 	private static final String OK = "OK";
-	
-    private FilterConfig config = null;
 
-    @Override
-    public void init(FilterConfig config) throws ServletException {
-        this.config = config;
-        config.getServletContext().log("Initializing SimpleCORSFilter");
-    }
+	private FilterConfig config = null;
 
 	@Override
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+	public void init(FilterConfig config) throws ServletException {
+		this.config = config;
+		config.getServletContext().log("Initializing SimpleCORSFilter");
+	}
+
+	@Override
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+			throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
@@ -45,11 +46,16 @@ public class SimpleCORSFilter implements Filter {
 			httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
 			httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
 			httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-			httpServletResponse.setHeader("Access-Control-Allow-Headers", "Accept-Language,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,Content-Disposition,Content-Length,"+CommonConstants.EXPORT_FILENAME_HEADER_NAME+","+CommonConstants.AUTH_HEADER_NAME);
-			// Allow more than the 6 default headers to be returned, as the content length is required for a download file request to get the file size 
-			httpServletResponse.setHeader("Access-Control-Expose-Headers", "Accept-Language,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,Content-Disposition,Content-Length,"+CommonConstants.EXPORT_FILENAME_HEADER_NAME+","+CommonConstants.AUTH_HEADER_NAME);
+			httpServletResponse.setHeader("Access-Control-Allow-Headers",
+					"Accept-Language,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,Content-Disposition,Content-Length,"
+							+ CommonConstants.EXPORT_FILENAME_HEADER_NAME + "," + CommonConstants.AUTH_HEADER_NAME);
+			// Allow more than the 6 default headers to be returned, as the content length
+			// is required for a download file request to get the file size
+			httpServletResponse.setHeader("Access-Control-Expose-Headers",
+					"Accept-Language,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,Content-Disposition,Content-Length,"
+							+ CommonConstants.EXPORT_FILENAME_HEADER_NAME + "," + CommonConstants.AUTH_HEADER_NAME);
 		}
-		
+
 		if (httpServletRequest.getMethod().equals(OPTIONS)) {
 			try {
 				httpServletResponse.getWriter().print(OK);
@@ -59,11 +65,11 @@ public class SimpleCORSFilter implements Filter {
 			}
 		} else {
 			filterChain.doFilter(servletRequest, servletResponse);
-		}		
+		}
 	}
 
 	public void destroy() {
-        config.getServletContext().log("Destroying SimpleCORSFilter");
+		config.getServletContext().log("Destroying SimpleCORSFilter");
 	}
-	
+
 }
