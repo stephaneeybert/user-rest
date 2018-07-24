@@ -84,11 +84,11 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 
 	private String extractAuthTokenFromRequest(HttpServletRequest request) {
 	    String token = null;
-	    int start = (CommonConstants.AUTH_BEARER + " ").length();
         String header = request.getHeader(CommonConstants.AUTH_HEADER_NAME);
-        if (header != null) {
+        if (header != null && header.contains(CommonConstants.AUTH_BEARER)) {
+			int start = (CommonConstants.AUTH_BEARER + " ").length();
             if (header.length() > start) {
-                token = header.substring(start);
+                token = header.substring(start - 1);
             }
         } else {
             // The token may be set as an HTTP parameter in case the client could not set it as an HTTP header
