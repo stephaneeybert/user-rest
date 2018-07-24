@@ -64,7 +64,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	
 	public Authentication authenticateFromToken(HttpServletRequest request) {
 		String token = extractAuthTokenFromRequest(request);
-        logger.debug("Security - The JWT token: " + token);
+        logger.debug("The request contained the JWT token: " + token);
 		if (token != null && !token.isEmpty()) {
 			try {
 				String username = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getSubject();
@@ -76,7 +76,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 					logger.debug("Security - The filter authenticated fine from the JWT token");
 				}
 			} catch (SignatureException e) {
-				logger.info("The JWT token could " + token + " not be parsed.");
+				logger.info("The JWT token " + token + " could not be parsed.");
 			}
 		}
 		return null;
