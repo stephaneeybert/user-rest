@@ -62,7 +62,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		return token;
 	}
 	
-	public Authentication authenticateFromToken(HttpServletRequest request) {
+	public void authenticateFromToken(HttpServletRequest request) {
 		String token = extractAuthTokenFromRequest(request);
         logger.debug("The request contained the JWT token: " + token);
 		if (token != null && !token.isEmpty()) {
@@ -79,7 +79,6 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 				logger.info("The JWT token " + token + " could not be parsed.");
 			}
 		}
-		return null;
 	}
 
 	private String extractAuthTokenFromRequest(HttpServletRequest request) {

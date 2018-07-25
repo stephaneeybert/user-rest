@@ -14,6 +14,6 @@ public interface TokenAuthenticationService {
 
 	public void addTokenToResponseHeader(HttpServletResponse response, Authentication authentication);
 	
-	public Authentication authenticateFromToken(HttpServletRequest request);
+	public void authenticateFromToken(HttpServletRequest request);
 	
 }
