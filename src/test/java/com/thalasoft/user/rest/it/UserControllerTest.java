@@ -92,7 +92,7 @@ public class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void testCanAccessOpenControllers() throws Exception {
+    public void testUnsecuredResourceGrantsAccess() throws Exception {
         this.mockMvc.perform(
                 get(RESTConstants.SLASH + RESTConstants.ERROR).headers(httpHeaders)
                 .accept(MediaType.APPLICATION_JSON)
