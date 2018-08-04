@@ -1,5 +1,11 @@
 package com.thalasoft.user.rest.config;
 
+import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
+import com.thalasoft.user.rest.filter.SimpleCORSFilter;
+import com.thalasoft.user.rest.security.RESTAuthenticationEntryPoint;
+import com.thalasoft.user.rest.utils.RESTConstants;
+import com.thalasoft.user.rest.utils.UserDomainConstants;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -44,5 +50,10 @@ public class WebSecurityTestConfiguration extends WebSecurityConfigurerAdapter {
     public SimpleCORSFilter simpleCORSFilter() throws Exception {
         return new SimpleCORSFilter();
     }
-    
+	
+	@Bean
+	public static NoOpPasswordEncoder passwordEncoder() {
+		return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+	}
+
 }
