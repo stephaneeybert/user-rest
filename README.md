@@ -21,5 +21,6 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=
 mvn clean install -Denv="test" -Ddb="h2" -Dmaven.surefire.debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -Xnoagent -Djava.compiler=NONE"
 
 Some example API requests
-curl -H "Accept:application/json" http://localhost:8080/api/error
-curl -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/users/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }" -i
+curl -i -H "Accept:application/json" http://localhost:8080/api/error
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/users/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MzQwMDQyNDIsInN1YiI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UifQ.7M4gdjgpjEcxof7_iowasdQQiFy6nj4-ylhrNnYXaPE" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
