@@ -18,4 +18,4 @@ mvn spring-boot:run
 
 Some example API requests
 curl -H "Accept:application/json" http://localhost:8080/api/error
-curl -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/users/login" -X POST -d "{ \"email\" : \"nsn@nsn.com\", \"password\" : \"mignet\" }" -i
+curl -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/users/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }" -i
