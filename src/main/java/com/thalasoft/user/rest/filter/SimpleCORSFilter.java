@@ -2,6 +2,8 @@ package com.thalasoft.user.rest.filter;
 
 import com.thalasoft.user.rest.utils.CommonConstants;
 
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -14,13 +16,9 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Component
 @WebFilter(filterName = "simpleCORSFilter")
 public class SimpleCORSFilter implements Filter {
-
-	private static Logger logger = LoggerFactory.getLogger(SimpleCORSFilter.class);
 
 	private static final String ORIGIN = "Origin";
 	private static final String OPTIONS = "OPTIONS";

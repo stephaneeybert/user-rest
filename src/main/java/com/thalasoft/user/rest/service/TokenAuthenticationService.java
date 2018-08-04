@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.security;
+package com.thalasoft.user.rest.service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +14,6 @@ public interface TokenAuthenticationService {
 
 	public void addTokenToResponseHeader(HttpServletResponse response, Authentication authentication);
 	
-	public void authenticateFromToken(HttpServletRequest request);
+	public Authentication authenticate(HttpServletRequest request);
 	
 }

@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.security;
+package com.thalasoft.user.rest.service;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 import io.jsonwebtoken.Jwts;
@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,31 +54,40 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	}
 
 	private String buildToken(String username) {
+		return CommonConstants.AUTH_BEARER + " " + buildTokenValue(username);
+	}
+	
+	private String buildTokenValue(String username) {
 		String token = null;
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (userDetails != null) {
 			Date expirationDate = new Date(System.currentTimeMillis() + ONE_WEEK);
-			token = CommonConstants.AUTH_BEARER + " " + Jwts.builder().signWith(HS256, getEncodedPrivateKey()).setExpiration(expirationDate).setSubject(userDetails.getUsername()).compact();		
+			token = Jwts.builder().signWith(HS256, getEncodedPrivateKey()).setExpiration(expirationDate).setSubject(userDetails.getUsername()).compact();		
 		}
 		return token;
 	}
 	
-	public void authenticateFromToken(HttpServletRequest request) {
+	public Authentication authenticate(HttpServletRequest request) {
 		String token = extractAuthTokenFromRequest(request);
-        logger.debug("The request contained the JWT token: " + token);
+        logger.debug("The request contained the authentication token: " + token);
 		if (token != null && !token.isEmpty()) {
 			try {
-				String username = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getSubject();
-				if (username != null) {
-					UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+				String subject = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getSubject();
+				if (subject != null) {
+					UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 					logger.debug("Security - The filter authenticated fine from the JWT token");
+					return authentication;
+				} else {
+					throw new BadCredentialsException("The authentication token " + token + " did not contain a subject.");
 				}
 			} catch (SignatureException e) {
-				logger.info("The JWT token " + token + " could not be parsed.");
+				throw new BadCredentialsException("The authentication token " + token + " could not be parsed.");
 			}
+		} else {
+			throw new BadCredentialsException("The authentication token was missing.");
 		}
 	}
 
