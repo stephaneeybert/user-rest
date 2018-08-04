@@ -16,6 +16,10 @@ The data layer is compatible with MySQL and Oracle
 To run the application
 mvn spring-boot:run
 
+Running with the debugger
+mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+mvn clean install -Denv="test" -Ddb="h2" -Dmaven.surefire.debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -Xnoagent -Djava.compiler=NONE"
+
 Some example API requests
 curl -H "Accept:application/json" http://localhost:8080/api/error
 curl -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/users/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }" -i
