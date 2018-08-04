@@ -34,9 +34,9 @@ public class WebSecurityTestConfiguration extends WebSecurityConfigurerAdapter {
 		.csrf().disable()
 		.httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint)
 		.and().authorizeRequests()
-        .antMatchers(RESTConstants.SLASH + RESTConstants.API + RESTConstants.SLASH + RESTConstants.ERROR).permitAll()
-		.antMatchers(RESTConstants.SLASH + RESTConstants.API + RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN).permitAll()
-		.antMatchers(RESTConstants.SLASH + RESTConstants.API + "/**").hasRole("ADMIN").anyRequest().authenticated()
+        .antMatchers(RESTConstants.SLASH + RESTConstants.ERROR).permitAll()
+		.antMatchers(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN).permitAll()
+		.antMatchers(RESTConstants.SLASH + "**").hasRole("ADMIN").anyRequest().authenticated()
 		.anyRequest().authenticated();
 	}
 	
