@@ -157,6 +157,7 @@ public class UserController {
                                 HttpStatus.OK);
         }
 
+        // TODO Do I need this login if there is already a CustomAuthenticationProvider in use ?
         @PostMapping(value = RESTConstants.SLASH + UserDomainConstants.LOGIN)
         @ResponseBody
         public ResponseEntity<UserResource> login(@Valid @RequestBody CredentialsResource credentialsResource,
