@@ -94,14 +94,14 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     public void testUnsecuredResourceGrantsAccess() throws Exception {
         this.mockMvc.perform(
-                get(RESTConstants.SLASH + RESTConstants.ERROR).headers(httpHeaders)
+                get(RESTConstants.SLASH + RESTConstants.ERROR)
                 .accept(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
             .andReturn();
 
             this.mockMvc.perform(
-                post(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN).headers(httpHeaders)
+                post(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isBadRequest())
