@@ -10,7 +10,7 @@ import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.assembler.UserResourceAssembler;
 import com.thalasoft.user.rest.resource.UserResource;
-import com.thalasoft.user.rest.security.TokenAuthenticationService;
+import com.thalasoft.user.rest.service.TokenAuthenticationService;
 import com.thalasoft.user.rest.service.CredentialsService;
 import com.thalasoft.user.rest.service.ResourceService;
 import com.thalasoft.user.rest.service.UserActionService;
