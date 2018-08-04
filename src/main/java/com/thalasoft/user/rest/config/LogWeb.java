@@ -10,6 +10,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
@@ -19,38 +20,38 @@ public class LogWeb {
 
 	private final static String PATTERN = "%date %-5level [%thread] %logger{36} %m%n %rEx";
 
-	@Bean 
-    public static LoggerContext loggerContext() {
+	@Bean
+    public LoggerContext loggerContext() {
         return (LoggerContext) LoggerFactory.getILoggerFactory();
     }
 
-	@Bean (initMethod = "start", destroyMethod = "stop")
-    public static PatternLayoutEncoder encoder (LoggerContext ctx) {
-        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-        encoder.setContext(ctx);
-        encoder.setPattern(PATTERN);
-        return encoder;
+	@Bean
+    public PatternLayoutEncoder patternLayoutEncoder(LoggerContext ctx) {
+        PatternLayoutEncoder patternLayoutEncoder = new PatternLayoutEncoder();
+        patternLayoutEncoder.setContext(ctx);
+        patternLayoutEncoder.setPattern(PATTERN);
+        return patternLayoutEncoder;
     }
 	
 	@Bean (initMethod = "start", destroyMethod = "stop")
-    public static ConsoleAppender consoleAppender (LoggerContext loggerContext, PatternLayoutEncoder encoder) {
-        ConsoleAppender consoleAppender = new ConsoleAppender();
+    public ConsoleAppender<ILoggingEvent> consoleAppender(LoggerContext loggerContext, PatternLayoutEncoder patternLayoutEncoder) {
+        ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<ILoggingEvent>();
         consoleAppender.setContext(loggerContext);
-        consoleAppender.setEncoder(encoder);
+        consoleAppender.setEncoder(patternLayoutEncoder);
         return consoleAppender;
     }
     
 	@Bean (initMethod = "start", destroyMethod = "stop")
-    public static FileAppender fileAppender(LoggerContext loggerContext, PatternLayoutEncoder encoder) throws IOException {
-        RollingFileAppender fileAppender = new RollingFileAppender();
+    public FileAppender<ILoggingEvent> fileAppender(LoggerContext loggerContext, PatternLayoutEncoder patternLayoutEncoder) throws IOException {
+        RollingFileAppender<ILoggingEvent> fileAppender = new RollingFileAppender<ILoggingEvent>();
         fileAppender.setContext(loggerContext);
-        fileAppender.setEncoder(encoder);
+        fileAppender.setEncoder(patternLayoutEncoder);
         fileAppender.setFile("build.log");
         return fileAppender;
     }
 
 	@Bean
-    public Logger registerApplicationLogger(LoggerContext loggerContext, ConsoleAppender consoleAppender, FileAppender fileAppender) throws IOException {
+    public Logger registerApplicationLogger(LoggerContext loggerContext, ConsoleAppender<ILoggingEvent> consoleAppender, FileAppender<ILoggingEvent> fileAppender) throws IOException {
     	Logger logger = loggerContext.getLogger("com.thalasoft.user.rest");
         logger.setLevel(Level.DEBUG);
         logger.addAppender(consoleAppender);
@@ -59,7 +60,7 @@ public class LogWeb {
     }
 
     @Bean
-    public Logger registerSpringLogger(LoggerContext loggerContext, ConsoleAppender consoleAppender, FileAppender fileAppender) throws IOException {
+    public Logger registerSpringLogger(LoggerContext loggerContext, ConsoleAppender<ILoggingEvent> consoleAppender, FileAppender<ILoggingEvent> fileAppender) throws IOException {
     	Logger logger = loggerContext.getLogger("org.springframework");
         logger.setLevel(Level.DEBUG);
         logger.addAppender(consoleAppender);
