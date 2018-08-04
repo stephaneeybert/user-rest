@@ -116,6 +116,20 @@ public class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testSecuredResourceDeniesAccessToNonLoggedInUser() throws Exception {
+        String password = "mynewpassword";
+        MvcResult mvcResult = this.mockMvc
+                .perform(put(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
+                        + userResource0.getResourceId() + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jacksonObjectMapper.writeValueAsString(password)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+    }
+
+    @Test
     public void testPostInvalidUserShouldReturnValidationErrorMessages() throws Exception {
         UserResource faultyUserResource = new UserResource();
         faultyUserResource.setFirstname("Stephane");
