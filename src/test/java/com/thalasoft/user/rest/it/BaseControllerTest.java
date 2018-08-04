@@ -19,7 +19,7 @@ public abstract class BaseControllerTest extends AbstractControllerTest {
 
 	@Autowired
     AcceptHeaderLocaleResolver localeResolver;
-    
+
 	protected MockHttpSession session;
 
     protected MockHttpServletRequest request;
@@ -32,7 +32,6 @@ public abstract class BaseControllerTest extends AbstractControllerTest {
     @Before
    	public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain).build();
-
 		createHeaders();
 		addBase64UserPasswordHeaders(USER, PASSWORD, httpHeaders);
     }
