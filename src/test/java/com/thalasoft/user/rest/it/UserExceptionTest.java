@@ -23,7 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MvcResult;
 
-public class UserExceptionTest extends BaseControllerTest {
+public class UserExceptionTest extends BaseSecuredTest {
 
     @Autowired
     UserService userService;

@@ -1,13 +1,18 @@
 package com.thalasoft.user.rest.it;
 
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.thalasoft.user.rest.resource.AbstractResource;
+import com.thalasoft.user.rest.utils.CommonConstants;
 
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,7 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
-public abstract class BaseControllerTest extends AbstractControllerTest {
+public abstract class BaseSecuredTest extends AbstractTest {
 
 	@Autowired
     AcceptHeaderLocaleResolver localeResolver;
@@ -35,6 +40,15 @@ public abstract class BaseControllerTest extends AbstractControllerTest {
 		createHeaders();
 		addBase64UserPasswordHeaders(USER, PASSWORD, httpHeaders);
     }
+
+	protected void addBase64UserPasswordHeaders(String username, String password, HttpHeaders httpHeaders) {
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		String usernamePassword = username + ":" + password;
+		String encodedAuthorisation = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
+		httpHeaders.add(CommonConstants.AUTH_HEADER_NAME,
+				CommonConstants.AUTH_BASIC + " " + new String(encodedAuthorisation));
+	}
 
 	protected String localizeErrorMessage(String errorCode, Object args[], Locale locale) {
 		return messageSource.getMessage(errorCode, args, locale);

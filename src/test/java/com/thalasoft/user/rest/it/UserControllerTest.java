@@ -39,7 +39,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-public class UserControllerTest extends BaseControllerTest {
+public class UserControllerTest extends BaseSecuredTest {
 
     @Autowired
     private ResourceService resourceService;
