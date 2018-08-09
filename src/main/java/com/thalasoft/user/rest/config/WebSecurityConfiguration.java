@@ -1,19 +1,10 @@
 package com.thalasoft.user.rest.config;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.thalasoft.toolbox.condition.EnvProd;
 import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
 import com.thalasoft.user.rest.filter.SimpleCORSFilter;
 import com.thalasoft.user.rest.security.AuthenticationFromCredentialsFilter;
 import com.thalasoft.user.rest.security.AuthenticationFromTokenFilter;
-import com.thalasoft.user.rest.security.CustomAuthenticationProvider;
-import com.thalasoft.user.rest.security.NoRedirectStrategy;
 import com.thalasoft.user.rest.security.RESTAuthenticationEntryPoint;
 import com.thalasoft.user.rest.utils.UserDomainConstants;
 
@@ -22,22 +13,13 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
@@ -86,17 +68,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return authenticationFromTokenFilter;
 	}
 
-	@Autowired
-	private CustomAuthenticationProvider customAuthenticationProvider;
-
-	@Autowired
-    private UserDetailsService userDetailsService;
-
-	protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.authenticationProvider(customAuthenticationProvider);
-		authenticationManagerBuilder.userDetailsService(userDetailsService);
-	}
-	
 	@Bean
 	FilterRegistrationBean<AuthenticationFromTokenFilter> disableAutoRegistration(final AuthenticationFromTokenFilter filter) {
 		final FilterRegistrationBean<AuthenticationFromTokenFilter> registration = new FilterRegistrationBean<AuthenticationFromTokenFilter>(filter);
