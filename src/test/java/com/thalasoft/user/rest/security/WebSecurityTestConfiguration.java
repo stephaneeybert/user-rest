@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.config;
+package com.thalasoft.user.rest.security;
 
 import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
 import com.thalasoft.user.rest.filter.SimpleCORSFilter;
