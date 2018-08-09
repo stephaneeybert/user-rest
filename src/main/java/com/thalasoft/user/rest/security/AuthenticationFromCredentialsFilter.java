@@ -16,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class AuthenticationFromCredentialsFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -27,8 +26,8 @@ public class AuthenticationFromCredentialsFilter extends AbstractAuthenticationP
 	@Autowired
 	CredentialsService credentialsService;
 
-	public AuthenticationFromCredentialsFilter() {
-		super(new AntPathRequestMatcher("/users/login", RequestMethod.POST.name()));
+	public AuthenticationFromCredentialsFilter(final RequestMatcher requestMatcher) {
+		super(requestMatcher);
 	}
 
 	@Override
