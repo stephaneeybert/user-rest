@@ -107,10 +107,12 @@ public class CredentialsServiceImpl implements CredentialsService {
 		}
     }
 
+	@Transactional
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		return authenticate(authentication.getName(), authentication.getCredentials().toString());
 	}
 
+	@Transactional
 	public Authentication authenticate(CredentialsResource credentialsResource) throws AuthenticationException {
 		return authenticate(credentialsResource.getEmail(), credentialsResource.getPassword());
 	}

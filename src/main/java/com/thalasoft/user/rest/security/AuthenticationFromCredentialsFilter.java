@@ -13,15 +13,13 @@ import com.thalasoft.user.rest.service.TokenAuthenticationService;
 import com.thalasoft.user.rest.service.resource.CredentialsResource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-public class AuthenticationFromCredentialsFilter extends UsernamePasswordAuthenticationFilter {
-
-	@Autowired
-	private AuthenticationManager authenticationManager;
+public class AuthenticationFromCredentialsFilter extends AbstractAuthenticationProcessingFilter {
 
 	@Autowired
 	private TokenAuthenticationService tokenAuthenticationService;
@@ -29,13 +27,17 @@ public class AuthenticationFromCredentialsFilter extends UsernamePasswordAuthent
 	@Autowired
 	CredentialsService credentialsService;
 
+	public AuthenticationFromCredentialsFilter() {
+		super(new AntPathRequestMatcher("/users/login", RequestMethod.POST.name()));
+	}
+
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
 			throws AuthenticationException {
 		try {
 			CredentialsResource credentialsResource = new ObjectMapper().readValue(req.getInputStream(),
 					CredentialsResource.class);
-			return authenticationManager.authenticate(credentialsService.authenticate(credentialsResource));
+			return credentialsService.authenticate(credentialsResource);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
