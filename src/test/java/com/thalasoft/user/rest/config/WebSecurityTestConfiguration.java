@@ -3,7 +3,6 @@ package com.thalasoft.user.rest.config;
 import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
 import com.thalasoft.user.rest.filter.SimpleCORSFilter;
 import com.thalasoft.user.rest.security.RESTAuthenticationEntryPoint;
-import com.thalasoft.user.rest.utils.RESTConstants;
 import com.thalasoft.user.rest.utils.UserDomainConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +33,20 @@ public class WebSecurityTestConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-        http
+		http
 		.csrf().disable()
-		.httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint)
-		.and().authorizeRequests()
-        .antMatchers(RESTConstants.SLASH).permitAll()
-        .antMatchers(RESTConstants.SLASH + RESTConstants.ERROR).permitAll()
-		.antMatchers(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN).permitAll()
-		.antMatchers(RESTConstants.SLASH + "**").hasRole("ADMIN").anyRequest().authenticated()
+		.formLogin().disable()
+		.httpBasic().disable()
+		.logout().disable();
+
+		http
+		.httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint);
+
+		http
+		.authorizeRequests()
+		.antMatchers("/", "/error").permitAll()
+		.antMatchers("/users/login").permitAll()
+		.antMatchers("/admin/**").hasRole(UserDomainConstants.ROLE_ADMIN)
 		.anyRequest().authenticated();
 	}
 	
