@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.security" })
-public class WebSecurityTestConfiguration extends WebSecurityConfigurerAdapter {
+public class MockSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	protected final String USER = "stephane";
 	protected final String PASSWORD = "mypassword";

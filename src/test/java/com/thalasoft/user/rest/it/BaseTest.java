@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.thalasoft.user.rest.config.TestConfiguration;
 import com.thalasoft.user.rest.config.WebConfiguration;
 import com.thalasoft.user.rest.resource.AbstractResource;
-import com.thalasoft.user.rest.security.WebSecurityTestConfiguration;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;

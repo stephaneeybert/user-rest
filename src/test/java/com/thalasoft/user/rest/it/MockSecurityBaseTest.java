@@ -5,7 +5,7 @@ import java.util.Base64;
 
 import com.thalasoft.user.rest.config.TestConfiguration;
 import com.thalasoft.user.rest.config.WebConfiguration;
-import com.thalasoft.user.rest.security.WebSecurityTestConfiguration;
+import com.thalasoft.user.rest.security.MockSecurityConfiguration;
 import com.thalasoft.user.rest.utils.CommonConstants;
 
 import org.junit.Before;
@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-@SpringBootTest(classes = { WebSecurityTestConfiguration.class, TestConfiguration.class, WebConfiguration.class })
-public abstract class BaseSecuredTest extends BaseTest {
+@SpringBootTest(classes = { MockSecurityConfiguration.class, TestConfiguration.class, WebConfiguration.class })
+public abstract class MockSecurityBaseTest extends BaseTest {
 
 	protected final String USER = "stephane";
 	protected final String PASSWORD = "mypassword";
