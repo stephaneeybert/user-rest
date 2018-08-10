@@ -41,8 +41,10 @@ public class BootstrapSQLData implements ApplicationListener<ContextRefreshedEve
         user0.setFirstname("Stephane");
         user0.setLastname("Eybert");
         user0.setEmail(new EmailAddress("mittiprovence@yahoo.se"));
-        user0.setPassword("bWl0dGlwcm92ZW5jZUB5YWhvby5zZTpldG9pbGU2ZjZmMjBjMy0wZjljLTQ0NDAtYjc3OS1jM2NlNGY=");
-        user0.setPasswordSalt("6f6f20c3-0f9c-4440-b779-c3ce4f");
+        final String password = "bWl0dGlwcm92ZW5jZUB5YWhvby5zZTptaWduZXQ4ZDE5MjcyOS0zZjRiLTQ1Y2QtYmQ5Yy00MDMxYWY=";
+        user0.setPassword(password);
+        final String passwordSalt = "8d192729-3f4b-45cd-bd9c-4031af";
+        user0.setPasswordSalt(passwordSalt);
         User user = userService.findByEmail(user0.getEmail().toString());
         if (user == null) {
 	        user0 = userService.add(user0);
