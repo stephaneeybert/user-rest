@@ -69,7 +69,7 @@ public class UserControllerTest extends BaseSecuredTest {
         userResource0.setUserRoles(userRoleResources);
 
         manyUserResources = new ArrayList<UserResource>();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 30; i++) {
             String index = intToString(i, 2);
             UserResource oneUserResource = new UserResource();
             oneUserResource.setFirstname("zfirstname" + index);
@@ -209,7 +209,7 @@ public class UserControllerTest extends BaseSecuredTest {
                 .andDo(print())
                 .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.page.number").value(1)).andExpect(jsonPath("$.page.size").value(10))
-                .andExpect(jsonPath("$.page.totalPages").value(5)).andExpect(jsonPath("$.page.totalElements").value(50))
+                .andExpect(jsonPath("$.page.totalPages").value(3)).andExpect(jsonPath("$.page.totalElements").value(30))
                 .andExpect(jsonPath("$._links.self.href").exists())
                 .andExpect(jsonPath("$._links.next.href").exists())
                 .andExpect(jsonPath("$._links.prev.href").exists())
