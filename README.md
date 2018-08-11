@@ -14,7 +14,7 @@ The data layer is compatible with MySQL and Oracle
 -Ddb="h2"
 
 To run the application
-mvn spring-boot:run
+mvn clean spring-boot:run
 
 Running with the debugger
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
