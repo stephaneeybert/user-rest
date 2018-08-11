@@ -1,21 +1,17 @@
-package com.thalasoft.user.rest.bootstrap;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
+package com.thalasoft.user.rest.config;
 
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.jpa.domain.UserRole;
 import com.thalasoft.user.data.service.UserRoleService;
 import com.thalasoft.user.data.service.UserService;
-import com.thalasoft.user.rest.condition.BootstrapSQL;
 import com.thalasoft.user.rest.security.AuthoritiesConstants;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 @Component
-@BootstrapSQL
-public class BootstrapSQLData implements ApplicationListener<ContextRefreshedEvent> {
+public class UserFixtureService {
 
 	@Autowired
 	private UserService userService;
@@ -23,28 +19,21 @@ public class BootstrapSQLData implements ApplicationListener<ContextRefreshedEve
 	@Autowired
 	private UserRoleService userRoleService;
 
-	private User user0;
+    public static final String USER_EMAIL = "mittiprovence@yahoo.se";
+    public static final String USER_PASSWORD = "mignet";
+    public static final String USER_ENCODED_PASSWORD = "bWl0dGlwcm92ZW5jZUB5YWhvby5zZTptaWduZXQ4ZDE5MjcyOS0zZjRiLTQ1Y2QtYmQ5Yy00MDMxYWY=";
+    public static final String USER_PASSWORD_SALT = "8d192729-3f4b-45cd-bd9c-4031af";
 
+	private User user0;
 	private UserRole role0;
 
-	@Override
-	public void onApplicationEvent(final ContextRefreshedEvent event) {
-		addFixtures();
-	}
-
-	public void addFixtures() {
-		addUserFixture();
-	}
-	
-	private void addUserFixture() {
+	public void addUserFixture() {
         user0 = new User();
         user0.setFirstname("Stephane");
         user0.setLastname("Eybert");
-        user0.setEmail(new EmailAddress("mittiprovence@yahoo.se"));
-        final String password = "bWl0dGlwcm92ZW5jZUB5YWhvby5zZTptaWduZXQ4ZDE5MjcyOS0zZjRiLTQ1Y2QtYmQ5Yy00MDMxYWY=";
-        user0.setPassword(password);
-        final String passwordSalt = "8d192729-3f4b-45cd-bd9c-4031af";
-        user0.setPasswordSalt(passwordSalt);
+        user0.setEmail(new EmailAddress(USER_EMAIL));
+        user0.setPassword(USER_ENCODED_PASSWORD);
+        user0.setPasswordSalt(USER_PASSWORD_SALT);
         User user = userService.findByEmail(user0.getEmail().toString());
         if (user == null) {
 	        user0 = userService.add(user0);

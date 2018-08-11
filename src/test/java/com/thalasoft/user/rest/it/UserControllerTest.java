@@ -39,7 +39,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-public class UserControllerTest extends MockSecurityBaseTest {
+public class UserControllerTest extends BaseTest {
 
     @Autowired
     private ResourceService resourceService;
@@ -89,64 +89,6 @@ public class UserControllerTest extends MockSecurityBaseTest {
         for (UserResource userResource : manyUserResources) {
             userService.delete(userResource.getResourceId());
         }
-    }
-
-    @Test
-    public void testUnsecuredResourceGrantsAccess() throws Exception {
-        this.mockMvc.perform(
-                get(RESTConstants.SLASH)
-                .accept(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andReturn();
-
-            this.mockMvc.perform(
-                get(RESTConstants.SLASH + RESTConstants.ERROR)
-                .accept(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andReturn();
-
-            this.mockMvc.perform(
-                post(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN)
-                .accept(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isBadRequest())
-            .andReturn();
-    }
-
-    @Test
-    public void testSecuredResourceDeniesAccessToNonLoggedInUser() throws Exception {
-        String password = "mynewpassword";
-        MvcResult mvcResult = this.mockMvc
-                .perform(put(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
-                        + userResource0.getResourceId() + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .content(jacksonObjectMapper.writeValueAsString(password)))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andReturn();
-    }
-
-    @Test
-    public void testPostInvalidUserShouldReturnValidationErrorMessages() throws Exception {
-        UserResource faultyUserResource = new UserResource();
-        faultyUserResource.setFirstname("Stephane");
-        faultyUserResource.setLastname("Eybert");
-        faultyUserResource.setEmail("notvalidemail");
-        MvcResult mvcResult = this.mockMvc
-                .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
-                .headers(httpHeaders)
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).locale(Locale.FRENCH)
-                .content(jacksonObjectMapper.writeValueAsString(faultyUserResource)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.failed.controller.validation", Locale.FRENCH)))
-                .andReturn();
-        ErrorFormInfo retrievedMessage = deserialize(mvcResult, ErrorFormInfo.class);
-        assertEquals(retrievedMessage.getHttpStatus(), HttpStatus.BAD_REQUEST);
-        assertEquals(retrievedMessage.getMessage(), localizeErrorMessage("error.failed.controller.validation", Locale.FRENCH));
-        assertEquals(retrievedMessage.getFieldErrors().size(), 1);
     }
 
     @Test

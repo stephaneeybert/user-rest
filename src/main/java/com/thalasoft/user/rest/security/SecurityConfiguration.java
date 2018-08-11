@@ -1,6 +1,5 @@
-package com.thalasoft.user.rest.config;
+package com.thalasoft.user.rest.security;
 
-import com.thalasoft.toolbox.condition.EnvProd;
 import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
 import com.thalasoft.user.rest.filter.SimpleCORSFilter;
 import com.thalasoft.user.rest.security.AuthenticationFromCredentialsFilter;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,19 +23,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@EnvProd
-@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity( // TODO What is this for ?
         securedEnabled = true,
         jsr250Enabled = true,
         prePostEnabled = true
 )
-// @EnableGlobalMethodSecurity(prePostEnabled=true) TODO see what it is used
-// @EnableGlobalMethodSecurity(securedEnabled = true) TODO see what it is used for
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.security",
 "com.thalasoft.user.rest.service", "com.thalasoft.user.rest.filter" })
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private RESTAuthenticationEntryPoint restAuthenticationEntryPoint;
