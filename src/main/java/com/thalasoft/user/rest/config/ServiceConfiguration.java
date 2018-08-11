@@ -5,9 +5,9 @@ import com.thalasoft.user.rest.service.MetricsServiceImpl;
 import com.thalasoft.user.rest.service.ResourceServiceImpl;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class ServiceConfiguration {
 
     @Bean

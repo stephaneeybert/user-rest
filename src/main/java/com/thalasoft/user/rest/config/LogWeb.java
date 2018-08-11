@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -15,7 +15,7 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 
-@Configuration
+@Component
 public class LogWeb {
 
 	private final static String PATTERN = "%date %-5level [%thread] %logger{36} %m%n %rEx";

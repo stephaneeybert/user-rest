@@ -6,16 +6,14 @@ import java.util.Locale;
 
 import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -27,14 +25,12 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
-@Configuration
+@Component
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.exception",
 		"com.thalasoft.user.rest.controller", "com.thalasoft.user.rest.assembler" })
 public class WebConfiguration implements WebMvcConfigurer {
-
-	private static Logger logger = LoggerFactory.getLogger(WebConfiguration.class);
 
 	private static final int PAGE_DEFAULT_SIZE = 20;
 	private static final int PAGE_MAX_SIZE = 50;
