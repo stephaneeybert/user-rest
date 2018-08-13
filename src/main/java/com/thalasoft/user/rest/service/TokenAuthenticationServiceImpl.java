@@ -97,7 +97,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
         if (header != null && header.contains(CommonConstants.AUTH_BEARER)) {
 			int start = (CommonConstants.AUTH_BEARER + " ").length();
             if (header.length() > start) {
-                token = header.substring(start - 1);
+                token = header.substring(start);
             }
         } else {
             // The token may be set as an HTTP parameter in case the client could not set it as an HTTP header
