@@ -16,7 +16,7 @@ import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 
 @Component
-public class LogWeb {
+public class Log {
 
 	private final static String PATTERN = "%date %-5level [%thread] %logger{36} %m%n %rEx";
 
