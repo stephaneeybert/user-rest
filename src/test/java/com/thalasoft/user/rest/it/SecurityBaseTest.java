@@ -30,10 +30,10 @@ public abstract class SecurityBaseTest extends BaseTest {
 		super.setup();
 		userFixtureService.addUserFixture();
 
-		addTokenToResponseHeader(httpHeaders, UserFixtureService.USER_EMAIL);
+		addTokenToRequestHeader(httpHeaders, UserFixtureService.USER_EMAIL);
 	}
 
-	private void addTokenToResponseHeader(HttpHeaders headers, String username) {
+	private void addTokenToRequestHeader(HttpHeaders headers, String username) {
 		tokenAuthenticationService.addTokenToResponseHeader(headers, username);
 	}
 
