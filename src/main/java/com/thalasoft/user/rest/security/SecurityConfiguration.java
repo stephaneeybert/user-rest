@@ -57,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	public AuthenticationFromTokenFilter authenticationFromTokenFilter() throws Exception {
-		AuthenticationFromTokenFilter authenticationFromTokenFilter = new AuthenticationFromTokenFilter(new NegatedRequestMatcher(new AntPathRequestMatcher("/users/login", RequestMethod.POST.name())));
+		AuthenticationFromTokenFilter authenticationFromTokenFilter = new AuthenticationFromTokenFilter(new NegatedRequestMatcher(new AntPathRequestMatcher("/users/login")));
 		authenticationFromTokenFilter.setAuthenticationManager(authenticationManagerBean());
 		return authenticationFromTokenFilter;
 	}
