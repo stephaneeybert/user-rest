@@ -46,10 +46,10 @@ public abstract class BaseTest {
     private UserService userService;
 
 	@Autowired
-	protected WebApplicationContext webApplicationContext;
+	private WebApplicationContext webApplicationContext;
 
 	@Autowired
-	protected FilterChainProxy springSecurityFilterChain;
+	private FilterChainProxy springSecurityFilterChain;
 
 	@Autowired
 	protected ObjectMapper jacksonObjectMapper;
@@ -58,7 +58,7 @@ public abstract class BaseTest {
 	protected MessageSource messageSource;
 
 	@Autowired
-	AcceptHeaderLocaleResolver localeResolver;
+	private AcceptHeaderLocaleResolver localeResolver;
 
 	protected MockHttpSession session;
 
