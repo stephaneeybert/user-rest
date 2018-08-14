@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MvcResult;
 public class UserAuthenticationTest extends SecurityBaseTest {
 
     @Autowired
-    UserService userService;
     private UserActionService userActionService;
 
     @Test
