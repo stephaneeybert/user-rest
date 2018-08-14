@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-@SpringBootTest(classes = { TestConfiguration.class, SecurityConfiguration.class, WebConfiguration.class })
+@SpringBootTest(classes = { SecurityConfiguration.class, TestConfiguration.class, WebConfiguration.class })
 public abstract class SecurityBaseTest extends BaseTest {
 
 	@Autowired
