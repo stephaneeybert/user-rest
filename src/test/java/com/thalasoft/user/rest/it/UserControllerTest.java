@@ -38,7 +38,6 @@ public class UserControllerTest extends BaseTest {
         MvcResult mvcResult = this.mockMvc
                 .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                .headers(httpHeaders)
                 .content(jacksonObjectMapper.writeValueAsString(userResource0)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstname").exists())
