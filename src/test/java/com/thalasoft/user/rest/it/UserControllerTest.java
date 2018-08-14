@@ -39,6 +39,7 @@ public class UserControllerTest extends BaseTest {
                 .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .content(jacksonObjectMapper.writeValueAsString(userResource0)))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstname").exists())
                 .andExpect(jsonPath("$.firstname").value(userResource0.getFirstname()))
@@ -54,7 +55,9 @@ public class UserControllerTest extends BaseTest {
         mvcResult = this.mockMvc
                 .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId())
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
                 .andExpect(status().isOk()).andReturn();
         retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
         assertThatUserResource(retrievedUserResource).hasEmail(userResource0.getEmail());
@@ -66,6 +69,7 @@ public class UserControllerTest extends BaseTest {
                 + retrievedUserResource.getResourceId())
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .content(jacksonObjectMapper.writeValueAsString(retrievedUserResource)))
+                .andDo(print())
                 .andExpect(status().isOk()).andExpect(jsonPath("$.firstname").value(changedFirstname)).andReturn();
         retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
         assertThatUserResource(retrievedUserResource).hasFirstname(changedFirstname);
@@ -73,14 +77,18 @@ public class UserControllerTest extends BaseTest {
         this.mockMvc
                 .perform(delete(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId())
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
                 .andExpect(status().isOk());
         userResource0.setResourceId(null);
 
         this.mockMvc
                 .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId())
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
@@ -93,8 +101,8 @@ public class UserControllerTest extends BaseTest {
         MvcResult mvcResult = this.mockMvc
                 .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).locale(Locale.FRENCH)
-                .headers(httpHeaders)
                 .content(jacksonObjectMapper.writeValueAsString(faultyUserResource)))
+                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.failed.controller.validation", Locale.FRENCH)))
                 .andReturn();
@@ -131,6 +139,7 @@ public class UserControllerTest extends BaseTest {
                 .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .content(jacksonObjectMapper.writeValueAsString(userResource0)))
+                .andDo(print())
                 .andExpect(status().isCreated()).andReturn();
         UserResource retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
         assertThatUserResource(retrievedUserResource).hasId(retrievedUserResource.getResourceId());
@@ -166,7 +175,9 @@ public class UserControllerTest extends BaseTest {
                 + retrievedUserResource.getResourceId() + RESTConstants.SLASH
                 + UserDomainConstants.CONFIRM_EMAIL)
                 .param("sialToken", sialToken)
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
                 .andExpect(status().isOk()).andReturn();
         retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
         assertThatUserResource(retrievedUserResource).isEmailConfirmed();
