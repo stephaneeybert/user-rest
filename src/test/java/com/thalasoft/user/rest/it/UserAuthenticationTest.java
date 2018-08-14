@@ -73,8 +73,10 @@ public class UserAuthenticationTest extends SecurityBaseTest {
     public void testUpdatePasswordAndLogin() throws Exception {
         MvcResult mvcResult = this.mockMvc
                 .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                        .content(jacksonObjectMapper.writeValueAsString(userResource0)))
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders)
+                .content(jacksonObjectMapper.writeValueAsString(userResource0)))
+                .andDo(print())
                 .andExpect(status().isCreated()).andReturn();
         UserResource retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
         assertThatUserResource(retrievedUserResource).hasId(retrievedUserResource.getResourceId());
@@ -86,6 +88,7 @@ public class UserAuthenticationTest extends SecurityBaseTest {
                         + retrievedUserResource.getResourceId() + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
+                                .headers(httpHeaders)
                                 .content(jacksonObjectMapper.writeValueAsString(password)))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -98,6 +101,7 @@ public class UserAuthenticationTest extends SecurityBaseTest {
         mvcResult = this.mockMvc.perform(
                 post(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                        .headers(httpHeaders)
                         .content(jacksonObjectMapper.writeValueAsString(credentialsResource)))
                 .andDo(print())
                 .andExpect(status().isCreated()).andReturn();
@@ -110,7 +114,10 @@ public class UserAuthenticationTest extends SecurityBaseTest {
                 .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
                         + retrievedUserResource.getResourceId() + RESTConstants.SLASH
                         + UserDomainConstants.CONFIRM_EMAIL).param("sialToken", sialToken)
-                                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                       .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                       .headers(httpHeaders)
+                       )
+                .andDo(print())
                 .andExpect(status().isOk()).andReturn();
         retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
         assertThatUserResource(retrievedUserResource).isEmailConfirmed();
