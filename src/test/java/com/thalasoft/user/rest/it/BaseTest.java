@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.config.TestConfiguration;
-import com.thalasoft.user.rest.config.UserFixtureService;
 import com.thalasoft.user.rest.config.WebConfiguration;
 import com.thalasoft.user.rest.resource.AbstractResource;
 import com.thalasoft.user.rest.resource.UserResource;
