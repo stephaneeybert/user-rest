@@ -31,6 +31,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -105,6 +106,19 @@ public class UserController {
                         UriComponentsBuilder builder) {
                 HttpHeaders responseHeaders = new HttpHeaders();
                 User user = userService.update(id, resourceService.toUser(userResource));
+                responseHeaders.setLocation(builder
+                                .path(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                .buildAndExpand(user.getId()).toUri());
+                UserResource updatedUserResource = userResourceAssembler.toResource(user);
+                return new ResponseEntity<UserResource>(updatedUserResource, responseHeaders, HttpStatus.OK);
+        }
+
+        @PatchMapping(value = RESTConstants.SLASH + "{id}")
+        @ResponseBody
+        public ResponseEntity<UserResource> partialUpdate(@PathVariable Long id, @Valid @RequestBody UserResource userResource,
+                        UriComponentsBuilder builder) {
+                HttpHeaders responseHeaders = new HttpHeaders();
+                User user = userService.partialUpdate(id, resourceService.toUser(userResource));
                 responseHeaders.setLocation(builder
                                 .path(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                 .buildAndExpand(user.getId()).toUri());
