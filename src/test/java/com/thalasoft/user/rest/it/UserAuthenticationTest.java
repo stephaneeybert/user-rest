@@ -24,9 +24,7 @@ public class UserAuthenticationTest extends SecurityBaseTest {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    UserActionService userActionService;
+    private UserActionService userActionService;
 
     @Test
     public void testUnsecuredResourceGrantsAccess() throws Exception {
