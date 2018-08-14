@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private SimpleCORSFilter simpleCORSFilter;
 	
 	@Autowired
-	AuthenticationFromTokenFilter authenticationFromTokenFilter;
+	private AuthenticationFromTokenFilter authenticationFromTokenFilter;
 
     @Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
