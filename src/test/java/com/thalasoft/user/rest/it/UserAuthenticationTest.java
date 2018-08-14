@@ -83,8 +83,7 @@ public class UserAuthenticationTest extends SecurityBaseTest {
         mvcResult = this.mockMvc
                 .perform(put(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId() + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders)
                 .content(jacksonObjectMapper.writeValueAsString(password)))
                 .andDo(print())
