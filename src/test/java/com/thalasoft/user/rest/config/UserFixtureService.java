@@ -27,7 +27,7 @@ public class UserFixtureService {
 	private User user0;
 	private UserRole role0;
 
-	public void addUserFixture() {
+	public void addUser() {
         user0 = new User();
         user0.setFirstname("Stephane");
         user0.setLastname("Eybert");
