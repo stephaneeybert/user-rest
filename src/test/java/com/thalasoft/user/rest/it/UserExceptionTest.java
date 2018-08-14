@@ -30,7 +30,7 @@ public class UserExceptionTest extends BaseTest {
 
     @Autowired
     MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
-    
+
     private User user0;
 
     @Before
