@@ -15,6 +15,7 @@ import com.thalasoft.user.rest.resource.AbstractResource;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.resource.UserRoleResource;
 import com.thalasoft.user.rest.security.AuthoritiesConstants;
+import com.thalasoft.user.rest.security.NoSecurityConfiguration;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +34,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
-@SpringBootTest(classes = { TestConfiguration.class, WebConfiguration.class })
+@SpringBootTest(classes = { NoSecurityConfiguration.class, TestConfiguration.class, WebConfiguration.class })
 @RunWith(SpringRunner.class)
 public abstract class BaseTest {
 
