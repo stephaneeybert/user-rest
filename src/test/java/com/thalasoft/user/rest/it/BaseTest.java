@@ -40,10 +40,10 @@ public abstract class BaseTest {
 
     protected UserResource userResource0;
 
+	protected List<UserResource> manyUserResources;
+
 	@Autowired
     private UserService userService;
-
-	protected List<UserResource> manyUserResources;
 
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
