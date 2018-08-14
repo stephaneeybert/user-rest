@@ -24,11 +24,11 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity( // TODO What is this for ?
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
-)
+// @EnableGlobalMethodSecurity( // TODO What is this for ?
+//         securedEnabled = true,
+//         jsr250Enabled = true,
+//         prePostEnabled = true
+// )
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.security",
 "com.thalasoft.user.rest.service", "com.thalasoft.user.rest.filter" })
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
