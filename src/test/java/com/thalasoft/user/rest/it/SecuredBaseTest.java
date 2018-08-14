@@ -24,6 +24,8 @@ public abstract class SecuredBaseTest extends BaseTest {
 
 	@Before
 	public void setup() throws Exception {
+		super.setup();
+		
 		addTokenToRequestHeader(httpHeaders, UserFixtureService.USER_EMAIL);
 	}
 
