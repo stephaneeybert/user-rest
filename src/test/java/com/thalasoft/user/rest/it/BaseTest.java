@@ -1,5 +1,6 @@
 package com.thalasoft.user.rest.it;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -7,6 +8,8 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.thalasoft.user.data.jpa.domain.User;
+import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.config.TestConfiguration;
 import com.thalasoft.user.rest.config.UserFixtureService;
 import com.thalasoft.user.rest.config.WebConfiguration;
@@ -15,6 +18,7 @@ import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.resource.UserRoleResource;
 import com.thalasoft.user.rest.security.AuthoritiesConstants;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,11 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 public abstract class BaseTest {
 
     protected UserResource userResource0;
+
+	@Autowired
+    private UserService userService;
+
+	protected List<UserResource> manyUserResources;
 
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
@@ -81,7 +90,34 @@ public abstract class BaseTest {
         userRoleResources.add(user0UserRoleResource);
         userResource0.setUserRoles(userRoleResources);
 	}
-	
+
+	@Before
+    public void createManyUserResource() throws Exception {
+		manyUserResources = new ArrayList<UserResource>();
+        for (int i = 0; i < 30; i++) {
+            String index = intToString(i, 2);
+            UserResource oneUserResource = new UserResource();
+            oneUserResource.setFirstname("zfirstname" + index);
+            oneUserResource.setLastname("zlastname" + index);
+            oneUserResource.setEmail("zemail" + index + "@nokia.com");
+            // User createdUser = userService.add(resourceService.toUser(oneUserResource));
+            // oneUserResource.setResourceId(createdUser.getId());
+            manyUserResources.add(oneUserResource);
+        }
+	}
+
+	@After
+    public void deleteUserResources() throws Exception {
+        if (null != userResource0.getResourceId()) {
+            userService.delete(userResource0.getResourceId());
+        }
+        for (UserResource userResource : manyUserResources) {
+			if (null != userResource.getResourceId()) {
+				userService.delete(userResource.getResourceId());
+			}
+        }
+    }
+
 	protected String localizeErrorMessage(String errorCode, Object args[], Locale locale) {
 		return messageSource.getMessage(errorCode, args, locale);
 	}
