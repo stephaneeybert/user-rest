@@ -70,21 +70,25 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	public Authentication authenticate(HttpServletRequest request) {
 		String token = extractAuthTokenFromRequest(request);
         logger.debug("The request contained the authentication token: " + token);
-		if (token != null && !token.isEmpty()) {
-			try {
-				String subject = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getSubject();
-				if (subject != null) {
-					UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
-					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(authentication);
-					logger.debug("Security - The filter authenticated fine from the JWT token");
-					return authentication;
-				} else {
-					throw new BadCredentialsException("The authentication token " + token + " did not contain a subject.");
+		if (token != null) {
+			if (!token.isEmpty()) {
+				try {
+					String subject = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getSubject();
+					if (subject != null) {
+						UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
+						UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+						authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+						SecurityContextHolder.getContext().setAuthentication(authentication);
+						logger.debug("Security - The filter authenticated fine from the JWT token");
+						return authentication;
+					} else {
+						throw new BadCredentialsException("The authentication token " + token + " did not contain a subject.");
+					}
+				} catch (SignatureException e) {
+					throw new BadCredentialsException("The authentication token " + token + " could not be parsed.");
 				}
-			} catch (SignatureException e) {
-				throw new BadCredentialsException("The authentication token " + token + " could not be parsed.");
+			} else {
+				throw new BadCredentialsException("The authentication token was empty.");
 			}
 		} else {
 			throw new BadCredentialsException("The authentication token was missing.");
