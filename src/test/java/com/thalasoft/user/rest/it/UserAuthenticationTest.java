@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.service.UserActionService;
 import com.thalasoft.user.rest.service.resource.CredentialsResource;
