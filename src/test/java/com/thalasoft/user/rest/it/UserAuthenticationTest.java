@@ -1,41 +1,22 @@
 package com.thalasoft.user.rest.it;
 
 import static com.thalasoft.user.rest.assertion.UserResourceAssert.assertThatUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
-import com.thalasoft.user.rest.exception.ErrorFormInfo;
 import com.thalasoft.user.rest.resource.UserResource;
-import com.thalasoft.user.rest.resource.UserRoleResource;
-import com.thalasoft.user.rest.security.AuthoritiesConstants;
-import com.thalasoft.user.rest.service.ResourceService;
 import com.thalasoft.user.rest.service.UserActionService;
 import com.thalasoft.user.rest.service.resource.CredentialsResource;
 import com.thalasoft.user.rest.utils.RESTConstants;
 import com.thalasoft.user.rest.utils.UserDomainConstants;
 
-import org.hamcrest.Matchers;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
