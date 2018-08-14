@@ -91,25 +91,6 @@ public class UserAuthenticationTest extends SecurityBaseTest {
     }
 
     @Test
-    public void testPostInvalidUserShouldReturnValidationErrorMessages() throws Exception {
-        UserResource faultyUserResource = new UserResource();
-        faultyUserResource.setFirstname("Stephane");
-        faultyUserResource.setLastname("Eybert");
-        faultyUserResource.setEmail("notvalidemail");
-        MvcResult mvcResult = this.mockMvc
-                .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).locale(Locale.FRENCH)
-                .content(jacksonObjectMapper.writeValueAsString(faultyUserResource)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.failed.controller.validation", Locale.FRENCH)))
-                .andReturn();
-        ErrorFormInfo retrievedMessage = deserialize(mvcResult, ErrorFormInfo.class);
-        assertEquals(retrievedMessage.getHttpStatus(), HttpStatus.BAD_REQUEST);
-        assertEquals(retrievedMessage.getMessage(), localizeErrorMessage("error.failed.controller.validation", Locale.FRENCH));
-        assertEquals(retrievedMessage.getFieldErrors().size(), 1);
-    }
-
-    @Test
     public void testUpdatePasswordAndLogin() throws Exception {
         MvcResult mvcResult = this.mockMvc
                 .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
