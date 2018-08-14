@@ -8,20 +8,19 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
-import com.thalasoft.user.rest.config.TestConfiguration;
-import com.thalasoft.user.rest.config.WebConfiguration;
+import com.thalasoft.user.rest.config.UserFixtureService;
 import com.thalasoft.user.rest.resource.AbstractResource;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.resource.UserRoleResource;
 import com.thalasoft.user.rest.security.AuthoritiesConstants;
-import com.thalasoft.user.rest.security.NoSecurityConfiguration;
+import com.thalasoft.user.rest.service.ResourceService;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -34,7 +33,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
-@SpringBootTest(classes = { NoSecurityConfiguration.class, TestConfiguration.class, WebConfiguration.class })
 @RunWith(SpringRunner.class)
 public abstract class BaseTest {
 
@@ -43,7 +41,14 @@ public abstract class BaseTest {
 	protected List<UserResource> manyUserResources;
 
 	@Autowired
+	protected UserFixtureService userFixtureService;
+
+
+	@Autowired
     private UserService userService;
+
+	@Autowired
+    private ResourceService resourceService;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -71,7 +76,10 @@ public abstract class BaseTest {
 	@Before
 	public void setup() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain).build();
+
 		httpHeaders = new HttpHeaders();
+
+		userFixtureService.addUser();
 	}
 
 	@Before
@@ -99,8 +107,8 @@ public abstract class BaseTest {
             oneUserResource.setFirstname("zfirstname" + index);
             oneUserResource.setLastname("zlastname" + index);
             oneUserResource.setEmail("zemail" + index + "@nokia.com");
-            //TODO  User createdUser = userService.add(resourceService.toUser(oneUserResource));
-            // oneUserResource.setResourceId(createdUser.getId());
+            User createdUser = userService.add(resourceService.toUser(oneUserResource));
+            oneUserResource.setResourceId(createdUser.getId());
             manyUserResources.add(oneUserResource);
         }
 	}

@@ -6,7 +6,7 @@ import java.util.Base64;
 import com.thalasoft.user.rest.config.TestConfiguration;
 import com.thalasoft.user.rest.config.UserFixtureService;
 import com.thalasoft.user.rest.config.WebConfiguration;
-import com.thalasoft.user.rest.security.SecurityConfiguration;
+import com.thalasoft.user.rest.security.ProdSecurityConfiguration;
 import com.thalasoft.user.rest.service.TokenAuthenticationService;
 import com.thalasoft.user.rest.utils.CommonConstants;
 
@@ -16,20 +16,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-@SpringBootTest(classes = { SecurityConfiguration.class, TestConfiguration.class, WebConfiguration.class })
-public abstract class SecurityBaseTest extends BaseTest {
+@SpringBootTest(classes = { ProdSecurityConfiguration.class, TestConfiguration.class, WebConfiguration.class })
+public abstract class SecuredBaseTest extends BaseTest {
 
 	@Autowired
 	private TokenAuthenticationService tokenAuthenticationService;
 
-	@Autowired
-	private UserFixtureService userFixtureService;
-
 	@Before
 	public void setup() throws Exception {
-		super.setup();
-		userFixtureService.addUser();
-
 		addTokenToRequestHeader(httpHeaders, UserFixtureService.USER_EMAIL);
 	}
 

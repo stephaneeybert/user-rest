@@ -29,8 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 //         jsr250Enabled = true,
 //         prePostEnabled = true
 // )
-@ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.security",
-"com.thalasoft.user.rest.service", "com.thalasoft.user.rest.filter" })
+@ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.service", "com.thalasoft.user.rest.filter" })
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
