@@ -1,13 +1,19 @@
 package com.thalasoft.user.rest.it;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.thalasoft.user.rest.config.TestConfiguration;
+import com.thalasoft.user.rest.config.UserFixtureService;
 import com.thalasoft.user.rest.config.WebConfiguration;
 import com.thalasoft.user.rest.resource.AbstractResource;
+import com.thalasoft.user.rest.resource.UserResource;
+import com.thalasoft.user.rest.resource.UserRoleResource;
+import com.thalasoft.user.rest.security.AuthoritiesConstants;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -28,6 +34,8 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 @SpringBootTest(classes = { TestConfiguration.class, WebConfiguration.class })
 @RunWith(SpringRunner.class)
 public abstract class BaseTest {
+
+    protected UserResource userResource0;
 
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
@@ -58,6 +66,22 @@ public abstract class BaseTest {
 		httpHeaders = new HttpHeaders();
 	}
 
+	@Before
+    public void createOneUserResource() throws Exception {
+        userResource0 = new UserResource();
+        userResource0.setFirstname("Cyril");
+        userResource0.setLastname("Eybert");
+        userResource0.setEmail("cyril@yahoo.es");
+        Set<UserRoleResource> userRoleResources = new HashSet<UserRoleResource>();
+        UserRoleResource user0AdminRoleResource = new UserRoleResource();
+        user0AdminRoleResource.setRole(AuthoritiesConstants.ROLE_ADMIN.getRole());
+        userRoleResources.add(user0AdminRoleResource);
+        UserRoleResource user0UserRoleResource = new UserRoleResource();
+        user0UserRoleResource.setRole(AuthoritiesConstants.ROLE_USER.getRole());
+        userRoleResources.add(user0UserRoleResource);
+        userResource0.setUserRoles(userRoleResources);
+	}
+	
 	protected String localizeErrorMessage(String errorCode, Object args[], Locale locale) {
 		return messageSource.getMessage(errorCode, args, locale);
 	}

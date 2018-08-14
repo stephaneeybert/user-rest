@@ -47,8 +47,6 @@ public class UserAuthenticationTest extends SecurityBaseTest {
     @Autowired
     UserActionService userActionService;
 
-    private UserResource userResource0;
-
     @Test
     public void testUnsecuredResourceGrantsAccess() throws Exception {
 // TODO The token filters is only open to the login path and these two other paths have not yet been added in the pattern of the filter
