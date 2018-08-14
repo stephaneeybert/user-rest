@@ -99,7 +99,7 @@ public abstract class BaseTest {
             oneUserResource.setFirstname("zfirstname" + index);
             oneUserResource.setLastname("zlastname" + index);
             oneUserResource.setEmail("zemail" + index + "@nokia.com");
-            // User createdUser = userService.add(resourceService.toUser(oneUserResource));
+            //TODO  User createdUser = userService.add(resourceService.toUser(oneUserResource));
             // oneUserResource.setResourceId(createdUser.getId());
             manyUserResources.add(oneUserResource);
         }
