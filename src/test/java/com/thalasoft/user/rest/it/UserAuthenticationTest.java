@@ -85,11 +85,11 @@ public class UserAuthenticationTest extends SecurityBaseTest {
         String password = "mynewpassword";
         mvcResult = this.mockMvc
                 .perform(put(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
-                        + retrievedUserResource.getResourceId() + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .headers(httpHeaders)
-                                .content(jacksonObjectMapper.writeValueAsString(password)))
+                + retrievedUserResource.getResourceId() + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders)
+                .content(jacksonObjectMapper.writeValueAsString(password)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.password").exists())
@@ -100,9 +100,9 @@ public class UserAuthenticationTest extends SecurityBaseTest {
         credentialsResource.setPassword(password);
         mvcResult = this.mockMvc.perform(
                 post(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                        .headers(httpHeaders)
-                        .content(jacksonObjectMapper.writeValueAsString(credentialsResource)))
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders)
+                .content(jacksonObjectMapper.writeValueAsString(credentialsResource)))
                 .andDo(print())
                 .andExpect(status().isCreated()).andReturn();
         retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
@@ -112,11 +112,11 @@ public class UserAuthenticationTest extends SecurityBaseTest {
                 retrievedUserResource.getResourceId());
         mvcResult = this.mockMvc
                 .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
-                        + retrievedUserResource.getResourceId() + RESTConstants.SLASH
-                        + UserDomainConstants.CONFIRM_EMAIL).param("sialToken", sialToken)
-                       .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                       .headers(httpHeaders)
-                       )
+                + retrievedUserResource.getResourceId() + RESTConstants.SLASH
+                + UserDomainConstants.CONFIRM_EMAIL).param("sialToken", sialToken)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders) 
+                )
                 .andDo(print())
                 .andExpect(status().isOk()).andReturn();
         retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
