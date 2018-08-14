@@ -16,22 +16,16 @@ import java.util.Locale;
 
 import com.thalasoft.user.rest.exception.ErrorFormInfo;
 import com.thalasoft.user.rest.resource.UserResource;
-import com.thalasoft.user.rest.service.UserActionService;
-import com.thalasoft.user.rest.service.resource.CredentialsResource;
 import com.thalasoft.user.rest.utils.RESTConstants;
 import com.thalasoft.user.rest.utils.UserDomainConstants;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-public class UserControllerTest extends BaseTest {
-
-    @Autowired
-    private UserActionService userActionService;
+public class UserControllerTest extends UnsecuredBaseTest {
 
     @Test
     public void testCrudOperations() throws Exception {
