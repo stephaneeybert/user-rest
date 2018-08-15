@@ -81,7 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.cors();
 
 		http
-		.csrf().disable()
+		.csrf().disable() // CSRF protection is disabled as cookies are not being used
 		.formLogin().disable()
 		.httpBasic().disable()
 		.logout().disable();
