@@ -12,7 +12,7 @@ import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.service.UserActionService;
 import com.thalasoft.user.rest.service.resource.CredentialsResource;
 import com.thalasoft.user.rest.utils.RESTConstants;
-import com.thalasoft.user.rest.utils.UserDomainConstants;
+import com.thalasoft.user.rest.utils.DomainConstants;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,38 +26,37 @@ public class UserAuthenticationTest extends SecuredBaseTest {
 
     @Test
     public void testUnsecuredResourceGrantsAccess() throws Exception {
-// TODO The token filters is only open to the login path and these two other paths have not yet been added in the pattern of the filter
-//         this.mockMvc.perform(
-//                 get(RESTConstants.SLASH)
-//                 .accept(MediaType.APPLICATION_JSON)
-//             )
-//             .andDo(print())
-//             .andExpect(status().isOk())
-//             .andReturn();
+        this.mockMvc.perform(
+        get(RESTConstants.SLASH)
+        .accept(MediaType.APPLICATION_JSON)
+        )
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
 
-//             this.mockMvc.perform(
-//                 get(RESTConstants.SLASH + RESTConstants.ERROR)
-//                 .accept(MediaType.APPLICATION_JSON)
-//             )
-//             .andDo(print())
-//             .andExpect(status().isOk())
-//             .andReturn();
+        this.mockMvc.perform(
+        get(RESTConstants.SLASH + DomainConstants.ERRORS)
+        .accept(MediaType.APPLICATION_JSON)
+        )
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
 
-            this.mockMvc.perform(
-                post(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN)
-                .accept(MediaType.APPLICATION_JSON)
-            )
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andReturn();
+        this.mockMvc.perform(
+        post(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN)
+        .accept(MediaType.APPLICATION_JSON)
+        )
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andReturn();
     }
 
     @Test
     public void testSecuredResourceDeniesAccessToNonLoggedInUser() throws Exception {
         String password = "mynewpassword";
         MvcResult mvcResult = this.mockMvc
-                .perform(put(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
-                + "1" + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
+                .perform(put(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH
+                + "1" + RESTConstants.SLASH + DomainConstants.PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .content(jacksonObjectMapper.writeValueAsString(password)))
                 .andDo(print())
@@ -68,7 +67,7 @@ public class UserAuthenticationTest extends SecuredBaseTest {
     @Test
     public void testUpdatePasswordAndLogin() throws Exception {
         MvcResult mvcResult = this.mockMvc
-                .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
+                .perform(post(RESTConstants.SLASH + DomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders)
                 .content(jacksonObjectMapper.writeValueAsString(userResource0)))
@@ -80,8 +79,8 @@ public class UserAuthenticationTest extends SecuredBaseTest {
 
         String password = "mynewpassword";
         mvcResult = this.mockMvc
-                .perform(put(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
-                + retrievedUserResource.getResourceId() + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
+                .perform(put(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH
+                + retrievedUserResource.getResourceId() + RESTConstants.SLASH + DomainConstants.PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders)
                 .content(jacksonObjectMapper.writeValueAsString(password)))
@@ -94,7 +93,7 @@ public class UserAuthenticationTest extends SecuredBaseTest {
         credentialsResource.setEmail(retrievedUserResource.getEmail());
         credentialsResource.setPassword(password);
         mvcResult = this.mockMvc.perform(
-                post(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + UserDomainConstants.LOGIN)
+                post(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders)
                 .content(jacksonObjectMapper.writeValueAsString(credentialsResource)))
@@ -103,12 +102,12 @@ public class UserAuthenticationTest extends SecuredBaseTest {
         retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
         assertThatUserResource(retrievedUserResource).hasEmail(retrievedUserResource.getEmail());
 
-        String sialToken = userActionService.signAction(UserDomainConstants.CONFIRM_EMAIL,
+        String sialToken = userActionService.signAction(DomainConstants.CONFIRM_EMAIL,
                 retrievedUserResource.getResourceId());
         mvcResult = this.mockMvc
-                .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
+                .perform(get(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId() + RESTConstants.SLASH
-                + UserDomainConstants.CONFIRM_EMAIL).param("sialToken", sialToken)
+                + DomainConstants.CONFIRM_EMAIL).param("sialToken", sialToken)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders) 
                 )

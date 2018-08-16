@@ -13,7 +13,7 @@ import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.utils.RESTConstants;
-import com.thalasoft.user.rest.utils.UserDomainConstants;
+import com.thalasoft.user.rest.utils.DomainConstants;
 
 import org.junit.After;
 import org.junit.Before;
@@ -55,7 +55,7 @@ public class UserExceptionTest extends UnsecuredBaseTest {
         String id = "dummy";
 
         this.mockMvc
-                .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + id)
+                .perform(get(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + id)
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.url").value("http://localhost/users/dummy")).andExpect(jsonPath("$.message")
@@ -66,7 +66,7 @@ public class UserExceptionTest extends UnsecuredBaseTest {
     @Test
     public void testAddingExistingUserTriggersEntityAlreadyExistException() throws Exception {
         MvcResult mvcResult = this.mockMvc
-                .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS).contentType(MediaType.APPLICATION_JSON)
+                .perform(post(RESTConstants.SLASH + DomainConstants.USERS).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content("{ \"firstname\" : \"" + user0.getFirstname() + "\", \"lastname\" : \""
                                 + user0.getLastname() + "\", \"email\" : \"" + user0.getEmail()
@@ -76,7 +76,7 @@ public class UserExceptionTest extends UnsecuredBaseTest {
         user0.setId(retrievedUserResource.getResourceId());
 
         this.mockMvc
-                .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS).contentType(MediaType.APPLICATION_JSON)
+                .perform(post(RESTConstants.SLASH + DomainConstants.USERS).contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content("{ \"firstname\" : \"" + user0.getFirstname() + "\", \"lastname\" : \""
                                 + user0.getLastname() + "\", \"email\" : \"" + user0.getEmail()
@@ -87,26 +87,26 @@ public class UserExceptionTest extends UnsecuredBaseTest {
 
     @Test
     public void testExceptionLocalizedMessage() throws Exception {
-        this.mockMvc.perform(get("/error/npe").locale(Locale.FRENCH).accept(MediaType.APPLICATION_JSON)).andDo(print())
+        this.mockMvc.perform(get("/errors/npe").locale(Locale.FRENCH).accept(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.npe", Locale.FRENCH))).andReturn();
 
-        this.mockMvc.perform(get("/error/npe").locale(Locale.FRENCH).accept(MediaType.APPLICATION_JSON)).andDo(print())
+        this.mockMvc.perform(get("/errors/npe").locale(Locale.FRENCH).accept(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.npe", Locale.FRENCH))).andReturn();
 
-        this.mockMvc.perform(get("/error/npe").locale(Locale.FRENCH).accept(MediaType.APPLICATION_JSON)).andDo(print())
+        this.mockMvc.perform(get("/errors/npe").locale(Locale.FRENCH).accept(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.npe", Locale.FRENCH))).andReturn();
 
-        this.mockMvc.perform(get("/error/npe").locale(Locale.FRENCH).accept(MediaType.APPLICATION_JSON)).andDo(print())
+        this.mockMvc.perform(get("/errors/npe").locale(Locale.FRENCH).accept(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.npe", Locale.FRENCH))).andReturn();
     }
 
     @Test
     public void testCannotEncodePasswordException() throws Exception {
-        this.mockMvc.perform(get("/error/cannotEncodePassword").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/errors/cannotEncodePassword").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.cannot.encode.password")))
                 .andReturn();
@@ -114,7 +114,7 @@ public class UserExceptionTest extends UnsecuredBaseTest {
 
     @Test
     public void testHttpMessageNotReadableException() throws Exception {
-        this.mockMvc.perform(get("/error/httpBody").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/errors/httpBody").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         jsonPath("$.message").value(localizeErrorMessage("error.http.request.body.cannot.be.parsed")))
@@ -123,27 +123,27 @@ public class UserExceptionTest extends UnsecuredBaseTest {
 
     @Test
     public void testInvalidDataAccessApiUsageException() throws Exception {
-        this.mockMvc.perform(get("/error/dao").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/errors/dao").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.dao"))).andReturn();
     }
 
     @Test
     public void testNumberFormatException() throws Exception {
-        this.mockMvc.perform(get("/error/nfe").accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+        this.mockMvc.perform(get("/errors/nfe").accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.nfe"))).andReturn();
     }
 
     @Test
     public void testNullPointerException() throws Exception {
-        this.mockMvc.perform(get("/error/npe").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/errors/npe").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.npe"))).andReturn();
     }
 
     @Test
     public void testRuntimeException() throws Exception {
-        this.mockMvc.perform(get("/error/rte").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/errors/rte").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.rte"))).andReturn();
     }

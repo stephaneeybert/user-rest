@@ -17,7 +17,7 @@ import java.util.Locale;
 import com.thalasoft.user.rest.exception.ErrorFormInfo;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.utils.RESTConstants;
-import com.thalasoft.user.rest.utils.UserDomainConstants;
+import com.thalasoft.user.rest.utils.DomainConstants;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
     @Test
     public void testCrudOperations() throws Exception {
         MvcResult mvcResult = this.mockMvc
-                .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
+                .perform(post(RESTConstants.SLASH + DomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .content(jacksonObjectMapper.writeValueAsString(userResource0)))
                 .andDo(print())
@@ -47,7 +47,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
         userResource0.setResourceId(retrievedUserResource.getResourceId());
 
         mvcResult = this.mockMvc
-                .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
+                .perform(get(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId())
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 )
@@ -59,7 +59,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
         String changedFirstname = "Cyril";
         retrievedUserResource.setFirstname(changedFirstname);
         mvcResult = this.mockMvc
-                .perform(put(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
+                .perform(put(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId())
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .content(jacksonObjectMapper.writeValueAsString(retrievedUserResource)))
@@ -69,7 +69,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
         assertThatUserResource(retrievedUserResource).hasFirstname(changedFirstname);
 
         this.mockMvc
-                .perform(delete(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
+                .perform(delete(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId())
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 )
@@ -78,7 +78,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
         userResource0.setResourceId(null);
 
         this.mockMvc
-                .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH
+                .perform(get(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH
                 + retrievedUserResource.getResourceId())
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 )
@@ -93,7 +93,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
         faultyUserResource.setLastname("Eybert");
         faultyUserResource.setEmail("notvalidemail");
         MvcResult mvcResult = this.mockMvc
-                .perform(post(RESTConstants.SLASH + UserDomainConstants.USERS)
+                .perform(post(RESTConstants.SLASH + DomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).locale(Locale.FRENCH)
                 .content(jacksonObjectMapper.writeValueAsString(faultyUserResource)))
                 .andDo(print())
@@ -109,7 +109,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
     @Test
     public void testSearchShouldReturnSome() throws Exception {
         this.mockMvc
-                .perform(get(RESTConstants.SLASH + UserDomainConstants.USERS)
+                .perform(get(RESTConstants.SLASH + DomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .param("searchTerm", "irstnam").param("page", "1").param("size", "10")
                 .param("sort", "lastname,asc").param("sort", "firstname,asc"))
