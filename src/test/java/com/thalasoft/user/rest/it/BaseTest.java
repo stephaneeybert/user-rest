@@ -44,7 +44,6 @@ public abstract class BaseTest {
 	@Autowired
 	protected UserFixtureService userFixtureService;
 
-
 	@Autowired
     private UserService userService;
 
