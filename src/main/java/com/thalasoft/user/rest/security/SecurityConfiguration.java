@@ -12,7 +12,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,11 +23,6 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @EnableWebSecurity
-// @EnableGlobalMethodSecurity( // TODO What is this for ?
-//         securedEnabled = true,
-//         jsr250Enabled = true,
-//         prePostEnabled = true
-// )
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.service", "com.thalasoft.user.rest.filter" })
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
