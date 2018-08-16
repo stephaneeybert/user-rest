@@ -30,6 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
@@ -122,11 +123,11 @@ public abstract class BaseTest {
 
 	@After
     public void deleteUserResources() throws Exception {
-        if (null != userResource0.getResourceId()) {
+        if (!StringUtils.isEmpty(userResource0.getResourceId())) {
             userService.delete(userResource0.getResourceId());
         }
         for (UserResource userResource : manyUserResources) {
-			if (null != userResource.getResourceId()) {
+			if (!StringUtils.isEmpty(userResource.getResourceId())) {
 				userService.delete(userResource.getResourceId());
 			}
         }
