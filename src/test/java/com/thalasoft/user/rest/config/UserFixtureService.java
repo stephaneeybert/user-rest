@@ -52,4 +52,8 @@ public class UserFixtureService {
         }
 	}
 
+    public void removeUser() {
+        userService.delete(user0.getId());
+    }
+
 }

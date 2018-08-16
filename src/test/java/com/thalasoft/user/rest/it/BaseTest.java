@@ -76,10 +76,17 @@ public abstract class BaseTest {
 	@Before
 	public void setup() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain).build();
-
 		httpHeaders = new HttpHeaders();
-
+	}
+	
+	@Before
+	public void initFixture() {
 		userFixtureService.addUser();
+	}
+
+	@After
+	public void cleanFixture() {
+		userFixtureService.removeUser();
 	}
 
 	@Before
