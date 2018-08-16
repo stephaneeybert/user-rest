@@ -27,7 +27,6 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -152,7 +151,6 @@ public class UserController {
                                 HttpStatus.OK);
         }
 
-        // @PreAuthorize("hasAuthority('ROLE_USER')") For @PreAuthorize annotation to have effect there is a need to have @EnableGlobalMethodSecurity annotation on @Configuration bean somewhere TODO is this usefull ?
         @GetMapping(params = "searchTerm")
         @ResponseBody
         public ResponseEntity<PagedResources<UserResource>> search(
