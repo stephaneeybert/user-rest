@@ -1,5 +1,8 @@
 package com.thalasoft.user.rest.security;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
 import com.thalasoft.user.rest.filter.SimpleCORSFilter;
 import com.thalasoft.user.rest.security.AuthenticationFromCredentialsFilter;
@@ -19,7 +22,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @EnableWebSecurity
@@ -49,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	public AuthenticationFromTokenFilter authenticationFromTokenFilter() throws Exception {
-		AuthenticationFromTokenFilter authenticationFromTokenFilter = new AuthenticationFromTokenFilter(new NegatedRequestMatcher(new AntPathRequestMatcher("/users/login")));
+		AuthenticationFromTokenFilter authenticationFromTokenFilter = new AuthenticationFromTokenFilter(securedPathRequestMatcher());
 		authenticationFromTokenFilter.setAuthenticationManager(authenticationManagerBean());
 		return authenticationFromTokenFilter;
 	}
@@ -60,7 +62,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		registration.setEnabled(false);
 		return registration;
 	}
-  
+
+	private PathRequestMatcher securedPathRequestMatcher() throws Exception {
+		PathRequestMatcher pathRequestMatcher = new PathRequestMatcher(getUnsecuredPaths(), "/**");
+		return pathRequestMatcher;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO For now allow non https access as the browser non signed certificate
@@ -94,5 +101,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/admin/**").hasRole(UserDomainConstants.ROLE_ADMIN)
 		.anyRequest().authenticated();
 	}
-	
+
+	private List<String> getUnsecuredPaths() {
+		List<String> unsecuredPaths = Arrays.asList(
+			RESTConstants.SLASH,
+			RESTConstants.SLASH + DomainConstants.ERRORS,
+			RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN,
+			RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH
+			);
+		return unsecuredPaths;
+	}
+
 }
