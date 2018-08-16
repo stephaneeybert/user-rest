@@ -1,9 +1,10 @@
 package com.thalasoft.user.rest.utils;
 
-public final class UserDomainConstants {
+public final class DomainConstants {
 
     public static final String USERS = "users";
     public static final String ADMINS = "admins";
+    public static final String ERRORS = "errors";
     public static final String ADDRESSES = "addresses";
     public static final String PASSWORD = "password";
     public static final String CONFIRM_EMAIL = "confirm-email";
@@ -12,10 +13,11 @@ public final class UserDomainConstants {
     public static final String ROLES = "roles";
     public static final String ROLE_USER = "USER";
     public static final String ROLE_ADMIN = "ADMIN";
+    public static final String TOKEN_REFRESH = "token-refresh";
 
     public static final String SERVLET_NAME = "UserREST";
 
-    private UserDomainConstants() {
+    private DomainConstants() {
         throw new AssertionError();
     }
     

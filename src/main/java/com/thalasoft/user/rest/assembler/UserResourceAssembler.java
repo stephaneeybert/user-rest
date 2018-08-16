@@ -6,7 +6,7 @@ import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.rest.controller.UserController;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.service.ResourceService;
-import com.thalasoft.user.rest.utils.UserDomainConstants;
+import com.thalasoft.user.rest.utils.DomainConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class UserResourceAssembler extends ResourceAssemblerSupport<User, UserRe
     public UserResource toResource(User user) {
         UserResource userResource = createResourceWithId(user.getId(), user);
         BeanUtils.copyProperties(resourceService.fromUser(user), userResource);
-        userResource.add(linkTo(UserController.class).slash(user.getId()).slash(UserDomainConstants.ROLES).withRel(UserDomainConstants.ROLES));
+        userResource.add(linkTo(UserController.class).slash(user.getId()).slash(DomainConstants.ROLES).withRel(DomainConstants.ROLES));
         return userResource;
     }
 
@@ -40,7 +40,7 @@ public class UserResourceAssembler extends ResourceAssemblerSupport<User, UserRe
         for (User user : users) {
         	UserResource userResource = createResourceWithId(user.getId(), user);
             BeanUtils.copyProperties(resourceService.fromUser(user), userResource);
-            userResource.add(linkTo(UserController.class).slash(user.getId()).slash(UserDomainConstants.ROLES).withRel(UserDomainConstants.ROLES));            
+            userResource.add(linkTo(UserController.class).slash(user.getId()).slash(DomainConstants.ROLES).withRel(DomainConstants.ROLES));            
             userResources.add(userResource);
         }
         return userResources;

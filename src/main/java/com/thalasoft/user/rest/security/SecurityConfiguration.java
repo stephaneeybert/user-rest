@@ -8,7 +8,8 @@ import com.thalasoft.user.rest.filter.SimpleCORSFilter;
 import com.thalasoft.user.rest.security.AuthenticationFromCredentialsFilter;
 import com.thalasoft.user.rest.security.AuthenticationFromTokenFilter;
 import com.thalasoft.user.rest.security.RESTAuthenticationEntryPoint;
-import com.thalasoft.user.rest.utils.UserDomainConstants;
+import com.thalasoft.user.rest.utils.DomainConstants;
+import com.thalasoft.user.rest.utils.RESTConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -96,9 +97,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http
 		.addFilterBefore(authenticationFromTokenFilter, UsernamePasswordAuthenticationFilter.class)
 		.authorizeRequests()
-		.antMatchers("/", "/error").permitAll()
-		.antMatchers("/users/login").permitAll()
-		.antMatchers("/admin/**").hasRole(UserDomainConstants.ROLE_ADMIN)
+		.antMatchers(RESTConstants.SLASH, RESTConstants.SLASH + DomainConstants.ERRORS).permitAll()
+		.antMatchers(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN).permitAll()
+		.antMatchers(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).permitAll()
+		.antMatchers("/admin/**").hasRole(DomainConstants.ROLE_ADMIN)
 		.anyRequest().authenticated();
 	}
 

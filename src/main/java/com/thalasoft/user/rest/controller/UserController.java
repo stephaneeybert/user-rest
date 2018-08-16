@@ -16,7 +16,7 @@ import com.thalasoft.user.rest.service.ResourceService;
 import com.thalasoft.user.rest.service.UserActionService;
 import com.thalasoft.user.rest.service.resource.CredentialsResource;
 import com.thalasoft.user.rest.utils.RESTConstants;
-import com.thalasoft.user.rest.utils.UserDomainConstants;
+import com.thalasoft.user.rest.utils.DomainConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
-@RequestMapping(RESTConstants.SLASH + UserDomainConstants.USERS)
+@RequestMapping(RESTConstants.SLASH + DomainConstants.USERS)
 public class UserController {
 
         @Autowired
@@ -73,7 +73,7 @@ public class UserController {
                 } else {
                         UserResource userResource = userResourceAssembler.toResource(user);
                         responseHeaders.setLocation(builder.path(
-                                        RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                        RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                         .buildAndExpand(user.getId()).toUri());
                         ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(userResource,
                                         responseHeaders, HttpStatus.OK);
@@ -91,7 +91,7 @@ public class UserController {
                 if (user != null) {
                         userActionService.sendEmailConfirmationMail(user);
                         responseHeaders.setLocation(builder.path(
-                                        RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                        RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                         .buildAndExpand(user.getId()).toUri());
                         createdUserResource = userResourceAssembler.toResource(user);
                 }
@@ -107,7 +107,7 @@ public class UserController {
                 HttpHeaders responseHeaders = new HttpHeaders();
                 User user = userService.update(id, resourceService.toUser(userResource));
                 responseHeaders.setLocation(builder
-                                .path(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                .path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                 .buildAndExpand(user.getId()).toUri());
                 UserResource updatedUserResource = userResourceAssembler.toResource(user);
                 return new ResponseEntity<UserResource>(updatedUserResource, responseHeaders, HttpStatus.OK);
@@ -120,7 +120,7 @@ public class UserController {
                 HttpHeaders responseHeaders = new HttpHeaders();
                 User user = userService.partialUpdate(id, resourceService.toUser(userResource));
                 responseHeaders.setLocation(builder
-                                .path(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                .path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                 .buildAndExpand(user.getId()).toUri());
                 UserResource updatedUserResource = userResourceAssembler.toResource(user);
                 return new ResponseEntity<UserResource>(updatedUserResource, responseHeaders, HttpStatus.OK);
@@ -141,7 +141,7 @@ public class UserController {
                         PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
                 Page<User> foundUsers = userService.all(pageable);
                 HttpHeaders responseHeaders = new HttpHeaders();
-                responseHeaders.setLocation(builder.path(RESTConstants.SLASH + UserDomainConstants.USERS)
+                responseHeaders.setLocation(builder.path(RESTConstants.SLASH + DomainConstants.USERS)
                                 .queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize())
                                 .buildAndExpand().toUri());
                 Link selfLink = linkTo(methodOn(UserController.class).all(pageable, pagedResourcesAssembler, builder))
@@ -160,7 +160,7 @@ public class UserController {
                         PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
                 Page<User> foundUsers = userService.search(searchTerm, pageable);
                 HttpHeaders responseHeaders = new HttpHeaders();
-                responseHeaders.setLocation(builder.path(RESTConstants.SLASH + UserDomainConstants.USERS)
+                responseHeaders.setLocation(builder.path(RESTConstants.SLASH + DomainConstants.USERS)
                                 .queryParam("searchTerm", searchTerm).queryParam("page", pageable.getPageNumber())
                                 .queryParam("size", pageable.getPageSize()).buildAndExpand().toUri());
                 Link selfLink = linkTo(methodOn(UserController.class).search(searchTerm, pageable,
@@ -172,7 +172,7 @@ public class UserController {
         }
 
         // TODO Do I need this login if there is already a CustomAuthenticationProvider in use ?
-        @PostMapping(value = RESTConstants.SLASH + UserDomainConstants.LOGIN)
+        @PostMapping(value = RESTConstants.SLASH + DomainConstants.LOGIN)
         @ResponseBody
         public ResponseEntity<UserResource> login(@Valid @RequestBody CredentialsResource credentialsResource,
                         UriComponentsBuilder builder) {
@@ -185,7 +185,7 @@ public class UserController {
                         tokenAuthenticationService.addTokenToResponseHeader(responseHeaders,
                                         credentialsResource.getEmail());
                         responseHeaders.setLocation(builder.path(
-                                        RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                        RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                         .buildAndExpand(user.getId()).toUri());
                         UserResource createdUserResource = userResourceAssembler.toResource(user);
                         ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(
@@ -194,7 +194,7 @@ public class UserController {
                 }
         }
 
-        @PutMapping(value = RESTConstants.SLASH + "{id}" + RESTConstants.SLASH + UserDomainConstants.PASSWORD)
+        @PutMapping(value = RESTConstants.SLASH + "{id}" + RESTConstants.SLASH + DomainConstants.PASSWORD)
         @ResponseBody
         public ResponseEntity<UserResource> updatePassword(@PathVariable Long id, @RequestBody String password,
                         UriComponentsBuilder builder) {
@@ -206,14 +206,14 @@ public class UserController {
                         return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
                 }
                 responseHeaders.setLocation(builder
-                                .path(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                .path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                 .buildAndExpand(updatedUser.getId()).toUri());
                 UserResource updatedUserResource = userResourceAssembler.toResource(updatedUser);
                 return new ResponseEntity<UserResource>(updatedUserResource, responseHeaders, HttpStatus.OK);
         }
 
         @GetMapping(value = RESTConstants.SLASH + "{id}" + RESTConstants.SLASH
-                        + UserDomainConstants.EMAIL_CONFIRMATION_MAIL)
+                        + DomainConstants.EMAIL_CONFIRMATION_MAIL)
         @ResponseBody
         public ResponseEntity<Void> requestEmailConfirmationMail(@PathVariable Long id, UriComponentsBuilder builder) {
                 HttpHeaders responseHeaders = new HttpHeaders();
@@ -223,13 +223,13 @@ public class UserController {
                 } else {
                         userActionService.sendEmailConfirmationMail(user);
                         responseHeaders.setLocation(builder.path(
-                                        RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                        RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                         .buildAndExpand(user.getId()).toUri());
                         return new ResponseEntity<Void>(responseHeaders, HttpStatus.OK);
                 }
         }
 
-        @GetMapping(value = RESTConstants.SLASH + "{id}" + RESTConstants.SLASH + UserDomainConstants.CONFIRM_EMAIL)
+        @GetMapping(value = RESTConstants.SLASH + "{id}" + RESTConstants.SLASH + DomainConstants.CONFIRM_EMAIL)
         @ResponseBody
         public ResponseEntity<UserResource> confirmEmail(@PathVariable Long id,
                         @RequestParam(value = "sialToken") String sialToken, UriComponentsBuilder builder) {
@@ -241,7 +241,7 @@ public class UserController {
                         return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
                 }
                 responseHeaders.setLocation(builder
-                                .path(RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                .path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                 .buildAndExpand(user.getId()).toUri());
                 UserResource userResource = userResourceAssembler.toResource(user);
                 return new ResponseEntity<UserResource>(userResource, responseHeaders, HttpStatus.OK);
@@ -258,7 +258,7 @@ public class UserController {
                 } else {
                         UserResource userResource = userResourceAssembler.toResource(user);
                         responseHeaders.setLocation(builder.path(
-                                        RESTConstants.SLASH + UserDomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                                        RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                                         .buildAndExpand(user.getId()).toUri());
                         ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(userResource,
                                         responseHeaders, HttpStatus.OK);

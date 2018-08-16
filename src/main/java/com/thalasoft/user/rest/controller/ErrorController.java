@@ -2,6 +2,7 @@ package com.thalasoft.user.rest.controller;
 
 import com.thalasoft.user.rest.exception.CannotEncodePasswordException;
 import com.thalasoft.user.rest.resource.UserResource;
+import com.thalasoft.user.rest.utils.DomainConstants;
 import com.thalasoft.user.rest.utils.RESTConstants;
 
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @ExposesResourceFor(UserResource.class)
-@RequestMapping(RESTConstants.SLASH + RESTConstants.ERROR)
+@RequestMapping(RESTConstants.SLASH + DomainConstants.ERRORS)
 public class ErrorController {
 
     @GetMapping

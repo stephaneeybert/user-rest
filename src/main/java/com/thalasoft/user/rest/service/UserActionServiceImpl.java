@@ -16,7 +16,7 @@ import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.properties.ApplicationProperties;
 import com.thalasoft.user.rest.utils.RESTConstants;
-import com.thalasoft.user.rest.utils.UserDomainConstants;
+import com.thalasoft.user.rest.utils.DomainConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -52,8 +52,8 @@ public class UserActionServiceImpl implements UserActionService {
     	String to = user.getEmail().toString();
 		String from = applicationProperties.getMailFrom();
 		String subject = localizeErrorMessage("user.mail.email.confirm.subject", new Object[] { user.getFirstname() + " " + user.getLastname() });
-		String sialToken = signAction(UserDomainConstants.CONFIRM_EMAIL, user.getId());
-		String url = RESTConstants.SLASH + user.getId() + RESTConstants.SLASH + UserDomainConstants.CONFIRM_EMAIL + RESTConstants.SLASH + sialToken;
+		String sialToken = signAction(DomainConstants.CONFIRM_EMAIL, user.getId());
+		String url = RESTConstants.SLASH + user.getId() + RESTConstants.SLASH + DomainConstants.CONFIRM_EMAIL + RESTConstants.SLASH + sialToken;
 		String body = localizeErrorMessage("user.mail.email.confirm.body", new Object[] { user.getFirstname() + " " + user.getLastname() })
 		  + " <a href='" + url + "'>" + localizeErrorMessage("user.mail.email.confirm.link", null) + "</a>"
 		  + localizeErrorMessage("user.mail.email.confirm.url", new Object[] { url });
@@ -111,7 +111,7 @@ public class UserActionServiceImpl implements UserActionService {
         if (user == null) {
         	throw new EntityNotFoundException();
         } else {
-	    	if (authenticateAction(sialToken, UserDomainConstants.CONFIRM_EMAIL, id)) {
+	    	if (authenticateAction(sialToken, DomainConstants.CONFIRM_EMAIL, id)) {
 	    		user.setConfirmedEmail(true);
 	    	}
 	    	return user;
