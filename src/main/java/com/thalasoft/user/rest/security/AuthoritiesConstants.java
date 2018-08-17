@@ -4,6 +4,7 @@ public enum AuthoritiesConstants {
 
 	ROLE_ADMIN("ROLE_ADMIN"),
 	ROLE_USER("ROLE_USER"),
+	ROLE_REFRESH_TOKEN("ROLE_REFRESH_TOKEN"),
 	ROLE_ANONYMOUS("ROLE_ANONYMOUS");
 	
 	private String role;

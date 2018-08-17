@@ -11,10 +11,13 @@ import com.thalasoft.user.rest.properties.JwtProperties;
 import com.thalasoft.user.rest.security.AuthoritiesConstants;
 import com.thalasoft.user.rest.utils.CommonConstants;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -68,8 +71,22 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		String token = null;
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (userDetails != null) {
-			Date expirationDate = new Date(System.currentTimeMillis() + ONE_WEEK);
-			token = Jwts.builder().signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey()).setExpiration(expirationDate).setSubject(userDetails.getUsername()).compact();
+			LocalDateTime currentTime = LocalDateTime.now();
+			Date expirationDate = Date.from(currentTime
+			.plusMinutes(jwtProperties.getAccessTokenExpirationTime())
+			.atZone(ZoneId.systemDefault()).toInstant());
+			// Date expirationDate = new Date(System.currentTimeMillis() + ONE_WEEK);
+			Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
+			claims.put("scopes", userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
+			token = Jwts.builder()
+			// If calling the setClaims method then call it before all other setters
+			.setClaims(claims)
+			.setSubject(userDetails.getUsername())
+			.setIssuer(jwtProperties.getTokenIssuer())
+			.setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
+			.setExpiration(expirationDate)
+			.signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey())
+			.compact();
 		}
 		return token;
 	}
@@ -78,17 +95,20 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		String token = null;
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (userDetails != null) {
-			DateTime currentTime = new DateTime();
+			LocalDateTime currentTime = LocalDateTime.now();
+			Date expirationDate = Date.from(currentTime
+			.plusMinutes(jwtProperties.getAccessTokenExpirationTime())
+			.atZone(ZoneId.systemDefault()).toInstant());
 			Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
-			claims.put("scopes", Arrays.asList(AuthoritiesConstants.ROLE_ADMIN.getRole()));
+			claims.put("scopes", Arrays.asList(AuthoritiesConstants.ROLE_REFRESH_TOKEN.getRole()));
 			token = Jwts.builder()
 			// If calling the setClaims method then call it before all other setters
 			.setClaims(claims)
-			.setIssuer(jwtProperties.getTokenIssuer())
 			.setId(UUID.randomUUID().toString())
-			.setIssuedAt(currentTime.toDate())
-			.setExpiration(currentTime.plusMinutes(jwtProperties.getRefreshTokenExpirationTime()).toDate())
-			.signWith(SignatureAlgorithm.HS512, jwtProperties.getTokenPrivateKey())
+			.setIssuer(jwtProperties.getTokenIssuer())
+			.setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
+			.setExpiration(expirationDate)
+			.signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey())
 			.compact();
 		}
         return token;
