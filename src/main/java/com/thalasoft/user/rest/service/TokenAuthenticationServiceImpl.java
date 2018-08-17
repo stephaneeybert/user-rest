@@ -42,23 +42,23 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	private UserDetailsService userDetailsService;
 
 	public void addTokenToResponseHeader(HttpHeaders headers, String username) {
-		String token = buildToken(username);
+		String token = buildAccessToken(username);
 		headers.add(CommonConstants.AUTH_HEADER_NAME, token);
 	}
 	
 	public void addTokenToResponseHeader(HttpServletResponse response, Authentication authentication) {
 		String username = authentication.getName();
 		if (username != null) {
-			String token = buildToken(username);
+			String token = buildAccessToken(username);
 			response.addHeader(CommonConstants.AUTH_HEADER_NAME, token);
 		}
 	}
 
-	private String buildToken(String username) {
-		return CommonConstants.AUTH_BEARER + " " + buildTokenValue(username);
+	private String buildAccessToken(String username) {
+		return CommonConstants.AUTH_BEARER + " " + buildAccessTokenValue(username);
 	}
 	
-	private String buildTokenValue(String username) {
+	private String buildAccessTokenValue(String username) {
 		String token = null;
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (userDetails != null) {
