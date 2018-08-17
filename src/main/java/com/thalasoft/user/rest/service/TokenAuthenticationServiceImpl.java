@@ -82,6 +82,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 			Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
 			claims.put("scopes", Arrays.asList(AuthoritiesConstants.ROLE_ADMIN.getRole()));
 			token = Jwts.builder()
+			// If calling the setClaims method then call it before all other setters
 			.setClaims(claims)
 			.setIssuer(jwtProperties.getTokenIssuer())
 			.setId(UUID.randomUUID().toString())
