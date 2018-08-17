@@ -1,6 +1,5 @@
 package com.thalasoft.user.rest.service;
 
-import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 
@@ -27,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class TokenAuthenticationServiceImpl implements TokenAuthenticationService {
 
@@ -63,7 +63,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (userDetails != null) {
 			Date expirationDate = new Date(System.currentTimeMillis() + ONE_WEEK);
-			token = Jwts.builder().signWith(HS256, getEncodedPrivateKey()).setExpiration(expirationDate).setSubject(userDetails.getUsername()).compact();		
+			token = Jwts.builder().signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey()).setExpiration(expirationDate).setSubject(userDetails.getUsername()).compact();
 		}
 		return token;
 	}
