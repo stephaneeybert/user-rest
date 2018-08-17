@@ -12,6 +12,7 @@ import com.thalasoft.user.rest.service.TokenAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -32,7 +33,8 @@ public class AuthenticationFromTokenFilter extends AbstractAuthenticationProcess
 
 	@Override
 	protected void successfulAuthentication(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
-			FilterChain filterChain, Authentication authResult) throws IOException, ServletException {
+			FilterChain filterChain, Authentication authentication) throws IOException, ServletException {
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 		filterChain.doFilter(httpRequest, httpResponse);
 	}
 

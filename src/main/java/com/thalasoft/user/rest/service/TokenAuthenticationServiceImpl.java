@@ -105,7 +105,6 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 						UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 						UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 						authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-						SecurityContextHolder.getContext().setAuthentication(authentication);
 						logger.debug("Security - The filter authenticated fine from the JWT token");
 						return authentication;
 					} else {
