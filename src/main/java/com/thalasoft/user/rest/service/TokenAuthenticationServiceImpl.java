@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureException;
 
 import com.thalasoft.user.rest.properties.ApplicationProperties;
 import com.thalasoft.user.rest.utils.CommonConstants;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.sql.Date;
 import java.util.Base64;
@@ -112,7 +113,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 
 	private String getEncodedPrivateKey() {
 		String privateKey = applicationProperties.getAuthenticationTokenPrivateKey();
-		return Base64.getEncoder().encodeToString(privateKey.getBytes());
+		return Base64.getEncoder().encodeToString(privateKey.getBytes(UTF_8));
 	}
 	
 }
