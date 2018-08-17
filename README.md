@@ -23,4 +23,4 @@ mvn clean install -Denv="test" -Ddb="h2" -Dmaven.surefire.debug="-Xdebug -Xrunjd
 Some example API requests
 curl -i -H "Accept:application/json" http://localhost:8080/api/error
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/users/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MzQ3NzA0ODksInN1YiI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UifQ.L52rTfIXMFkKUyEjUHv3kwGKJ8j7M7Z1NkXGW2eUg08" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1MzUwOTU2OTMsInN1YiI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UifQ.a0m4XSpJsQJTslqJJ2ElhyBqqT8CpUnPeAZ64l-T05M3s8E2C34hwEyjujJ6HO4jKITr_ubNX17vAQg4COGq4g" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
