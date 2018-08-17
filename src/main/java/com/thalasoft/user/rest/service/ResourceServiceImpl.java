@@ -6,7 +6,6 @@ import java.util.Set;
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.jpa.domain.UserRole;
-import com.thalasoft.user.data.service.UserRoleService;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.resource.UserRoleResource;
@@ -20,9 +19,6 @@ public class ResourceServiceImpl implements ResourceService {
     @Autowired 
 	private UserService userService;
     
-    @Autowired 
-	private UserRoleService userRoleService;
-
     @Override
 	public User toUser(UserResource userResource) {
         User user = null;
@@ -38,20 +34,9 @@ public class ResourceServiceImpl implements ResourceService {
 		user.setConfirmedEmail(userResource.isConfirmedEmail());
 		user.setPassword(userResource.getPassword());
 		user.setWorkPhone(userResource.getWorkPhone());
-		Set<UserRole> userRoles = new HashSet<UserRole>();
 		for (UserRoleResource userRoleResource : userResource.getUserRoles()) {
-	        UserRole userRole = null;
-	        if (userRoleResource.getResourceId() != null) {
-	        	userRole = userRoleService.findById(userRoleResource.getResourceId());
-	        }
-	        if (userRole == null) {
-	        	userRole = new UserRole();
-	        }
-	    	userRole.setRole(userRoleResource.getRole());
-	    	userRole.setUser(user);        
-			userRoles.add(userRole);
+			user.addRole(userRoleResource.getRole());
 		}
-		user.setUserRoles(userRoles);
         return user;
     }
 
