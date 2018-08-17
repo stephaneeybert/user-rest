@@ -4,9 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 public abstract class AbstractUserProperties implements ApplicationProperties {
 
-    @Value("${" + PropertyNames.CONFIG_AUTH_TOKEN_PRIVATE_KEY + "}")
-	private String authenticationTokenPrivateKey;
-	
     @Value("${" + PropertyNames.CONFIG_MAIL_HOST + "}")
     private String host;
 
@@ -31,10 +28,6 @@ public abstract class AbstractUserProperties implements ApplicationProperties {
     @Value("${" + PropertyNames.CONFIG_MAILING_ENABLED + "}")
     private boolean mailingEnabled;
     
-    public String getAuthenticationTokenPrivateKey() {
-        return authenticationTokenPrivateKey;
-    }
-
     @Override
     public String getHost() {
         return host;

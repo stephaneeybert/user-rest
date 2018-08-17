@@ -1,0 +1,7 @@
+server.error.whitelabel.enabled : false
+server.servlet.context-path : /api
+security.jwt:
+  tokenIssuer: http://thalasoft.com
+  tokenPrivateKey: xm8EOfkdu4d653D_GGIDAwQus
+  accessTokenExpirationTime: 15 # Expressed in minutes
+  refreshTokenExpirationTime: 60 # Expressed in minutes

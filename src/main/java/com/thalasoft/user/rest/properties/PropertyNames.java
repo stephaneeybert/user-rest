@@ -2,7 +2,6 @@ package com.thalasoft.user.rest.properties;
 
 public final class PropertyNames {
 
-    public static final String CONFIG_AUTH_TOKEN_PRIVATE_KEY = "authentication.token.private.key";
     public static final String CONFIG_MAIL_HOST = "spring.mail.host";
     public static final String CONFIG_MAIL_PORT = "spring.mail.port";
     public static final String CONFIG_MAIL_PROTOCOL = "spring.mail.protocol";

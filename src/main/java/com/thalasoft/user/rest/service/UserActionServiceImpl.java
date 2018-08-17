@@ -15,6 +15,7 @@ import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.properties.ApplicationProperties;
+import com.thalasoft.user.rest.properties.JwtProperties;
 import com.thalasoft.user.rest.utils.RESTConstants;
 import com.thalasoft.user.rest.utils.DomainConstants;
 
@@ -38,6 +39,9 @@ public class UserActionServiceImpl implements UserActionService {
 
 	@Autowired
     private ApplicationProperties applicationProperties;
+
+	@Autowired
+	private JwtProperties jwtProperties;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -129,7 +133,7 @@ public class UserActionServiceImpl implements UserActionService {
 	}
 	
 	private String getEncodedPrivateKey() {
-		String privateKey = applicationProperties.getAuthenticationTokenPrivateKey();
+		String privateKey = jwtProperties.getTokenPrivateKey();
 		return Base64.getEncoder().encodeToString(privateKey.getBytes(UTF_8));
 	}
 

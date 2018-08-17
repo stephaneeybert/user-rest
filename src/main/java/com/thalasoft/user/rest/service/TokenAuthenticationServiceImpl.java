@@ -1,10 +1,5 @@
 package com.thalasoft.user.rest.service;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureException;
-
-import com.thalasoft.user.rest.properties.ApplicationProperties;
-import com.thalasoft.user.rest.utils.CommonConstants;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.sql.Date;
@@ -12,6 +7,9 @@ import java.util.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.thalasoft.user.rest.properties.JwtProperties;
+import com.thalasoft.user.rest.utils.CommonConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +24,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+
 @Service
 public class TokenAuthenticationServiceImpl implements TokenAuthenticationService {
 
@@ -36,7 +37,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	private static final String TOKEN_URL_PARAM_NAME = "token";
 	
     @Autowired
-    private ApplicationProperties applicationProperties;
+    private JwtProperties jwtProperties;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -112,7 +113,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	}
 
 	private String getEncodedPrivateKey() {
-		String privateKey = applicationProperties.getAuthenticationTokenPrivateKey();
+		String privateKey = jwtProperties.getTokenPrivateKey();
 		return Base64.getEncoder().encodeToString(privateKey.getBytes(UTF_8));
 	}
 	

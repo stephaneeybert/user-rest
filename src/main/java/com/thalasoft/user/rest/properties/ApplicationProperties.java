@@ -2,8 +2,6 @@ package com.thalasoft.user.rest.properties;
 
 public interface ApplicationProperties {
 
-    public String getAuthenticationTokenPrivateKey();
-
     public String getHost();
 
     public String getPort();
