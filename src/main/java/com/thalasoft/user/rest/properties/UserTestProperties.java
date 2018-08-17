@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @PropertySource({ "classpath:user-test.properties" })
 public class UserTestProperties extends AbstractUserProperties {
 	
-    private static Logger logger = LoggerFactory.getLogger(UserProdProperties.class);
+    private static Logger logger = LoggerFactory.getLogger(UserTestProperties.class);
 
     public UserTestProperties() {
         logger.debug("Loading the application test properties file");
