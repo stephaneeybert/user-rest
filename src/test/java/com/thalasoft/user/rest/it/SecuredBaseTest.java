@@ -1,5 +1,7 @@
 package com.thalasoft.user.rest.it;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -37,7 +39,7 @@ public abstract class SecuredBaseTest extends BaseTest {
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		String usernamePassword = username + ":" + password;
-		String encodedAuthorisation = Base64.getEncoder().encodeToString(usernamePassword.getBytes());
+		String encodedAuthorisation = Base64.getEncoder().encodeToString(usernamePassword.getBytes(UTF_8));
 		httpHeaders.add(CommonConstants.AUTH_HEADER_NAME,
 				CommonConstants.AUTH_BASIC + " " + new String(encodedAuthorisation));
 	}
