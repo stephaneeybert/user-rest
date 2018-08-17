@@ -2,15 +2,24 @@ package com.thalasoft.user.rest.service;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+
+import com.thalasoft.user.rest.properties.JwtProperties;
+import com.thalasoft.user.rest.security.AuthoritiesConstants;
+import com.thalasoft.user.rest.utils.CommonConstants;
+
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.thalasoft.user.rest.properties.JwtProperties;
-import com.thalasoft.user.rest.utils.CommonConstants;
-
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +32,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 
 @Service
 public class TokenAuthenticationServiceImpl implements TokenAuthenticationService {
@@ -69,6 +74,25 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		return token;
 	}
 	
+	public String buildRefreshToken(String username) {
+		String token = null;
+		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		if (userDetails != null) {
+			DateTime currentTime = new DateTime();
+			Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
+			claims.put("scopes", Arrays.asList(AuthoritiesConstants.ROLE_ADMIN.getRole()));
+			token = Jwts.builder()
+			.setClaims(claims)
+			.setIssuer(jwtProperties.getTokenIssuer())
+			.setId(UUID.randomUUID().toString())
+			.setIssuedAt(currentTime.toDate())
+			.setExpiration(currentTime.plusMinutes(jwtProperties.getRefreshTokenExpirationTime()).toDate())
+			.signWith(SignatureAlgorithm.HS512, jwtProperties.getTokenPrivateKey())
+			.compact();
+		}
+        return token;
+	}
+
 	public Authentication authenticate(HttpServletRequest request) {
 		String token = extractAuthTokenFromRequest(request);
         logger.debug("The request contained the authentication token: " + token);
