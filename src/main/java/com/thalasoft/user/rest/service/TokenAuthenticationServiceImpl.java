@@ -123,7 +123,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 						UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 						UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 						authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-						logger.debug("Security - The filter authenticated fine from the JWT token");
+						logger.debug("Security - The request authenticated fine from the JWT Access token");
 						return authentication;
 					} else {
 						throw new BadCredentialsException("The authentication token " + token + " did not contain a subject.");
