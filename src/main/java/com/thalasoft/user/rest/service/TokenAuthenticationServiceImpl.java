@@ -113,7 +113,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	}
 
 	public Authentication authenticate(HttpServletRequest request) {
-		String token = extractAuthTokenFromRequest(request);
+		String token = extractAuthenticationTokenFromRequest(request);
         logger.debug("The request contained the authentication token: " + token);
 		if (token != null) {
 			if (!token.isEmpty()) {
@@ -170,6 +170,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		}
 	}
 
+	private String extractAuthenticationTokenFromRequest(HttpServletRequest request) {
 	    String token = null;
         String header = request.getHeader(CommonConstants.AUTH_HEADER_NAME);
         if (header != null && header.contains(CommonConstants.AUTH_BEARER)) {
