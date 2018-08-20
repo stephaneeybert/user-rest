@@ -2,6 +2,7 @@ package com.thalasoft.user.rest.utils;
 
 public final class DomainConstants {
 
+    public static final String AUTH = "auth";
     public static final String USERS = "users";
     public static final String ADMINS = "admins";
     public static final String ERRORS = "errors";

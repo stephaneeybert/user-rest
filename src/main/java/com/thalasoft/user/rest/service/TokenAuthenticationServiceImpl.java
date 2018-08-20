@@ -2,15 +2,6 @@ package com.thalasoft.user.rest.service;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-
-import com.thalasoft.user.rest.properties.JwtProperties;
-import com.thalasoft.user.rest.security.AuthoritiesConstants;
-import com.thalasoft.user.rest.utils.CommonConstants;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -22,7 +13,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.joda.time.DateTime;
+import com.thalasoft.user.rest.properties.JwtProperties;
+import com.thalasoft.user.rest.security.AuthoritiesConstants;
+import com.thalasoft.user.rest.utils.CommonConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +24,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 @Service
 public class TokenAuthenticationServiceImpl implements TokenAuthenticationService {
@@ -141,7 +139,37 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		}
 	}
 
-	private String extractAuthTokenFromRequest(HttpServletRequest request) {
+	public Authentication authenticateFromRefreshToken(HttpServletRequest request) {
+		String token = extractAuthenticationTokenFromRequest(request);
+		if (token != null) {
+			if (!token.isEmpty()) {
+				try {
+					String jti = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getId();
+					if (jti != null) {
+						String subject = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getSubject();
+						if (subject != null) {
+							UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
+							UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+							authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+							logger.debug("Security - The request authenticated fine from the JWT Refresh token");
+							return authentication;
+						} else {
+							throw new BadCredentialsException("The refresh token " + token + " did not contain a subject.");
+						}
+					} else {
+						throw new BadCredentialsException("The refresh token " + token + " did not contain a JTI.");
+					}
+				} catch (SignatureException e) {
+					throw new BadCredentialsException("The refresh token " + token + " could not be parsed.");
+				}
+			} else {
+				throw new BadCredentialsException("The refresh token was empty.");
+			}
+		} else {
+			throw new BadCredentialsException("The refresh token was missing.");
+		}
+	}
+
 	    String token = null;
         String header = request.getHeader(CommonConstants.AUTH_HEADER_NAME);
         if (header != null && header.contains(CommonConstants.AUTH_BEARER)) {

@@ -93,7 +93,7 @@ public class UserAuthenticationTest extends SecuredBaseTest {
         credentialsResource.setEmail(retrievedUserResource.getEmail());
         credentialsResource.setPassword(password);
         mvcResult = this.mockMvc.perform(
-                post(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN)
+                post(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders)
                 .content(jacksonObjectMapper.writeValueAsString(credentialsResource)))
