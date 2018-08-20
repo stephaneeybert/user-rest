@@ -118,7 +118,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		if (token != null) {
 			if (!token.isEmpty()) {
 				try {
-					String subject = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getSubject();
+					String subject = getUserIdFromToken(token);
 					if (subject != null) {
 						UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 						UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -144,9 +144,9 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		if (token != null) {
 			if (!token.isEmpty()) {
 				try {
-					String jti = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getId();
+					String jti = getJtiFromToken(token);
 					if (jti != null) {
-						String subject = Jwts.parser().setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody().getSubject();
+						String subject = getUserIdFromToken(token);
 						if (subject != null) {
 							UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 							UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -168,6 +168,31 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		} else {
 			throw new BadCredentialsException("The refresh token was missing.");
 		}
+	}
+
+	private String getUserIdFromToken(String token) {
+		Claims claims = getClaimsFromToken(token);
+		if (null != claims) {
+			return claims.getSubject();
+		} else {
+			return null;
+		}
+	}
+
+	private String getJtiFromToken(String token) {
+		Claims claims = getClaimsFromToken(token);
+		if (null != claims) {
+			return claims.getId();
+		} else {
+			return null;
+		}
+	}
+
+	private Claims getClaimsFromToken(String token) {
+		return Jwts.parser()
+				.setSigningKey(getEncodedPrivateKey())
+				.parseClaimsJws(token)
+				.getBody();
 	}
 
 	private String extractAuthenticationTokenFromRequest(HttpServletRequest request) {
