@@ -84,13 +84,11 @@ public class UserController {
         User user = userService.add(resourceService.toUser(userResource));
         HttpHeaders responseHeaders = new HttpHeaders();
         UserResource createdUserResource = null;
-        if (user != null) {
-            userActionService.sendEmailConfirmationMail(user);
-            URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-            .buildAndExpand(user.getId()).toUri();
-            responseHeaders.setLocation(location);
-            createdUserResource = userResourceAssembler.toResource(user);
-        }
+        userActionService.sendEmailConfirmationMail(user);
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+        .buildAndExpand(user.getId()).toUri();
+        responseHeaders.setLocation(location);
+        createdUserResource = userResourceAssembler.toResource(user);
         ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(createdUserResource,
                 responseHeaders, HttpStatus.CREATED);
         return responseEntity;
