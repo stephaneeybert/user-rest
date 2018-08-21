@@ -24,3 +24,12 @@ Some example API requests
 curl -i -H "Accept:application/json" http://localhost:8080/api/error
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/users/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1MzUwOTU2OTMsInN1YiI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UifQ.a0m4XSpJsQJTslqJJ2ElhyBqqT8CpUnPeAZ64l-T05M3s8E2C34hwEyjujJ6HO4jKITr_ubNX17vAQg4COGq4g" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
+
+To do list
+Create the refresh token in the credentials filter and add it to the response.
+In the angular interceptor, if the access token is expired then try to renew it with the refresh token and try to authenticate with it.
+Add a "remember me" angular interceptor to decide if the refresh token must be used if the access token expired.
+Add a test on the full update
+Add a test on the partial update
+Add a refresh token and test it
+
