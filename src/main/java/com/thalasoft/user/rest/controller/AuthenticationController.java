@@ -35,55 +35,54 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping(RESTConstants.SLASH + DomainConstants.AUTH)
 public class AuthenticationController {
 
-        @Autowired
-        private TokenAuthenticationService tokenAuthenticationService;
+    @Autowired
+    private TokenAuthenticationService tokenAuthenticationService;
 
-        @Autowired
-        private UserService userService;
+    @Autowired
+    private UserService userService;
 
-        @Autowired
-        private CredentialsService credentialsService;
+    @Autowired
+    private CredentialsService credentialsService;
 
-        @Autowired
-        private UserResourceAssembler userResourceAssembler;
+    @Autowired
+    private UserResourceAssembler userResourceAssembler;
 
-        // TODO Do I need this login if there is already a CustomAuthenticationProvider
-        // in use ?
-        @PostMapping(value = RESTConstants.SLASH + DomainConstants.LOGIN)
-        @ResponseBody
-        public ResponseEntity<UserResource> login(@Valid @RequestBody CredentialsResource credentialsResource,
-                        UriComponentsBuilder builder) {
-                HttpHeaders responseHeaders = new HttpHeaders();
-                User user = credentialsService.checkPassword(credentialsResource);
-                userService.clearReadablePassword(user);
-                if (user == null) {
-                        return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
-                } else {
-                        tokenAuthenticationService.addTokenToResponseHeader(responseHeaders,
-                                        credentialsResource.getEmail());
-                        responseHeaders.setLocation(builder.path(
-                                        RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                                        .buildAndExpand(user.getId()).toUri());
-                        UserResource createdUserResource = userResourceAssembler.toResource(user);
-                        ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(
-                                        createdUserResource, responseHeaders, HttpStatus.CREATED);
-                        return responseEntity;
-                }
+    // TODO Do I need this login if there is already a CustomAuthenticationProvider
+    // in use ?
+    @PostMapping(value = RESTConstants.SLASH + DomainConstants.LOGIN)
+    @ResponseBody
+    public ResponseEntity<UserResource> login(@Valid @RequestBody CredentialsResource credentialsResource,
+            UriComponentsBuilder builder) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        User user = credentialsService.checkPassword(credentialsResource);
+        userService.clearReadablePassword(user);
+        if (user == null) {
+            return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
+        } else {
+            tokenAuthenticationService.addTokenToResponseHeader(responseHeaders, credentialsResource.getEmail());
+            responseHeaders.setLocation(
+                    builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                            .buildAndExpand(user.getId()).toUri());
+            UserResource createdUserResource = userResourceAssembler.toResource(user);
+            ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(createdUserResource,
+                    responseHeaders, HttpStatus.CREATED);
+            return responseEntity;
         }
+    }
 
-        @GetMapping(value = RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH)
-        @ResponseBody
-        public ResponseEntity<ResourceSupport> refreshToken(HttpServletRequest request, HttpServletResponse response,
-                        UriComponentsBuilder builder) throws IOException, ServletException {
-                HttpHeaders responseHeaders = new HttpHeaders();
-                Authentication authentication = tokenAuthenticationService.authenticateFromRefreshToken(request);
-                tokenAuthenticationService.addTokenToResponseHeader(response, authentication);
-                ResourceSupport resource = new ResourceSupport();
-                responseHeaders.setLocation(builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH)
-                                .buildAndExpand().toUri());
-                ResponseEntity<ResourceSupport> responseEntity = new ResponseEntity<ResourceSupport>(resource,
-                                responseHeaders, HttpStatus.CREATED);
-                return responseEntity;
-        }
+    @GetMapping(value = RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH)
+    @ResponseBody
+    public ResponseEntity<ResourceSupport> refreshToken(HttpServletRequest request, HttpServletResponse response,
+            UriComponentsBuilder builder) throws IOException, ServletException {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        Authentication authentication = tokenAuthenticationService.authenticateFromRefreshToken(request);
+        tokenAuthenticationService.addTokenToResponseHeader(response, authentication);
+        ResourceSupport resource = new ResourceSupport();
+        responseHeaders.setLocation(
+                builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).buildAndExpand().toUri());
+        ResponseEntity<ResourceSupport> responseEntity = new ResponseEntity<ResourceSupport>(resource, responseHeaders,
+                HttpStatus.CREATED);
+        return responseEntity;
+    }
 
 }
