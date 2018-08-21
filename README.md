@@ -29,7 +29,5 @@ To do list
 Create the refresh token in the credentials filter and add it to the response.
 In the angular interceptor, if the access token is expired then try to renew it with the refresh token and try to authenticate with it.
 Add a "remember me" angular interceptor to decide if the refresh token must be used if the access token expired.
-Add a test on the full update
-Add a test on the partial update
 Add a refresh token and test it
 
