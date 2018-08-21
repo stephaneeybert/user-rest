@@ -41,6 +41,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Controller
 @RequestMapping(RESTConstants.SLASH + DomainConstants.USERS)
 public class UserController {
+
         @Autowired
         private ResourceService resourceService;
 
