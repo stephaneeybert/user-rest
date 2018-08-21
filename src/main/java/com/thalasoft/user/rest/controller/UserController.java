@@ -3,6 +3,8 @@ package com.thalasoft.user.rest.controller;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import java.net.URI;
+
 import javax.validation.Valid;
 
 import com.thalasoft.user.data.exception.EntityNotFoundException;
@@ -84,9 +86,9 @@ public class UserController {
         UserResource createdUserResource = null;
         if (user != null) {
             userActionService.sendEmailConfirmationMail(user);
-            responseHeaders.setLocation(
-                    builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                            .buildAndExpand(user.getId()).toUri());
+            URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+            .buildAndExpand(user.getId()).toUri();
+            responseHeaders.setLocation(location);
             createdUserResource = userResourceAssembler.toResource(user);
         }
         ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(createdUserResource,
