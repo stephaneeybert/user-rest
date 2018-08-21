@@ -62,18 +62,12 @@ public class UserController {
     @GetMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
     public ResponseEntity<UserResource> findById(@PathVariable Long id, UriComponentsBuilder builder) {
-        HttpHeaders responseHeaders = new HttpHeaders();
         User user = userService.findById(id);
         if (user == null) {
-            return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         } else {
             UserResource userResource = userResourceAssembler.toResource(user);
-            responseHeaders.setLocation(
-                    builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                            .buildAndExpand(user.getId()).toUri());
-            ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(userResource,
-                    responseHeaders, HttpStatus.OK);
-            return responseEntity;
+            return ResponseEntity.ok(userResource);
         }
     }
 
@@ -86,47 +80,36 @@ public class UserController {
         UserResource createdUserResource = null;
         userActionService.sendEmailConfirmationMail(user);
         URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-        .buildAndExpand(user.getId()).toUri();
+                .buildAndExpand(user.getId()).toUri();
         responseHeaders.setLocation(location);
         createdUserResource = userResourceAssembler.toResource(user);
-        ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(createdUserResource,
-                responseHeaders, HttpStatus.CREATED);
-        return responseEntity;
+        return ResponseEntity.created(location).headers(responseHeaders).body(createdUserResource);
     }
 
     @PutMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
     public ResponseEntity<UserResource> update(@PathVariable Long id, @Valid @RequestBody UserResource userResource,
             UriComponentsBuilder builder) {
-        HttpHeaders responseHeaders = new HttpHeaders();
         User user = userService.update(id, resourceService.toUser(userResource));
-        responseHeaders
-                .setLocation(builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                        .buildAndExpand(user.getId()).toUri());
         UserResource updatedUserResource = userResourceAssembler.toResource(user);
-        return new ResponseEntity<UserResource>(updatedUserResource, responseHeaders, HttpStatus.OK);
+        return ResponseEntity.ok(updatedUserResource);
     }
 
     @PatchMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
     public ResponseEntity<UserResource> partialUpdate(@PathVariable Long id,
             @Valid @RequestBody UserResource userResource, UriComponentsBuilder builder) {
-        HttpHeaders responseHeaders = new HttpHeaders();
         User user = userService.partialUpdate(id, resourceService.toUser(userResource));
-        responseHeaders
-                .setLocation(builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                        .buildAndExpand(user.getId()).toUri());
         UserResource updatedUserResource = userResourceAssembler.toResource(user);
-        return new ResponseEntity<UserResource>(updatedUserResource, responseHeaders, HttpStatus.OK);
+        return ResponseEntity.ok(updatedUserResource);
     }
 
     @DeleteMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
     public ResponseEntity<UserResource> delete(@PathVariable Long id) {
         User user = userService.delete(id);
-        HttpHeaders responseHeaders = new HttpHeaders();
         UserResource userResource = userResourceAssembler.toResource(user);
-        return new ResponseEntity<UserResource>(userResource, responseHeaders, HttpStatus.OK);
+        return ResponseEntity.ok(userResource);
     }
 
     @GetMapping
