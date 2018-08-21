@@ -1,5 +1,6 @@
 package com.thalasoft.user.rest.config;
 
+import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
@@ -28,11 +29,11 @@ public class UserFixtureService {
         user0.setEmail(new EmailAddress(USER_EMAIL));
         user0.setPassword(USER_ENCODED_PASSWORD);
         user0.setPasswordSalt(USER_PASSWORD_SALT);
-        User user = userService.findByEmail(user0.getEmail().toString());
-        if (user == null) {
-	        user0 = userService.add(user0);
-        } else {
-        	user0 = user;
+        try {
+            User user = userService.findByEmail(user0.getEmail().toString());
+            user0 = user;
+        } catch (EntityNotFoundException e) {
+            user0 = userService.add(user0);
         }
         user0.addRole(AuthoritiesConstants.ROLE_ADMIN.getRole());
 	}
