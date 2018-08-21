@@ -30,8 +30,7 @@ public class UserFixtureService {
         user0.setPassword(USER_ENCODED_PASSWORD);
         user0.setPasswordSalt(USER_PASSWORD_SALT);
         try {
-            User user = userService.findByEmail(user0.getEmail().toString());
-            user0 = user;
+            user0 = userService.findByEmail(user0.getEmail().toString());
         } catch (EntityNotFoundException e) {
             user0 = userService.add(user0);
         }

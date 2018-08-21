@@ -62,12 +62,16 @@ public class UserController {
     @GetMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
     public ResponseEntity<UserResource> findById(@PathVariable Long id, UriComponentsBuilder builder) {
-        User user = userService.findById(id);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        } else {
+        try {
+            User user = userService.findById(id);
             UserResource userResource = userResourceAssembler.toResource(user);
-            return ResponseEntity.ok(userResource);
+            URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                    .buildAndExpand(user.getId()).toUri();
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.setLocation(location);
+            return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userResource);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -76,14 +80,12 @@ public class UserController {
     public ResponseEntity<UserResource> add(@Valid @RequestBody UserResource userResource,
             UriComponentsBuilder builder) {
         User user = userService.add(resourceService.toUser(userResource));
-        HttpHeaders responseHeaders = new HttpHeaders();
         UserResource createdUserResource = null;
         userActionService.sendEmailConfirmationMail(user);
         URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                 .buildAndExpand(user.getId()).toUri();
-        responseHeaders.setLocation(location);
         createdUserResource = userResourceAssembler.toResource(user);
-        return ResponseEntity.created(location).headers(responseHeaders).body(createdUserResource);
+        return ResponseEntity.created(location).body(createdUserResource);
     }
 
     @PutMapping(value = RESTConstants.SLASH + "{id}")
@@ -92,7 +94,11 @@ public class UserController {
             UriComponentsBuilder builder) {
         User user = userService.update(id, resourceService.toUser(userResource));
         UserResource updatedUserResource = userResourceAssembler.toResource(user);
-        return ResponseEntity.ok(updatedUserResource);
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                .buildAndExpand(user.getId()).toUri();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(location);
+        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(updatedUserResource);
     }
 
     @PatchMapping(value = RESTConstants.SLASH + "{id}")
@@ -101,7 +107,11 @@ public class UserController {
             @Valid @RequestBody UserResource userResource, UriComponentsBuilder builder) {
         User user = userService.partialUpdate(id, resourceService.toUser(userResource));
         UserResource updatedUserResource = userResourceAssembler.toResource(user);
-        return ResponseEntity.ok(updatedUserResource);
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                .buildAndExpand(user.getId()).toUri();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(location);
+        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(updatedUserResource);
     }
 
     @DeleteMapping(value = RESTConstants.SLASH + "{id}")
@@ -117,15 +127,18 @@ public class UserController {
     public ResponseEntity<PagedResources<UserResource>> all(Pageable pageable,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         Page<User> foundUsers = userService.all(pageable);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(
-                builder.path(RESTConstants.SLASH + DomainConstants.USERS).queryParam("page", pageable.getPageNumber())
-                        .queryParam("size", pageable.getPageSize()).buildAndExpand().toUri());
+        // TODO the location is unused here
+        // https://stackoverflow.com/questions/51949203/how-to-add-the-resource-location-to-the-respponse
         Link selfLink = linkTo(methodOn(UserController.class).all(pageable, pagedResourcesAssembler, builder))
-                .withRel("all");
+        .withRel("all");
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
-                userResourceAssembler, selfLink);
-        return new ResponseEntity<PagedResources<UserResource>>(userPagedResources, responseHeaders, HttpStatus.OK);
+        userResourceAssembler, selfLink);
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS)
+            .queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize())
+            .buildAndExpand().toUri();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(location);
+        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userPagedResources);
     }
 
     @GetMapping(params = "searchTerm")
@@ -133,49 +146,48 @@ public class UserController {
     public ResponseEntity<PagedResources<UserResource>> search(@RequestParam(value = "searchTerm") String searchTerm,
             Pageable pageable, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         Page<User> foundUsers = userService.search(searchTerm, pageable);
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS).queryParam("searchTerm", searchTerm)
+                .queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize())
+                .buildAndExpand().toUri();
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(builder.path(RESTConstants.SLASH + DomainConstants.USERS)
-                .queryParam("searchTerm", searchTerm).queryParam("page", pageable.getPageNumber())
-                .queryParam("size", pageable.getPageSize()).buildAndExpand().toUri());
+        responseHeaders.setLocation(location);
         Link selfLink = linkTo(
                 methodOn(UserController.class).search(searchTerm, pageable, pagedResourcesAssembler, builder))
                         .withRel("search");
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
                 userResourceAssembler, selfLink);
-        return new ResponseEntity<PagedResources<UserResource>>(userPagedResources, responseHeaders, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userPagedResources);
     }
 
     @PutMapping(value = RESTConstants.SLASH + "{id}" + RESTConstants.SLASH + DomainConstants.PASSWORD)
     @ResponseBody
     public ResponseEntity<UserResource> updatePassword(@PathVariable Long id, @RequestBody String password,
             UriComponentsBuilder builder) {
-        HttpHeaders responseHeaders = new HttpHeaders();
         User updatedUser;
         try {
             updatedUser = credentialsService.updatePassword(id, password);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
-        responseHeaders
-                .setLocation(builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                        .buildAndExpand(updatedUser.getId()).toUri());
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                .buildAndExpand(updatedUser.getId()).toUri();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(location);
         UserResource updatedUserResource = userResourceAssembler.toResource(updatedUser);
-        return new ResponseEntity<UserResource>(updatedUserResource, responseHeaders, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(updatedUserResource);
     }
 
     @GetMapping(value = RESTConstants.SLASH + "{id}" + RESTConstants.SLASH + DomainConstants.EMAIL_CONFIRMATION_MAIL)
     @ResponseBody
     public ResponseEntity<Void> requestEmailConfirmationMail(@PathVariable Long id, UriComponentsBuilder builder) {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        User user = userService.findById(id);
-        if (user == null) {
-            return new ResponseEntity<Void>(responseHeaders, HttpStatus.NOT_FOUND);
-        } else {
+        try {
+            User user = userService.findById(id);
             userActionService.sendEmailConfirmationMail(user);
-            responseHeaders.setLocation(
-                    builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                            .buildAndExpand(user.getId()).toUri());
-            return new ResponseEntity<Void>(responseHeaders, HttpStatus.OK);
+            URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                    .buildAndExpand(user.getId()).toUri();
+            return ResponseEntity.ok().location(location).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -183,18 +195,18 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<UserResource> confirmEmail(@PathVariable Long id,
             @RequestParam(value = "sialToken") String sialToken, UriComponentsBuilder builder) {
-        HttpHeaders responseHeaders = new HttpHeaders();
         User user;
         try {
             user = userActionService.confirmEmail(sialToken, id);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
-        responseHeaders
-                .setLocation(builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                        .buildAndExpand(user.getId()).toUri());
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                .buildAndExpand(user.getId()).toUri();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(location);
         UserResource userResource = userResourceAssembler.toResource(user);
-        return new ResponseEntity<UserResource>(userResource, responseHeaders, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userResource);
     }
 
     @GetMapping(params = "email")
@@ -208,7 +220,7 @@ public class UserController {
             responseHeaders.setLocation(
                     builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                             .buildAndExpand(user.getId()).toUri());
-            return ResponseEntity.ok(userResource);
+            return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userResource);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

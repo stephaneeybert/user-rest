@@ -3,6 +3,7 @@ package com.thalasoft.user.rest.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.jpa.domain.UserRole;
@@ -16,27 +17,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
-    @Autowired 
-	private UserService userService;
-    
+    @Autowired
+    private UserService userService;
+  
     @Override
 	public User toUser(UserResource userResource) {
         User user = null;
-        if (userResource.getResourceId() != null) {
-        	user = userService.findById(userResource.getResourceId());
+        if (userResource.getResourceId() == null) {
+            user = new User();
+        } else {
+            try {
+                user = userService.findById(userResource.getResourceId());
+            } catch (EntityNotFoundException e) {
+                user = new User();
+            }
         }
-        if (user == null) {
-        	user = new User();
+        user.setFirstname(userResource.getFirstname());
+        user.setLastname(userResource.getLastname());
+        user.setEmail(new EmailAddress(userResource.getEmail()));
+        user.setConfirmedEmail(userResource.isConfirmedEmail());
+        user.setPassword(userResource.getPassword());
+        user.setWorkPhone(userResource.getWorkPhone());
+        for (UserRoleResource userRoleResource : userResource.getUserRoles()) {
+            user.addRole(userRoleResource.getRole());
         }
-		user.setFirstname(userResource.getFirstname());
-		user.setLastname(userResource.getLastname());
-		user.setEmail(new EmailAddress(userResource.getEmail()));
-		user.setConfirmedEmail(userResource.isConfirmedEmail());
-		user.setPassword(userResource.getPassword());
-		user.setWorkPhone(userResource.getWorkPhone());
-		for (UserRoleResource userRoleResource : userResource.getUserRoles()) {
-			user.addRole(userRoleResource.getRole());
-		}
         return user;
     }
 

@@ -45,7 +45,7 @@ public class UserExceptionTest extends UnsecuredBaseTest {
 
     @After
     public void afterAnyTest() throws Exception {
-        if (null != user0.getId()) {
+        if (null != user0 && null != user0.getId()) {
             userService.delete(user0.getId());
         }
     }

@@ -42,7 +42,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.UNAUTHORIZED, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.UNAUTHORIZED);
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorInfo);
 	}
 
 	@ExceptionHandler(BadCredentialsException.class)
@@ -53,7 +53,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.UNAUTHORIZED, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorInfo);
 	}
 
 	@ExceptionHandler(EntityNotFoundException.class)
@@ -64,7 +64,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.NOT_FOUND, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfo);
 	}
 
 	@ExceptionHandler(EntityAlreadyExistsException.class)
@@ -75,7 +75,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.CONFLICT, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.CONFLICT);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorInfo);
 	}
 
 	@ExceptionHandler(NoEntitiesFoundException.class)
@@ -86,7 +86,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.NOT_FOUND, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.NOT_FOUND);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfo);
 	}
 	
 	@ExceptionHandler(CannotDeleteEntityException.class)
@@ -97,7 +97,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.FORBIDDEN, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.FORBIDDEN);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorInfo);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -111,7 +111,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		errorFormInfo.getFieldErrors().addAll(populateFieldErrors(fieldErrors));
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-		return new ResponseEntity<ErrorFormInfo>(errorFormInfo, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorFormInfo);
 	}
 
 	private List<ErrorFormField> populateFieldErrors(List<FieldError> fieldErrorList) {
@@ -135,7 +135,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.BAD_REQUEST, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-       return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
     }
     
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -146,7 +146,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.BAD_REQUEST, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-       return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
     }
     
     @ExceptionHandler(IllegalArgumentException.class)
@@ -155,7 +155,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
     	String url = request.getRequestURL().toString();
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
 		logger.debug(getStackTrace(e));
-    	return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorInfo);
     }
     
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -164,7 +164,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
     	String url = request.getRequestURL().toString();
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		logger.debug(getStackTrace(e));
-    	return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
     }
 
     @ExceptionHandler({NoHandlerFoundException.class})
@@ -173,7 +173,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
     	String url = request.getRequestURL().toString();
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		logger.debug(getStackTrace(e));
-    	return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -184,7 +184,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.CONFLICT, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-    	return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorInfo);
     }
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
@@ -195,7 +195,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-    	return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorInfo);
     }
    
     @ExceptionHandler(TypeMismatchException.class)
@@ -206,7 +206,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.BAD_REQUEST, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-        return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
     }
  
     @ExceptionHandler(NumberFormatException.class)
@@ -217,7 +217,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.BAD_REQUEST, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-        return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorInfo);
     }
    
     @ExceptionHandler(NullPointerException.class)
@@ -228,7 +228,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-        return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+    	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorInfo);
 	}
 	
     @ExceptionHandler(RuntimeException.class)
@@ -239,7 +239,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
-    	return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+    	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorInfo);
     }
     
 }

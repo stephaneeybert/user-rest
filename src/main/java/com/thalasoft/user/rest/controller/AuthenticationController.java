@@ -1,12 +1,14 @@
 package com.thalasoft.user.rest.controller;
 
 import java.io.IOException;
+import java.net.URI;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.assembler.UserResourceAssembler;
@@ -54,19 +56,16 @@ public class AuthenticationController {
     public ResponseEntity<UserResource> login(@Valid @RequestBody CredentialsResource credentialsResource,
             UriComponentsBuilder builder) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        User user = credentialsService.checkPassword(credentialsResource);
-        userService.clearReadablePassword(user);
-        if (user == null) {
-            return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
-        } else {
+        try {
+            User user = credentialsService.checkPassword(credentialsResource);
+            userService.clearReadablePassword(user);
             tokenAuthenticationService.addTokenToResponseHeader(responseHeaders, credentialsResource.getEmail());
-            responseHeaders.setLocation(
-                    builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-                            .buildAndExpand(user.getId()).toUri());
+            URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+            .buildAndExpand(user.getId()).toUri();
             UserResource createdUserResource = userResourceAssembler.toResource(user);
-            ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(createdUserResource,
-                    responseHeaders, HttpStatus.CREATED);
-            return responseEntity;
+            return ResponseEntity.created(location).headers(responseHeaders).body(createdUserResource);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -74,15 +73,12 @@ public class AuthenticationController {
     @ResponseBody
     public ResponseEntity<ResourceSupport> refreshToken(HttpServletRequest request, HttpServletResponse response,
             UriComponentsBuilder builder) throws IOException, ServletException {
-        HttpHeaders responseHeaders = new HttpHeaders();
         Authentication authentication = tokenAuthenticationService.authenticateFromRefreshToken(request);
         tokenAuthenticationService.addTokenToResponseHeader(response, authentication);
         ResourceSupport resource = new ResourceSupport();
-        responseHeaders.setLocation(
-                builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).buildAndExpand().toUri());
-        ResponseEntity<ResourceSupport> responseEntity = new ResponseEntity<ResourceSupport>(resource, responseHeaders,
-                HttpStatus.CREATED);
-        return responseEntity;
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).buildAndExpand().toUri();
+        return ResponseEntity.created(location).body(resource);
+        // TODO finish this endpoint
     }
 
 }

@@ -41,57 +41,57 @@ public abstract class BaseTest {
 
     protected UserResource userResource0;
 
-	protected List<UserResource> manyUserResources;
+    protected List<UserResource> manyUserResources;
 
-	@Autowired
-	protected UserFixtureService userFixtureService;
+    @Autowired
+    protected UserFixtureService userFixtureService;
 
-	@Autowired
+    @Autowired
     private UserService userService;
 
-	@Autowired
+    @Autowired
     private ResourceService resourceService;
 
-	@Autowired
-	private WebApplicationContext webApplicationContext;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
 
-	@Autowired
-	protected ObjectMapper jacksonObjectMapper;
+    @Autowired
+    protected ObjectMapper jacksonObjectMapper;
 
-	@Autowired
-	protected MessageSource messageSource;
+    @Autowired
+    protected MessageSource messageSource;
 
-	@Autowired
-	private AcceptHeaderLocaleResolver localeResolver;
+    @Autowired
+    private AcceptHeaderLocaleResolver localeResolver;
 
-	protected MockHttpSession session;
+    protected MockHttpSession session;
 
-	protected MockHttpServletRequest request;
+    protected MockHttpServletRequest request;
 
-	protected MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
-	protected HttpHeaders httpHeaders;
+    protected HttpHeaders httpHeaders;
 
-	@Before
-	public void setup() throws Exception {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain).build();
-		httpHeaders = new HttpHeaders();
-	}
-	
-	@Before
-	public void initFixture() {
-		userFixtureService.addUser();
-	}
+    @Before
+    public void setup() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain).build();
+        httpHeaders = new HttpHeaders();
+    }
+    
+    @Before
+    public void initFixture() {
+        userFixtureService.addUser();
+    }
 
-	@After
-	public void cleanFixture() {
-		userFixtureService.removeUser();
-	}
+    @After
+    public void cleanFixture() {
+        userFixtureService.removeUser();
+    }
 
-	@Before
+    @Before
     public void createOneUserResource() throws Exception {
         userResource0 = new UserResource();
         userResource0.setFirstname("Cyril");
@@ -105,11 +105,11 @@ public abstract class BaseTest {
         user0UserRoleResource.setRole(AuthoritiesConstants.ROLE_USER.getRole());
         userRoleResources.add(user0UserRoleResource);
         userResource0.setUserRoles(userRoleResources);
-	}
+    }
 
-	@Before
+    @Before
     public void createManyUserResource() throws Exception {
-		manyUserResources = new ArrayList<UserResource>();
+        manyUserResources = new ArrayList<UserResource>();
         for (int i = 0; i < 30; i++) {
             String index = intToString(i, 2);
             UserResource oneUserResource = new UserResource();
@@ -120,57 +120,57 @@ public abstract class BaseTest {
             oneUserResource.setResourceId(createdUser.getId());
             manyUserResources.add(oneUserResource);
         }
-	}
+    }
 
-	@After
+    @After
     public void deleteUserResources() throws Exception {
         if (!StringUtils.isEmpty(userResource0.getResourceId())) {
             userService.delete(userResource0.getResourceId());
         }
         for (UserResource userResource : manyUserResources) {
-			if (!StringUtils.isEmpty(userResource.getResourceId())) {
-				userService.delete(userResource.getResourceId());
-			}
+            if (!StringUtils.isEmpty(userResource.getResourceId())) {
+                userService.delete(userResource.getResourceId());
+            }
         }
     }
 
-	protected String localizeErrorMessage(String errorCode, Object args[], Locale locale) {
-		return messageSource.getMessage(errorCode, args, locale);
-	}
+    protected String localizeErrorMessage(String errorCode, Object args[], Locale locale) {
+        return messageSource.getMessage(errorCode, args, locale);
+    }
 
-	protected String localizeErrorMessage(String errorCode, Locale locale) {
-		return messageSource.getMessage(errorCode, null, locale);
-	}
+    protected String localizeErrorMessage(String errorCode, Locale locale) {
+        return messageSource.getMessage(errorCode, null, locale);
+    }
 
-	protected String localizeErrorMessage(String errorCode, Object args[]) {
-		Locale locale = localeResolver.getDefaultLocale();
-		return messageSource.getMessage(errorCode, args, locale);
-	}
+    protected String localizeErrorMessage(String errorCode, Object args[]) {
+        Locale locale = localeResolver.getDefaultLocale();
+        return messageSource.getMessage(errorCode, args, locale);
+    }
 
-	protected String localizeErrorMessage(String errorCode) {
-		Locale locale = localeResolver.getDefaultLocale();
-		return messageSource.getMessage(errorCode, null, locale);
-	}
+    protected String localizeErrorMessage(String errorCode) {
+        Locale locale = localeResolver.getDefaultLocale();
+        return messageSource.getMessage(errorCode, null, locale);
+    }
 
-	protected String intToString(int num, int digits) {
-		String output = Integer.toString(num);
-		while (output.length() < digits) {
-			output = "0" + output;
-		}
-		return output;
-	}
+    protected String intToString(int num, int digits) {
+        String output = Integer.toString(num);
+        while (output.length() < digits) {
+            output = "0" + output;
+        }
+        return output;
+    }
 
-	protected <T extends Object> T deserialize(final MvcResult mvcResult, Class<T> clazz) throws Exception {
-    	return jacksonObjectMapper.readValue(mvcResult.getResponse().getContentAsString(), clazz);
-	}
+    protected <T extends Object> T deserialize(final MvcResult mvcResult, Class<T> clazz) throws Exception {
+        return jacksonObjectMapper.readValue(mvcResult.getResponse().getContentAsString(), clazz);
+    }
 
-	protected <T extends AbstractResource> T deserializeResource(final MvcResult mvcResult, Class<T> clazz) throws Exception {
-    	return jacksonObjectMapper.readValue(mvcResult.getResponse().getContentAsString(), clazz);
-	}
+    protected <T extends AbstractResource> T deserializeResource(final MvcResult mvcResult, Class<T> clazz) throws Exception {
+        return jacksonObjectMapper.readValue(mvcResult.getResponse().getContentAsString(), clazz);
+    }
 
-	protected <T extends AbstractResource> List<T> deserializeResources(final MvcResult mvcResult, Class<T> clazz) throws Exception {
-		final CollectionType javaType = jacksonObjectMapper.getTypeFactory().constructCollectionType(List.class, clazz);
-		return jacksonObjectMapper.readValue(mvcResult.getResponse().getContentAsString(), javaType);
-	}
+    protected <T extends AbstractResource> List<T> deserializeResources(final MvcResult mvcResult, Class<T> clazz) throws Exception {
+        final CollectionType javaType = jacksonObjectMapper.getTypeFactory().constructCollectionType(List.class, clazz);
+        return jacksonObjectMapper.readValue(mvcResult.getResponse().getContentAsString(), javaType);
+    }
 
 }

@@ -30,7 +30,7 @@ public class RootController {
 	@GetMapping
 	@ResponseBody
 	public HttpEntity<ResourceSupport> root(final PagedResourcesAssembler<User> pagedResourcesAssembler, final UriComponentsBuilder builder, final HttpServletResponse response) {
-		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "lastname"), new Sort.Order(Sort.Direction.ASC, "firstname"));
+		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "lastname"), new Sort.Order(Sort.Direction.ASC, "firstname")); // TODO deprecated stuff
 		Pageable pageable = new PageRequest(1, 10, sort);
 		Link search = linkTo(methodOn(UserController.class).search("searchTerm", pageable, pagedResourcesAssembler, builder)).withRel("users search");
 		
@@ -41,7 +41,7 @@ public class RootController {
         ResourceSupport resource = new ResourceSupport();
         resource.add(search);
         
-        return new ResponseEntity<ResourceSupport>(resource, HttpStatus.OK);
+        return ResponseEntity.ok(resource);
 	}
 
 }

@@ -112,14 +112,10 @@ public class UserActionServiceImpl implements UserActionService {
 	@Override
 	public User confirmEmail(String sialToken, Long id) throws EntityNotFoundException {
 		User user = userService.findById(id);
-        if (user == null) {
-        	throw new EntityNotFoundException();
-        } else {
-	    	if (authenticateAction(sialToken, DomainConstants.CONFIRM_EMAIL, id)) {
-	    		user.setConfirmedEmail(true);
-	    	}
-	    	return user;
-        }
+		if (authenticateAction(sialToken, DomainConstants.CONFIRM_EMAIL, id)) {
+			user.setConfirmedEmail(true);
+		}
+		return user;
 	}
 	
 	@Override
