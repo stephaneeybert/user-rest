@@ -202,17 +202,15 @@ public class UserController {
     public ResponseEntity<UserResource> findByEmail(@RequestParam(value = "email") String email,
             UriComponentsBuilder builder) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        User user = userService.findByEmail(email);
-        if (user == null) {
-            return new ResponseEntity<UserResource>(responseHeaders, HttpStatus.NOT_FOUND);
-        } else {
+        try {
+            User user = userService.findByEmail(email);
             UserResource userResource = userResourceAssembler.toResource(user);
             responseHeaders.setLocation(
                     builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                             .buildAndExpand(user.getId()).toUri());
-            ResponseEntity<UserResource> responseEntity = new ResponseEntity<UserResource>(userResource,
-                    responseHeaders, HttpStatus.OK);
-            return responseEntity;
+            return ResponseEntity.ok(userResource);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
