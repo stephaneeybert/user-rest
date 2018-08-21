@@ -59,17 +59,17 @@ public class CredentialsServiceImpl implements CredentialsService {
 
 	@Override
     public User checkPassword(CredentialsResource credentialsResource) throws BadCredentialsException, EntityNotFoundException {
-		User user = userService.findByEmail(credentialsResource.getEmail());
-		if (user != null) {
+		try {
+			User user = userService.findByEmail(credentialsResource.getEmail());
 			if (checkPassword(user, credentialsResource.getPassword())) {
-                if (user.getUserRoles() == null) {
-                    throw new InsufficientAuthenticationException("The user has not been granted any roles");
-                }
+				if (user.getUserRoles() == null) {
+					throw new InsufficientAuthenticationException("The user has not been granted any roles");
+				}
 				return user;
 			} else {
-                throw new BadCredentialsException("The login " + credentialsResource.getEmail() + " and password could not match.");
+				throw new BadCredentialsException("The login " + credentialsResource.getEmail() + " and password could not match.");
 			}
-		} else {
+		} catch (EntityNotFoundException e) {
 			throw new BadCredentialsException("The login " + credentialsResource.getEmail() + " and password could not match.");
 		}
     }
@@ -83,13 +83,13 @@ public class CredentialsServiceImpl implements CredentialsService {
 	@Override
 	@Transactional
     public User updatePassword(Long id, String password) throws EntityNotFoundException {
-		User foundUser = userService.findById(id);
-		if (foundUser != null) {
+		try {
+			User foundUser = userService.findById(id);
 			foundUser.setReadablePassword(password);
 			String passwordSalt = generatePasswordSalt();
 			foundUser.setPasswordSalt(passwordSalt);
 			foundUser.setPassword(encodePassword(foundUser.getEmail().toString(), password, passwordSalt));
-
+	
 			if (javaMailSender != null && applicationProperties.getMailingEnabled()) {
 				simpleMailMessage.setTo(foundUser.getEmail().toString());
 				simpleMailMessage.setSubject(localizeErrorMessage("user.mail.update.password.subject", new Object[] { foundUser.getFirstname() + " " + foundUser.getLastname() }));
@@ -100,10 +100,9 @@ public class CredentialsServiceImpl implements CredentialsService {
 					System.err.println(e.getMessage());
 				}
 			}
-
 			return foundUser;
-		} else {
-			throw new EntityNotFoundException("The user with id: " + id + " was not found.");            	
+		} catch (EntityNotFoundException e) {
+			throw new EntityNotFoundException("The user with id: " + id + " was not found.");
 		}
     }
 
@@ -120,25 +119,24 @@ public class CredentialsServiceImpl implements CredentialsService {
 	private Authentication authenticate(String email, String password) throws AuthenticationException {
         User user = null;
         try {
-            user = findByEmail(new EmailAddress(email));
+			user = findByEmail(new EmailAddress(email));
+			if (checkPassword(user, password)) {
+				List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<SimpleGrantedAuthority>();
+				if (user.getUserRoles() == null) {
+					throw new InsufficientAuthenticationException("The user has not been granted any roles");
+				}
+				for (UserRole userRole : user.getUserRoles()) {
+					grantedAuthorities.add(new SimpleGrantedAuthority(userRole.getRole()));
+				}
+				return new UsernamePasswordAuthenticationToken(email, password, grantedAuthorities);
+			} else {
+				throw new BadCredentialsException("The login " + user.getEmail() + " and password could not match.");
+			}
+		} catch (EntityNotFoundException e) {
+            throw new BadCredentialsException("The login " + email + " and password could not match.");
         } catch (IllegalArgumentException e) {
             throw new BadCredentialsException("The login " + email + " and password could not match.");
         }
-        if (user != null) {
-            if (checkPassword(user, password)) {
-                List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<SimpleGrantedAuthority>();
-                if (user.getUserRoles() == null) {
-                    throw new InsufficientAuthenticationException("The user has not been granted any roles");
-                }
-                for (UserRole userRole : user.getUserRoles()) {
-                    grantedAuthorities.add(new SimpleGrantedAuthority(userRole.getRole()));
-                }
-                return new UsernamePasswordAuthenticationToken(email, password, grantedAuthorities);
-            } else {
-                throw new BadCredentialsException("The login " + user.getEmail() + " and password could not match.");            	
-            }
-        }
-        throw new BadCredentialsException("The login " + email + " and password could not match.");
 	}
 	
 	private String encodePassword(String email, String password, String passwordSalt) {

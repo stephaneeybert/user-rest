@@ -1,5 +1,6 @@
 package com.thalasoft.user.rest.security;
 
+import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.rest.service.CredentialsService;
@@ -21,10 +22,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     	if (username != null && !username.isEmpty()) {
-	        User user = credentialsService.findByEmail(new EmailAddress(username));
-	        if (user != null) {
-	        	return new UserDetailsWrapper(user);
-	        }
+			try {
+				User user = credentialsService.findByEmail(new EmailAddress(username));
+				return new UserDetailsWrapper(user);
+			} catch (EntityNotFoundException e) {
+				throw new UsernameNotFoundException("The user " + username + " was not found.");
+			}
     	}
     	throw new UsernameNotFoundException("The user " + username + " was not found.");
     }
