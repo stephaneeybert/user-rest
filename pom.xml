@@ -9,7 +9,7 @@
   <packaging>jar</packaging>
 
   <name>user-data</name>
-  <description>The REST layer of the user management</description>
+  <description>The JWT user authentication server</description>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
