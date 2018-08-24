@@ -114,7 +114,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 
 	public Authentication authenticate(HttpServletRequest request) {
 		String token = extractAuthenticationTokenFromRequest(request);
-        logger.debug("The request contained the authentication token: " + token);
+        logger.debug("The request should contain an authentication token: " + token);
 		if (token != null) {
 			if (!token.isEmpty()) {
 				try {
