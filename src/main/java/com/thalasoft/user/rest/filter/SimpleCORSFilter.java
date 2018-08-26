@@ -45,7 +45,7 @@ public class SimpleCORSFilter implements Filter {
 			httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
 			httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
 			httpServletResponse.setHeader("Access-Control-Allow-Headers",
-					"Accept-Language,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,Content-Disposition,Content-Length,"
+					"Accept-Language,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,Content-Disposition,Content-Length,Pragma,Cache-Control,"
 							+ CommonConstants.EXPORT_FILENAME_HEADER_NAME + "," + CommonConstants.AUTH_HEADER_NAME);
 			// Allow more than the 6 default headers to be returned, as the content length
 			// is required for a download file request to get the file size
