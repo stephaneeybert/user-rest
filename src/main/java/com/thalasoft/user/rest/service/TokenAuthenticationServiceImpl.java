@@ -39,7 +39,6 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 
 	private static Logger logger = LoggerFactory.getLogger(TokenAuthenticationServiceImpl.class);
 
-	private static final long ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
 	private static final String TOKEN_URL_PARAM_NAME = "token";
 	
     @Autowired
