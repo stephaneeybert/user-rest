@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @EnvTest
 @Component
 @ConfigurationProperties(prefix = "security.jwt")
-public class JwtTestProperties extends AbstractJwtProperties {
+public class JwtTestProperties extends JwtAbstractProperties {
 	
     private static Logger logger = LoggerFactory.getLogger(JwtTestProperties.class);
 

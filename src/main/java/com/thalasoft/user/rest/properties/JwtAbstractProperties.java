@@ -1,6 +1,6 @@
 package com.thalasoft.user.rest.properties;
 
-public abstract class AbstractJwtProperties implements JwtProperties {
+public abstract class JwtAbstractProperties implements JwtProperties {
 
     private String tokenIssuer;
     private String tokenPrivateKey;
