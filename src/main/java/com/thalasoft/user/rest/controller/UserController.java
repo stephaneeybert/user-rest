@@ -127,8 +127,6 @@ public class UserController {
     public ResponseEntity<PagedResources<UserResource>> all(Pageable pageable,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         Page<User> foundUsers = userService.all(pageable);
-        // TODO the location is unused here
-        // https://stackoverflow.com/questions/51949203/how-to-add-the-resource-location-to-the-respponse
         Link selfLink = linkTo(methodOn(UserController.class).all(pageable, pagedResourcesAssembler, builder))
         .withRel("all");
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
