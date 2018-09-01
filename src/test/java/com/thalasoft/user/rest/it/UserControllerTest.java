@@ -131,4 +131,27 @@ public class UserControllerTest extends UnsecuredBaseTest {
                 .andReturn();
     }
 
+    // TODO https://jira.spring.io/browse/DATACMNS-563    
+    @Test
+    public void testPaginationIsZeroIndexed() throws Exception {
+        this.mockMvc.perform(get(RESTConstants.SLASH + DomainConstants.USERS)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .param("searchTerm", "irstnam")
+                .param("page", "2")
+                .param("size", "10")
+                .param("sort", "lastname,asc")
+                .param("sort", "firstname,asc"))
+                .andDo(print())
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$._links.first.href", Matchers.containsString("page=0")))
+                .andExpect(jsonPath("$._links.prev.href", Matchers.containsString("page=1")))
+                .andExpect(jsonPath("$._links.self.href", Matchers.containsString("/users?searchTerm=irstnam")))
+                .andExpect(jsonPath("$._links.last.href", Matchers.containsString("page=2")))
+                .andExpect(jsonPath("$.page.size").value(10))
+                .andExpect(jsonPath("$.page.totalElements").value(30))
+                .andExpect(jsonPath("$.page.totalPages").value(3))
+                .andExpect(jsonPath("$.page.number").value(2))
+                .andReturn();
+    }
+
 }
