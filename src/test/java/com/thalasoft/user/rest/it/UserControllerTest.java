@@ -111,8 +111,11 @@ public class UserControllerTest extends UnsecuredBaseTest {
         this.mockMvc
                 .perform(get(RESTConstants.SLASH + DomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                .param("searchTerm", "irstnam").param("page", "1").param("size", "10")
-                .param("sort", "lastname,asc").param("sort", "firstname,asc"))
+                .param("searchTerm", "irstnam")
+                .param("page", "1")
+                .param("size", "10")
+                .param("sort", "lastname,asc")
+                .param("sort", "firstname,asc"))
                 .andDo(print())
                 .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.page.number").value(1)).andExpect(jsonPath("$.page.size").value(10))
@@ -124,7 +127,8 @@ public class UserControllerTest extends UnsecuredBaseTest {
                 .andExpect(jsonPath("$._embedded.userResourceList[0].firstname").value(manyUserResources.get(10).getFirstname()))
                 .andExpect(jsonPath("$._embedded.userResourceList[0].lastname").value(manyUserResources.get(10).getLastname()))
                 .andExpect(jsonPath("$._embedded.userResourceList[0].email").value(manyUserResources.get(10).getEmail()))
-                .andExpect(header().string("Location", Matchers.containsString("/users?searchTerm="))).andReturn();
+                .andExpect(header().string("Location", Matchers.containsString("/users?searchTerm=")))
+                .andReturn();
     }
 
 }
