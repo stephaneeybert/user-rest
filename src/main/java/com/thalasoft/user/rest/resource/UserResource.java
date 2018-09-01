@@ -7,6 +7,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+// import lombok.*; TODO try using these annotations instead of coding the getters and setters
+// @Getter
+// @Setter
+// @NoArgsConstructor
+// @AllArgsConstructor
+// @ToString
 public class UserResource extends AbstractResource {
 
     @NotEmpty
