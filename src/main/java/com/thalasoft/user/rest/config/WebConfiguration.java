@@ -44,8 +44,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 		resolver.setFallbackPageable(PageRequest.of(0, PAGE_DEFAULT_SIZE));
 		resolver.setMaxPageSize(PAGE_MAX_SIZE);
 		argumentResolvers.add(resolver);
-		// super.addArgumentResolvers(argumentResolvers); // TODO test that this line is
-		// not needed, by checking the pagination is okay
 	}
 
 	@Bean
