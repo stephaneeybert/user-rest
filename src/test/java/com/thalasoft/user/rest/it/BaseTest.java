@@ -92,7 +92,7 @@ public abstract class BaseTest {
     }
 
     @Before
-    public void createOneUserResource() throws Exception {
+    public void createUserResources() throws Exception {
         userResource0 = new UserResource();
         userResource0.setFirstname("Cyril");
         userResource0.setLastname("Eybert");
@@ -105,10 +105,7 @@ public abstract class BaseTest {
         user0UserRoleResource.setRole(AuthoritiesConstants.ROLE_USER.getRole());
         userRoleResources.add(user0UserRoleResource);
         userResource0.setUserRoles(userRoleResources);
-    }
 
-    @Before
-    public void createManyUserResource() throws Exception {
         manyUserResources = new ArrayList<UserResource>();
         for (int i = 0; i < 30; i++) {
             String index = intToString(i, 2);
