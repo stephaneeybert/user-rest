@@ -121,11 +121,11 @@ public abstract class BaseTest {
 
     @After
     public void deleteUserResources() throws Exception {
-        if (!StringUtils.isEmpty(userResource0.getResourceId())) {
+        if (userResource0 != null && !StringUtils.isEmpty(userResource0.getResourceId())) {
             userService.delete(userResource0.getResourceId());
         }
         for (UserResource userResource : manyUserResources) {
-            if (!StringUtils.isEmpty(userResource.getResourceId())) {
+            if (userResource != null && !StringUtils.isEmpty(userResource.getResourceId())) {
                 userService.delete(userResource.getResourceId());
             }
         }
