@@ -16,8 +16,6 @@ public final class DomainConstants {
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String TOKEN_REFRESH = "token-refresh";
 
-    public static final String SERVLET_NAME = "UserREST";
-
     private DomainConstants() {
         throw new AssertionError();
     }
