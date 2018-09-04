@@ -45,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	public AuthenticationFromCredentialsFilter authenticationFromCredentialsFilter() throws Exception {
-		AuthenticationFromCredentialsFilter authenticationFromCredentialsFilter = new AuthenticationFromCredentialsFilter(new AntPathRequestMatcher("/users/login", RequestMethod.POST.name()));
+		AuthenticationFromCredentialsFilter authenticationFromCredentialsFilter = new AuthenticationFromCredentialsFilter(new AntPathRequestMatcher(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN, RequestMethod.POST.name()));
 		authenticationFromCredentialsFilter.setAuthenticationManager(authenticationManagerBean());
 		return authenticationFromCredentialsFilter;
 	}
