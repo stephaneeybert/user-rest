@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.thalasoft.user.data.jpa.domain.User;
+import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.properties.JwtProperties;
 import com.thalasoft.user.rest.security.AuthoritiesConstants;
 import com.thalasoft.user.rest.utils.CommonConstants;
@@ -47,21 +49,42 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	@Autowired
+	private UserService userService;
+
+	@Override
 	public void addAccessTokenToResponseHeader(HttpHeaders headers, String username) {
 		String token = buildAccessToken(username);
-		headers.add(CommonConstants.AUTH_HEADER_NAME, token);
+		headers.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME, token);
 	}
 	
+	@Override
+	public void addRefreshTokenToResponseHeader(HttpHeaders headers, String username, String clientId) {
+		String token = buildRefreshToken(username, clientId);
+		headers.add(CommonConstants.REFRESH_TOKEN_HEADER_NAME, token);
+	}
+	
+	@Override
 	public void addAccessTokenToResponseHeader(HttpServletResponse response, Authentication authentication) {
 		String username = authentication.getName();
 		if (username != null) {
 			String token = buildAccessToken(username);
-			response.addHeader(CommonConstants.AUTH_HEADER_NAME, token);
+			response.addHeader(CommonConstants.ACCESS_TOKEN_HEADER_NAME, token);
+		}
+	}
+
+	@Override
+	public void addRefreshTokenToResponseHeader(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+		String username = authentication.getName();
+		if (username != null) {
+			String clientId = extractClientIdFromRequest(request);
+			String token = buildRefreshToken(username, clientId);
+			response.addHeader(CommonConstants.REFRESH_TOKEN_HEADER_NAME, token);
 		}
 	}
 
 	private String buildAccessToken(String username) {
-		return CommonConstants.AUTH_BEARER + " " + buildAccessTokenValue(username);
+		return CommonConstants.AUTH_BEARER_HEADER + " " + buildAccessTokenValue(username);
 	}
 	
 	private String buildAccessTokenValue(String username) {
@@ -74,6 +97,9 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 			.atZone(ZoneId.systemDefault()).toInstant());
 			// Date expirationDate = new Date(System.currentTimeMillis() + ONE_WEEK);
 			Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
+			User user = userService.findByEmail(userDetails.getUsername());
+			claims.put("fullname", user.getFirstname() + " " + user.getLastname());
+			claims.put("email", user.getEmail());
 			claims.put("scopes", userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 			token = Jwts.builder()
 			// If calling the setClaims method then call it before all other setters
@@ -88,16 +114,21 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		return token;
 	}
 	
-	public String buildRefreshToken(String username) {
+	private String buildRefreshToken(String username, String clientId) {
+		return CommonConstants.AUTH_BEARER_HEADER + " " + buildRefreshTokenValue(username, clientId);
+	}
+	
+	public String buildRefreshTokenValue(String username, String clientId) {
 		String token = null;
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (userDetails != null) {
 			LocalDateTime currentTime = LocalDateTime.now();
 			Date expirationDate = Date.from(currentTime
-			.plusMinutes(jwtProperties.getAccessTokenExpirationTime())
+			.plusMinutes(jwtProperties.getRefreshTokenExpirationTime())
 			.atZone(ZoneId.systemDefault()).toInstant());
-			Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
-			claims.put("scopes", Arrays.asList(AuthoritiesConstants.ROLE_REFRESH_TOKEN.getRole()));
+			Claims claims = Jwts.claims().setSubject(clientId);
+			User user = userService.findByEmail(userDetails.getUsername());
+			claims.put("email", user.getEmail());
 			token = Jwts.builder()
 			// If calling the setClaims method then call it before all other setters
 			.setClaims(claims)
@@ -112,7 +143,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	}
 
 	public Authentication authenticate(HttpServletRequest request) {
-		String token = extractTokenFromRequest(request);
+		String token = extractAccessTokenFromRequest(request);
         logger.debug("The request should contain an authentication token: " + token);
 		if (token != null) {
 			if (!token.isEmpty()) {
@@ -139,7 +170,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	}
 
 	public Authentication authenticateFromRefreshToken(HttpServletRequest request) {
-		String token = extractTokenFromRequest(request);
+		String token = extractRefreshTokenFromRequest(request);
 		if (token != null) {
 			if (!token.isEmpty()) {
 				try {
@@ -194,17 +225,33 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 				.getBody();
 	}
 
-	private String extractTokenFromRequest(HttpServletRequest request) {
+	private String extractAccessTokenFromRequest(HttpServletRequest request) {
 	    String token = null;
-        String header = request.getHeader(CommonConstants.AUTH_HEADER_NAME);
-        if (header != null && header.contains(CommonConstants.AUTH_BEARER)) {
-			int start = (CommonConstants.AUTH_BEARER + " ").length();
+        String header = request.getHeader(CommonConstants.ACCESS_TOKEN_HEADER_NAME);
+        if (header != null && header.contains(CommonConstants.AUTH_BEARER_HEADER)) {
+			int start = (CommonConstants.AUTH_BEARER_HEADER + " ").length();
             if (header.length() > start) {
                 token = header.substring(start);
             }
         } else {
             // The token may be set as an HTTP parameter in case the client could not set it as an HTTP header
 			token = request.getParameter(ACCESS_TOKEN_URL_PARAM_NAME);
+		}
+		return token;
+	}
+
+	private String extractClientIdFromRequest(HttpServletRequest request) {
+        return request.getHeader(CommonConstants.CLIENT_ID_HEADER_NAME);
+	}
+
+	private String extractRefreshTokenFromRequest(HttpServletRequest request) {
+	    String token = null;
+        String header = request.getHeader(CommonConstants.REFRESH_TOKEN_HEADER_NAME);
+        if (header != null && header.contains(CommonConstants.AUTH_BEARER_HEADER)) {
+			int start = (CommonConstants.AUTH_BEARER_HEADER + " ").length();
+            if (header.length() > start) {
+                token = header.substring(start);
+            }
 		}
 		return token;
 	}

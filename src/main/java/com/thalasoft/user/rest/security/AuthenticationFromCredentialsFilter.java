@@ -46,6 +46,7 @@ public class AuthenticationFromCredentialsFilter extends AbstractAuthenticationP
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authentication) throws IOException, ServletException {
 		tokenAuthenticationService.addAccessTokenToResponseHeader(response, authentication);
+		tokenAuthenticationService.addRefreshTokenToResponseHeader(request, response, authentication);
 	}
 
 }

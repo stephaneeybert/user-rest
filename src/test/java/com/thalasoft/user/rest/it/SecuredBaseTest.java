@@ -40,7 +40,7 @@ public abstract class SecuredBaseTest extends BaseTest {
 		httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		String usernamePassword = username + ":" + password;
 		String encodedAuthorisation = Base64.getEncoder().encodeToString(usernamePassword.getBytes(UTF_8));
-		httpHeaders.add(CommonConstants.AUTH_HEADER_NAME,
+		httpHeaders.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME,
 				CommonConstants.AUTH_BASIC + " " + new String(encodedAuthorisation));
 	}
 

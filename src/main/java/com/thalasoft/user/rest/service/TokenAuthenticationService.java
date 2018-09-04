@@ -12,7 +12,11 @@ public interface TokenAuthenticationService {
 
 	public void addAccessTokenToResponseHeader(HttpHeaders headers, String username);
 
+	public void addRefreshTokenToResponseHeader(HttpHeaders headers, String username, String clientId);
+
 	public void addAccessTokenToResponseHeader(HttpServletResponse response, Authentication authentication);
+	
+	public void addRefreshTokenToResponseHeader(HttpServletRequest request, HttpServletResponse response, Authentication authentication);
 	
 	public Authentication authenticate(HttpServletRequest request);
 

@@ -68,7 +68,7 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping(value = RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH)
+    @PostMapping(value = RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH)
     @ResponseBody
     public ResponseEntity<ResourceSupport> refreshToken(HttpServletRequest request, HttpServletResponse response,
             UriComponentsBuilder builder) throws IOException, ServletException {
