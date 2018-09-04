@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface TokenAuthenticationService {
 
-	public void addTokenToResponseHeader(HttpHeaders headers, String username);
+	public void addAccessTokenToResponseHeader(HttpHeaders headers, String username);
 
-	public void addTokenToResponseHeader(HttpServletResponse response, Authentication authentication);
+	public void addAccessTokenToResponseHeader(HttpServletResponse response, Authentication authentication);
 	
 	public Authentication authenticate(HttpServletRequest request);
 

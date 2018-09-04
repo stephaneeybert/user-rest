@@ -32,7 +32,7 @@ public abstract class SecuredBaseTest extends BaseTest {
 	}
 
 	private void addTokenToRequestHeader(HttpHeaders headers, String username) {
-		tokenAuthenticationService.addTokenToResponseHeader(headers, username);
+		tokenAuthenticationService.addAccessTokenToResponseHeader(headers, username);
 	}
 
 	private void addBase64UserPasswordHeaders(String username, String password, HttpHeaders httpHeaders) {

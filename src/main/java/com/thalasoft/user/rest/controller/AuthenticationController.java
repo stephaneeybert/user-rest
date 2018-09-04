@@ -59,7 +59,7 @@ public class AuthenticationController {
         try {
             User user = credentialsService.checkPassword(credentialsResource);
             userService.clearReadablePassword(user);
-            tokenAuthenticationService.addTokenToResponseHeader(responseHeaders, credentialsResource.getEmail());
+            tokenAuthenticationService.addAccessTokenToResponseHeader(responseHeaders, credentialsResource.getEmail());
             URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
             .buildAndExpand(user.getId()).toUri();
             UserResource createdUserResource = userResourceAssembler.toResource(user);
@@ -74,7 +74,7 @@ public class AuthenticationController {
     public ResponseEntity<ResourceSupport> refreshToken(HttpServletRequest request, HttpServletResponse response,
             UriComponentsBuilder builder) throws IOException, ServletException {
         Authentication authentication = tokenAuthenticationService.authenticateFromRefreshToken(request);
-        tokenAuthenticationService.addTokenToResponseHeader(response, authentication);
+        tokenAuthenticationService.addAccessTokenToResponseHeader(response, authentication);
         ResourceSupport resource = new ResourceSupport();
         URI location = builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).buildAndExpand().toUri();
         return ResponseEntity.created(location).body(resource);

@@ -39,7 +39,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 
 	private static Logger logger = LoggerFactory.getLogger(TokenAuthenticationServiceImpl.class);
 
-	private static final String TOKEN_URL_PARAM_NAME = "token";
+	private static final String ACCESS_TOKEN_URL_PARAM_NAME = "access-token";
 	
     @Autowired
     private JwtProperties jwtProperties;
@@ -47,12 +47,12 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	public void addTokenToResponseHeader(HttpHeaders headers, String username) {
+	public void addAccessTokenToResponseHeader(HttpHeaders headers, String username) {
 		String token = buildAccessToken(username);
 		headers.add(CommonConstants.AUTH_HEADER_NAME, token);
 	}
 	
-	public void addTokenToResponseHeader(HttpServletResponse response, Authentication authentication) {
+	public void addAccessTokenToResponseHeader(HttpServletResponse response, Authentication authentication) {
 		String username = authentication.getName();
 		if (username != null) {
 			String token = buildAccessToken(username);
@@ -112,7 +112,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	}
 
 	public Authentication authenticate(HttpServletRequest request) {
-		String token = extractAuthenticationTokenFromRequest(request);
+		String token = extractTokenFromRequest(request);
         logger.debug("The request should contain an authentication token: " + token);
 		if (token != null) {
 			if (!token.isEmpty()) {
@@ -139,7 +139,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	}
 
 	public Authentication authenticateFromRefreshToken(HttpServletRequest request) {
-		String token = extractAuthenticationTokenFromRequest(request);
+		String token = extractTokenFromRequest(request);
 		if (token != null) {
 			if (!token.isEmpty()) {
 				try {
@@ -194,7 +194,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 				.getBody();
 	}
 
-	private String extractAuthenticationTokenFromRequest(HttpServletRequest request) {
+	private String extractTokenFromRequest(HttpServletRequest request) {
 	    String token = null;
         String header = request.getHeader(CommonConstants.AUTH_HEADER_NAME);
         if (header != null && header.contains(CommonConstants.AUTH_BEARER)) {
@@ -204,7 +204,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
             }
         } else {
             // The token may be set as an HTTP parameter in case the client could not set it as an HTTP header
-			token = request.getParameter(TOKEN_URL_PARAM_NAME);
+			token = request.getParameter(ACCESS_TOKEN_URL_PARAM_NAME);
 		}
 		return token;
 	}
