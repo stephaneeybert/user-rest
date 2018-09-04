@@ -45,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	public AuthenticationFromCredentialsFilter authenticationFromCredentialsFilter() throws Exception {
-		AuthenticationFromCredentialsFilter authenticationFromCredentialsFilter = new AuthenticationFromCredentialsFilter(new AntPathRequestMatcher(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN, RequestMethod.POST.name()));
+		AuthenticationFromCredentialsFilter authenticationFromCredentialsFilter = new AuthenticationFromCredentialsFilter(new AntPathRequestMatcher(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN, RequestMethod.POST.name()));
 		authenticationFromCredentialsFilter.setAuthenticationManager(authenticationManagerBean());
 		return authenticationFromCredentialsFilter;
 	}
@@ -98,8 +98,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.addFilterBefore(authenticationFromTokenFilter, UsernamePasswordAuthenticationFilter.class)
 		.authorizeRequests()
 		.antMatchers(RESTConstants.SLASH, RESTConstants.SLASH + DomainConstants.ERRORS).permitAll()
-		.antMatchers(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN).permitAll()
-		.antMatchers(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).permitAll()
+		.antMatchers(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN).permitAll()
+		.antMatchers(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).permitAll()
 		.antMatchers("/admin/**").hasRole(DomainConstants.ROLE_ADMIN)
 		.anyRequest().authenticated();
 	}
@@ -108,8 +108,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		List<String> unsecuredPaths = Arrays.asList(
 			RESTConstants.SLASH,
 			RESTConstants.SLASH + DomainConstants.ERRORS,
-			RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN,
-			RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH
+			RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN,
+			RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH
 			);
 		return unsecuredPaths;
 	}
