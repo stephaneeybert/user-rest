@@ -178,8 +178,6 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 					if (jti != null) {
 						String subject = getSubjectFromToken(token);
 						if (subject != null) {
-							// The subject is the clientId 
-							// What kind of auth do I need to do here ?
 							Claims claims = getClaimsFromToken(token);
 							String email = (String) claims.get("email");
 							UserDetails userDetails = userDetailsService.loadUserByUsername(email);
