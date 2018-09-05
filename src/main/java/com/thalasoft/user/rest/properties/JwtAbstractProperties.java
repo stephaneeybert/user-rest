@@ -6,6 +6,7 @@ public abstract class JwtAbstractProperties implements JwtProperties {
     private String tokenPrivateKey;
     private Integer accessTokenExpirationTime;
     private Integer refreshTokenExpirationTime;
+    private Integer allowedClockSkewSeconds;
     
     public String getTokenIssuer() {
         return tokenIssuer;
@@ -37,6 +38,14 @@ public abstract class JwtAbstractProperties implements JwtProperties {
 
     public void setRefreshTokenExpirationTime(Integer refreshTokenExpirationTime) {
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
+    }
+
+    public Integer getAllowedClockSkewSeconds() {
+        return allowedClockSkewSeconds;
+    }
+
+    public void setAllowedClockSkewSeconds(Integer allowedClockSkewSeconds) {
+        this.allowedClockSkewSeconds = allowedClockSkewSeconds;
     }
 
 }

@@ -222,6 +222,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	private Claims getClaimsFromToken(String token) {
 		try {
 			return Jwts.parser()
+			.setAllowedClockSkewSeconds(jwtProperties.getAllowedClockSkewSeconds())
 			.setSigningKey(getEncodedPrivateKey())
 			.parseClaimsJws(token)
 			.getBody();

@@ -9,5 +9,7 @@ public interface JwtProperties {
     public Integer getAccessTokenExpirationTime();
 
     public Integer getRefreshTokenExpirationTime();
+ 
+    public Integer getAllowedClockSkewSeconds();
     
 }
