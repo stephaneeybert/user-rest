@@ -149,7 +149,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		if (token != null) {
 			if (!token.isEmpty()) {
 				try {
-					String subject = getUserIdFromToken(token);
+					String subject = getSubjectFromToken(token);
 					if (subject != null) {
 						UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 						UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -177,7 +177,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 				try {
 					String jti = getJtiFromToken(token);
 					if (jti != null) {
-						String subject = getUserIdFromToken(token);
+						String subject = getSubjectFromToken(token);
 						if (subject != null) {
 							UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
 							UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -201,7 +201,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		}
 	}
 
-	private String getUserIdFromToken(String token) {
+	private String getSubjectFromToken(String token) {
 		Claims claims = getClaimsFromToken(token);
 		if (null != claims) {
 			return claims.getSubject();
