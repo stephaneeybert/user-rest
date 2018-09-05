@@ -4,7 +4,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.properties.JwtProperties;
-import com.thalasoft.user.rest.security.AuthoritiesConstants;
 import com.thalasoft.user.rest.utils.CommonConstants;
 
 import org.slf4j.Logger;
