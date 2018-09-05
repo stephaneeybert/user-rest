@@ -197,7 +197,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 				throw new BadCredentialsException("The refresh token was empty.");
 			}
 		} else {
-			throw new BadCredentialsException("The refresh token was missing.");
+			throw new BadCredentialsException("The refresh token was missing from the request.");
 		}
 	}
 
