@@ -97,8 +97,8 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 			// Date expirationDate = new Date(System.currentTimeMillis() + ONE_WEEK);
 			Claims claims = Jwts.claims();
 			User user = userService.findByEmail(userDetails.getUsername());
-			claims.put("fullname", user.getFirstname() + " " + user.getLastname());
-			claims.put("email", user.getEmail().getEmailAddress());
+			claims.put("fullname", user.getFirstname() + " " + user.getLastname()); // TODO Avoid such hard coded string
+			claims.put("email", user.getEmail().getEmailAddress()); // TODO Avoid such hard coded string
 			claims.put("scopes", userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 			token = Jwts.builder()
 			// If calling the setClaims method then call it before all other setters
@@ -127,7 +127,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 			.atZone(ZoneId.systemDefault()).toInstant());
 			Claims claims = Jwts.claims();
 			User user = userService.findByEmail(userDetails.getUsername());
-			claims.put("email", user.getEmail().getEmailAddress());
+			claims.put("email", user.getEmail().getEmailAddress()); // TODO Avoid such hard coded string
 			token = Jwts.builder()
 			// If calling the setClaims method then call it before all other setters
 			.setClaims(claims)
@@ -179,7 +179,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 						String subject = getSubjectFromToken(token);
 						if (subject != null) {
 							Claims claims = getClaimsFromToken(token);
-							String email = (String) claims.get("email");
+							String email = (String) claims.get("email"); // TODO Avoid such hard coded string
 							UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 							UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 							authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
