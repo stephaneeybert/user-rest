@@ -2,11 +2,15 @@ package com.thalasoft.user.rest.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import com.thalasoft.toolbox.utils.Web;
 
 import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.User;
@@ -74,10 +78,10 @@ public class AuthenticationController {
             UriComponentsBuilder builder) throws IOException, ServletException {
         Authentication authentication = tokenAuthenticationService.authenticateFromRefreshToken(request);
         tokenAuthenticationService.addAccessTokenToResponseHeader(response, authentication);
+        tokenAuthenticationService.addRefreshTokenToResponseHeader(request, response, authentication);
         ResourceSupport resource = new ResourceSupport();
         URI location = builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).buildAndExpand().toUri();
-        return ResponseEntity.created(location).body(resource);
-        // TODO finish this endpoint
+        return ResponseEntity.created(location).headers(Web.getAllHeaders(response)).body(resource);
     }
 
 }
