@@ -32,6 +32,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
@@ -219,10 +220,14 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	}
 
 	private Claims getClaimsFromToken(String token) {
-		return Jwts.parser()
-				.setSigningKey(getEncodedPrivateKey())
-				.parseClaimsJws(token)
-				.getBody();
+		try {
+			return Jwts.parser()
+			.setSigningKey(getEncodedPrivateKey())
+			.parseClaimsJws(token)
+			.getBody();
+		} catch (ExpiredJwtException e) {
+			throw new BadCredentialsException("The token " + token + " expired.");
+		}
 	}
 
 	private String extractAccessTokenFromRequest(HttpServletRequest request) {
