@@ -9,7 +9,10 @@ public final class CommonConstants {
     public static final String AUTH_BEARER_HEADER = "Bearer";
     public static final String AUTH_BASIC = "Basic";
 	public static final String EXPORT_FILENAME_HEADER_NAME = "X-Filename";
-	
+    
+    public static final String JWT_CLAIM_USER_EMAIL = "email";
+    public static final String JWT_CLAIM_USER_FULLNAME = "fullname";
+    
     private CommonConstants() {
         throw new AssertionError();
     }

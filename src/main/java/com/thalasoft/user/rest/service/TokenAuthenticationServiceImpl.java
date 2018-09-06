@@ -97,8 +97,8 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 			// Date expirationDate = new Date(System.currentTimeMillis() + ONE_WEEK);
 			Claims claims = Jwts.claims();
 			User user = userService.findByEmail(userDetails.getUsername());
-			claims.put("fullname", user.getFirstname() + " " + user.getLastname()); // TODO Avoid such hard coded string
-			claims.put("email", user.getEmail().getEmailAddress()); // TODO Avoid such hard coded string
+			claims.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
+			claims.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
 			claims.put("scopes", userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 			token = Jwts.builder()
 			// If calling the setClaims method then call it before all other setters
