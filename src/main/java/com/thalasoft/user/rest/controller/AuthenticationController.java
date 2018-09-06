@@ -47,8 +47,7 @@ public class AuthenticationController {
     @Autowired
     private UserResourceAssembler userResourceAssembler;
 
-    // TODO Do I need this login if there is already a CustomAuthenticationProvider
-    // in use ?
+    // This method is not needed since there is already a filter doing the job
     @PostMapping(value = RESTConstants.SLASH + DomainConstants.LOGIN)
     @ResponseBody
     public ResponseEntity<UserResource> login(@Valid @RequestBody CredentialsResource credentialsResource,
