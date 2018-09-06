@@ -58,7 +58,7 @@ public class AuthenticationController {
             userService.clearReadablePassword(user);
             tokenAuthenticationService.addAccessTokenToResponseHeader(responseHeaders, credentialsResource.getEmail());
             URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-            .buildAndExpand(user.getId()).toUri();
+                    .buildAndExpand(user.getId()).toUri();
             UserResource createdUserResource = userResourceAssembler.toResource(user);
             return ResponseEntity.created(location).headers(responseHeaders).body(createdUserResource);
         } catch (EntityNotFoundException e) {
