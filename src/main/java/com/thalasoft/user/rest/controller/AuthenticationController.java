@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.thalasoft.toolbox.utils.Web;
-
 import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
@@ -79,7 +77,7 @@ public class AuthenticationController {
         tokenAuthenticationService.addRefreshTokenToResponseHeader(request, response, authentication);
         ResourceSupport resource = new ResourceSupport();
         URI location = builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).buildAndExpand().toUri();
-        return ResponseEntity.created(location).headers(Web.getAllHeaders(response)).body(resource);
+        return ResponseEntity.created(location).body(resource);
     }
 
 }
