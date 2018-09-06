@@ -62,6 +62,15 @@ public class Log {
     @Bean
     public Logger registerSpringLogger(LoggerContext loggerContext, ConsoleAppender<ILoggingEvent> consoleAppender, FileAppender<ILoggingEvent> fileAppender) throws IOException {
     	Logger logger = loggerContext.getLogger("org.springframework");
+        logger.setLevel(Level.OFF);
+        logger.addAppender(consoleAppender);
+        logger.addAppender(fileAppender);
+        return logger;
+    }
+
+    @Bean
+    public Logger registerSpringHttpLogger(LoggerContext loggerContext, ConsoleAppender<ILoggingEvent> consoleAppender, FileAppender<ILoggingEvent> fileAppender) throws IOException {
+    	Logger logger = loggerContext.getLogger("org.springframework.http");
         logger.setLevel(Level.DEBUG);
         logger.addAppender(consoleAppender);
         logger.addAppender(fileAppender);
