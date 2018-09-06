@@ -71,8 +71,9 @@ public class AuthenticationController {
     public ResponseEntity<ResourceSupport> refreshToken(HttpServletRequest request, HttpServletResponse response,
             UriComponentsBuilder builder) throws IOException, ServletException {
         Authentication authentication = tokenAuthenticationService.authenticateFromRefreshToken(request);
+        // Only the access token is refreshed
+        // Refresing the refresh token would be like giving a never expiring refresh token
         tokenAuthenticationService.addAccessTokenToResponseHeader(response, authentication);
-        tokenAuthenticationService.addRefreshTokenToResponseHeader(request, response, authentication);
         ResourceSupport resource = new ResourceSupport();
         URI location = builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).buildAndExpand().toUri();
         return ResponseEntity.created(location).body(resource);
