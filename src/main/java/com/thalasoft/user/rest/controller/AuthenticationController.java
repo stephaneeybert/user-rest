@@ -2,8 +2,6 @@ package com.thalasoft.user.rest.controller;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collection;
-import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
