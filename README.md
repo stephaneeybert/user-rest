@@ -22,7 +22,7 @@ mvn clean install -Denv="test" -Ddb="h2" -Dmaven.surefire.debug="-Xdebug -Xrunjd
 
 Some example API requests
 curl -i -H "Accept:application/json" http://localhost:8080/api/error
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/users/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/auth/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXR0aXByb3ZlbmNlQHlhaG9vLnNlIiwic2NvcGVzIjpbIlJPTEVfQURNSU4iXSwiaXNzIjoiaHR0cDovL3RoYWxhc29mdC5jb20iLCJpYXQiOjE1MzU2MDgyMjAsImV4cCI6MTUzNTYwOTEyMH0.RXopXBufbzit9StoAvB_khA_lF9-UV0NwXSGVm_B9k5ijY89N0IMWDMeZyfE2AmJN_AAQ0doRni8d0RvDpGldQ" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
 
 To do list
