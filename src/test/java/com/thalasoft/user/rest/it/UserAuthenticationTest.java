@@ -43,7 +43,7 @@ public class UserAuthenticationTest extends SecuredBaseTest {
         .andReturn();
 
         this.mockMvc.perform(
-        post(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + DomainConstants.LOGIN)
+        post(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN)
         .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(print())
