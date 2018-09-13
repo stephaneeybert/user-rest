@@ -8,4 +8,17 @@ security.jwt:
   accessTokenExpirationTime: 60 # Expressed in minutes
   refreshTokenExpirationTime: 10080 # Expressed in minutes
   allowedClockSkewSeconds: 300
-  
+
+# SSL
+# # Define a custom port instead of the default 8080
+# server.port=8443
+# # Tell Spring Security (if used) to require requests over HTTPS
+# security.require-ssl=true
+# # The format used for the keystore 
+# server.ssl.key-store-type=PKCS12
+# # The path to the keystore containing the certificate
+# server.ssl.key-store=classpath:keystore.p12
+# # The password used to generate the certificate
+# server.ssl.key-store-password=password
+# # The alias mapped to the certificate
+# server.ssl.key-alias=tomcat
