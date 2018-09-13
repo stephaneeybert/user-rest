@@ -5,7 +5,7 @@ public final class DomainConstants {
     public static final String AUTH = "auth";
     public static final String USERS = "users";
     public static final String ADMINS = "admins";
-    public static final String ERRORS = "errors";
+    public static final String ERROR = "error";
     public static final String ADDRESSES = "addresses";
     public static final String PASSWORD = "password";
     public static final String CONFIRM_EMAIL = "confirm-email";

@@ -4,6 +4,7 @@ import com.thalasoft.user.rest.exception.CannotEncodePasswordException;
 import com.thalasoft.user.rest.utils.DomainConstants;
 import com.thalasoft.user.rest.utils.RESTConstants;
 
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
@@ -13,12 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(RESTConstants.SLASH + DomainConstants.ERRORS)
-public class ErrorController {
+@RequestMapping(RESTConstants.SLASH + DomainConstants.ERROR)
+public class CustomErrorController implements ErrorController {
 
+    @Override
+    public String getErrorPath() {
+        return "/";
+    }
+    
     @GetMapping
     @ResponseBody
-    public void error() {
+    public String error() {
+        return "Error handling...";
     }
 
     @GetMapping(value = "/cannotEncodePassword")
@@ -56,17 +63,17 @@ public class ErrorController {
     public void errorNFE() {
     	throw new NumberFormatException();
     }
-    
+
     @GetMapping(value = "/npe")
     @ResponseBody
     public void errorNPE() {
     	throw new NullPointerException();
     }
-    
+
     @GetMapping(value = "/rte")
     @ResponseBody
     public void errorRTE() {
     	throw new RuntimeException();
     }
-    
+
 }
