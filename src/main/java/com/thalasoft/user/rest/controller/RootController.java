@@ -32,14 +32,11 @@ public class RootController {
 		Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "lastname"), new Sort.Order(Sort.Direction.ASC, "firstname"));
 		Pageable pageable = PageRequest.of(1, 10, sort);
 		Link search = linkTo(methodOn(UserController.class).search("searchTerm", pageable, pagedResourcesAssembler, builder)).withRel("users search");
-		
 		final StringBuilder links = new StringBuilder();
 		links.append(search);
         response.addHeader("Link", links.toString());
-
         ResourceSupport resource = new ResourceSupport();
         resource.add(search);
-        
         return ResponseEntity.ok(resource);
 	}
 
