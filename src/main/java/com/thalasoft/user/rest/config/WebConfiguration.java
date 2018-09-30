@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -98,6 +99,14 @@ public class WebConfiguration implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(localeChangeInterceptor());
 		registry.addInterceptor(webContentInterceptor());
+	}
+	
+	@Bean
+	public FilterRegistrationBean<RequestResponseLoggingFilter> loggingFilter() {
+		FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new RequestResponseLoggingFilter());
+		registrationBean.addUrlPatterns("/auth/*");
+		return registrationBean;
 	}
 
 }
