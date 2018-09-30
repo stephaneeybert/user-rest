@@ -22,3 +22,27 @@ security.jwt:
 # server.ssl.key-store-password=password
 # # The alias mapped to the certificate
 # server.ssl.key-alias=tomcat
+
+# Logging
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+      springframework:
+        web: TRACE
+
+# Actuator
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: info,health,httptrace
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    httptrace:
+      enabled: true

@@ -92,11 +92,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(simpleCORSFilter, ChannelProcessingFilter.class);
-		
+
 		http
 		.addFilterBefore(authenticationFromTokenFilter, UsernamePasswordAuthenticationFilter.class)
 		.authorizeRequests()
 		.antMatchers(RESTConstants.SLASH, RESTConstants.SLASH + DomainConstants.ERROR + "/**").permitAll()
+		.antMatchers(RESTConstants.SLASH + DomainConstants.ACTUATOR + "/**").permitAll()
 		.antMatchers(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN).permitAll()
 		.antMatchers(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).permitAll()
 		.antMatchers(RESTConstants.SLASH + DomainConstants.ADMINS + "/**").hasRole(DomainConstants.ROLE_ADMIN)
@@ -107,9 +108,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		List<String> unsecuredPaths = Arrays.asList(
 			RESTConstants.SLASH,
 			RESTConstants.SLASH + DomainConstants.ERROR + "/**",
+			RESTConstants.SLASH + DomainConstants.ACTUATOR + "/**",
 			RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN,
 			RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH
-			);
+		);
 		return unsecuredPaths;
 	}
 

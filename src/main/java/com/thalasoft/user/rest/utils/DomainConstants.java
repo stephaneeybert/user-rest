@@ -3,6 +3,7 @@ package com.thalasoft.user.rest.utils;
 public final class DomainConstants {
 
     public static final String AUTH = "auth";
+    public static final String ACTUATOR = "actuator";
     public static final String USERS = "users";
     public static final String ADMINS = "admins";
     public static final String ERROR = "error";
@@ -14,6 +15,7 @@ public final class DomainConstants {
     public static final String ROLES = "roles";
     public static final String ROLE_USER = "USER";
     public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_ENDPOINT_ADMIN = "ENDPOINT_ADMIN";
     public static final String TOKEN_REFRESH = "token-refresh";
 
     private DomainConstants() {
