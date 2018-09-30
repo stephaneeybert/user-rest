@@ -22,6 +22,8 @@ public class PathRequestMatcher implements RequestMatcher {
 
     @Override
     public boolean matches(HttpServletRequest request) {
+        String method = request.getMethod();
+        String requestURI = request.getRequestURI();
         if (orRequestMatcher.matches(request)) {
             return false;
         }
