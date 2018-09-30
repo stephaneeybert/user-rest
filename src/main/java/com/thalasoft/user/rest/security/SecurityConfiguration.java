@@ -65,8 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	private PathRequestMatcher securedPathRequestMatcher() throws Exception {
-		PathRequestMatcher pathRequestMatcher = new PathRequestMatcher(getUnsecuredPaths(), "/**");
-		return pathRequestMatcher;
+		return new PathRequestMatcher(getUnsecuredPaths(), "/**");
 	}
 
 	@Override
