@@ -25,7 +25,7 @@ public class CustomErrorController implements ErrorController {
     @GetMapping
     @ResponseBody
     public String error() {
-        return "Error handling...";
+        return "An error occured.";
     }
 
     @GetMapping(value = "/cannotEncodePassword")
