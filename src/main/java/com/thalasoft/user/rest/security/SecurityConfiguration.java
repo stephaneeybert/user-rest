@@ -99,7 +99,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers(RESTConstants.SLASH, RESTConstants.SLASH + DomainConstants.ERROR + "/**").permitAll()
 		.antMatchers(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN).permitAll()
 		.antMatchers(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).permitAll()
-		.antMatchers("/admin/**").hasRole(DomainConstants.ROLE_ADMIN)
+		.antMatchers(RESTConstants.SLASH + DomainConstants.ADMINS + "/**").hasRole(DomainConstants.ROLE_ADMIN)
 		.anyRequest().authenticated();
 	}
 
