@@ -44,5 +44,6 @@ management:
       enabled: true
     health:
       enabled: true
+      show-details: always # when-authorized TODO how to have this work ?
     httptrace:
       enabled: true
