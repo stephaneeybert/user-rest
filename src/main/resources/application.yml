@@ -44,7 +44,8 @@ management:
       enabled: true
     health:
       enabled: true
-      show-details: always # when-authorized TODO how to have this work ?
+      roles: ENDPOINT_ADMIN, ADMIN, USER
+      show-details: when-authorized # always
     httptrace:
       enabled: true
   info:
