@@ -47,3 +47,8 @@ management:
       show-details: always # when-authorized TODO how to have this work ?
     httptrace:
       enabled: true
+  info:
+    git:
+      mode:
+        full
+      
