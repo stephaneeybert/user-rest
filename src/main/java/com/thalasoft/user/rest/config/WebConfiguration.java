@@ -105,7 +105,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 	public FilterRegistrationBean<RequestResponseLoggingFilter> loggingFilter() {
 		FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new RequestResponseLoggingFilter());
-		registrationBean.addUrlPatterns("/auth/*");
+		registrationBean.addUrlPatterns("/*");
 		return registrationBean;
 	}
 
