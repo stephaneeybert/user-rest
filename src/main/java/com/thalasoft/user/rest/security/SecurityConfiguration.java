@@ -96,10 +96,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http
 		.addFilterBefore(authenticationFromTokenFilter, UsernamePasswordAuthenticationFilter.class)
 		.authorizeRequests()
-		.antMatchers(RESTConstants.SLASH, RESTConstants.SLASH + DomainConstants.ERROR + "/**").permitAll()
-		.antMatchers(RESTConstants.SLASH + DomainConstants.ACTUATOR + "/**").permitAll()
-		.antMatchers(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN).permitAll()
-		.antMatchers(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).permitAll()
+		.antMatchers(getUnsecuredPaths().toArray(new String[]{})).permitAll()
 		.antMatchers(RESTConstants.SLASH + DomainConstants.ADMINS + "/**").hasRole(DomainConstants.ROLE_ADMIN)
 		.anyRequest().authenticated();
 	}
