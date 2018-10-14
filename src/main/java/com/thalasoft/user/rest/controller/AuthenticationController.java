@@ -79,4 +79,11 @@ public class AuthenticationController {
         return ResponseEntity.created(location).body(resource);
     }
 
+    @PostMapping(value = RESTConstants.SLASH + DomainConstants.LOGOUT)
+    @ResponseBody
+    public ResponseEntity<Void> logout(UriComponentsBuilder builder) {
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.LOGOUT).buildAndExpand().toUri();
+        return ResponseEntity.ok().location(location).build();
+    }
+
 }
