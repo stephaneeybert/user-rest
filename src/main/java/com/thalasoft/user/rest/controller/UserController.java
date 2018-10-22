@@ -152,18 +152,26 @@ public class UserController {
     @GetMapping(params = "searchTerm")
     @ResponseBody
     public ResponseEntity<PagedResources<UserResource>> search(@RequestParam(value = "searchTerm") String searchTerm,
-            Pageable pageable, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
+            Pageable pageable, Sort sort, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
+        userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.search(searchTerm, pageable);
-        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS).queryParam("searchTerm", searchTerm)
-                .queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize())
-                .buildAndExpand().toUri();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(location);
-        Link selfLink = linkTo(
-                methodOn(UserController.class).search(searchTerm, pageable, pagedResourcesAssembler, builder))
-                        .withRel("search");
+        Link selfLink = linkTo(methodOn(UserController.class).search(searchTerm, pageable, sort, pagedResourcesAssembler, builder)).withRel("search");
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
                 userResourceAssembler, selfLink);
+        builder.path(RESTConstants.SLASH + DomainConstants.USERS)
+            .queryParam("searchTerm", searchTerm)
+            .queryParam("page", pageable.getPageNumber())
+            .queryParam("size", pageable.getPageSize());
+        if (pageable.getSort() != null) {
+            for (Sort.Order order : pageable.getSort()) {
+                builder.path(RESTConstants.SLASH + DomainConstants.USERS)
+                .queryParam("sort", order.getProperty())
+                .queryParam(order.getProperty() + RESTConstants.PAGEABLE_SORT_SUFFIX, order.getDirection().name());
+            }
+        }
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS).buildAndExpand().toUri();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(location);
         return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userPagedResources);
     }
 
