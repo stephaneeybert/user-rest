@@ -78,9 +78,11 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
         } else {
             log.info("{} {} {}?{}", prefix, request.getMethod(), request.getRequestURI(), queryString);
         }
+        StringBuffer headersStr = new StringBuffer();
         Collections.list(request.getHeaderNames())
             .forEach(headerName -> Collections.list(request.getHeaders(headerName))
-                .forEach(headerValue -> log.info("{} {}: {}", prefix, headerName, headerValue)));
+                .forEach(headerValue -> headersStr.append(PREFIX_OUTPUT + headerName + " : " + headerValue)));
+        log.info("{}: {}", prefix, headersStr.toString());
     }
 
     private static void logRequestBody(ContentCachingRequestWrapper request, String prefix) {
@@ -107,7 +109,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
         if (visible) {
             try {
                 String contentString = new String(content, contentEncoding);
-                Stream.of(contentString.split("\r\n|\r|\n")).forEach(line -> log.info("{} {}", prefix, line));
+                log.info("{} {}", prefix, contentString);
             } catch (UnsupportedEncodingException e) {
                 log.info("{} [{} bytes content]", prefix, content.length);
             }
