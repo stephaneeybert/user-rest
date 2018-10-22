@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class RequestResponseLoggingFilter extends OncePerRequestFilter {
     
+    private static final String PREFIX_OUTPUT = "\n";
     private static final String PREFIX_REQUEST = "|>";
     private static final String PREFIX_RESPONSE = "|<";
     
@@ -58,15 +59,15 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
     protected void beforeRequest(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response) {
         if (log.isInfoEnabled() || (response.getStatus() == HttpStatus.BAD_REQUEST.value() && log.isWarnEnabled())) {
-            logRequestHeader(request, request.getRemoteAddr() + PREFIX_REQUEST);
+            logRequestHeader(request, PREFIX_OUTPUT + request.getRemoteAddr() + PREFIX_REQUEST);
         }
     }
 
     protected void afterRequest(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response) {
         if (log.isInfoEnabled() || (response.getStatus() == HttpStatus.BAD_REQUEST.value() && log.isWarnEnabled())) {
-            logRequestHeader(request, request.getRemoteAddr() + PREFIX_REQUEST);
-            logRequestBody(request, request.getRemoteAddr() + PREFIX_REQUEST);
-            logResponse(response, request.getRemoteAddr() + PREFIX_RESPONSE);
+            logRequestHeader(request, PREFIX_OUTPUT + request.getRemoteAddr() + PREFIX_REQUEST);
+            logRequestBody(request, PREFIX_OUTPUT + request.getRemoteAddr() + PREFIX_REQUEST);
+            logResponse(response, PREFIX_OUTPUT + request.getRemoteAddr() + PREFIX_RESPONSE);
         }
     }
 
