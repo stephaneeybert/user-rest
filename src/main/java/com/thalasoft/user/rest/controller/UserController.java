@@ -131,19 +131,10 @@ public class UserController {
         Page<User> foundUsers = userService.all(pageable);
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
         userResourceAssembler);
-        builder.path(RESTConstants.SLASH + DomainConstants.USERS)
-            .queryParam("page", pageable.getPageNumber())
-            .queryParam("size", pageable.getPageSize());
-        if (pageable.getSort() != null) {
-            for (Sort.Order order : pageable.getSort()) {
-                builder.path(RESTConstants.SLASH + DomainConstants.USERS)
-                .queryParam("sort", order.getProperty())
-                .queryParam(order.getProperty() + RESTConstants.PAGEABLE_SORT_SUFFIX, order.getDirection().name());
-            }
-        }
-        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS).buildAndExpand().toUri();
+        UriComponentsBuilder uriComponentsBuilder = builder.path(RESTConstants.SLASH + DomainConstants.USERS);
+        resourceService.addPageableToUri(uriComponentsBuilder, pageable);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(location);
+        responseHeaders.setLocation(uriComponentsBuilder.buildAndExpand().toUri());
         return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userPagedResources);
     }
 
@@ -155,20 +146,11 @@ public class UserController {
         Page<User> foundUsers = userService.search(searchTerm, pageable);
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
                 userResourceAssembler);
-        builder.path(RESTConstants.SLASH + DomainConstants.USERS)
-            .queryParam("searchTerm", searchTerm)
-            .queryParam("page", pageable.getPageNumber())
-            .queryParam("size", pageable.getPageSize());
-        if (pageable.getSort() != null) {
-            for (Sort.Order order : pageable.getSort()) {
-                builder.path(RESTConstants.SLASH + DomainConstants.USERS)
-                .queryParam("sort", order.getProperty())
-                .queryParam(order.getProperty() + RESTConstants.PAGEABLE_SORT_SUFFIX, order.getDirection().name());
-            }
-        }
-        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS).buildAndExpand().toUri();
+        UriComponentsBuilder uriComponentsBuilder = builder.path(RESTConstants.SLASH + DomainConstants.USERS);
+        uriComponentsBuilder.queryParam("searchTerm", searchTerm);
+        resourceService.addPageableToUri(uriComponentsBuilder, pageable);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(location);
+        responseHeaders.setLocation(uriComponentsBuilder.buildAndExpand().toUri());
         return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userPagedResources);
     }
 

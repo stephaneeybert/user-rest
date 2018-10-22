@@ -10,9 +10,13 @@ import com.thalasoft.user.data.jpa.domain.UserRole;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.resource.UserResource;
 import com.thalasoft.user.rest.resource.UserRoleResource;
+import com.thalasoft.user.rest.utils.RESTConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -63,6 +67,20 @@ public class ResourceServiceImpl implements ResourceService {
         }
         userResource.setUserRoles(userRoleResources);
         return userResource;
+    }
+
+    @Override
+    public void addPageableToUri(UriComponentsBuilder uriComponentsBuilder, Pageable pageable) {
+        uriComponentsBuilder
+            .queryParam("page", pageable.getPageNumber())
+            .queryParam("size", pageable.getPageSize());
+        if (pageable.getSort() != null) {
+            for (Sort.Order order : pageable.getSort()) {
+                uriComponentsBuilder
+                .queryParam("sort", order.getProperty())
+                .queryParam(order.getProperty() + RESTConstants.PAGEABLE_SORT_SUFFIX, order.getDirection().name());
+            }
+        }
     }
 
 }
