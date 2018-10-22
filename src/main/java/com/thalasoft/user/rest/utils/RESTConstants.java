@@ -17,6 +17,8 @@ public final class RESTConstants {
     public static final String REL_NEXT = "next";
     public static final String REL_LAST = "last";
 
+    public static final String PAGEABLE_SORT_SUFFIX = ".dir";
+
     private RESTConstants() {
         throw new AssertionError();
     }

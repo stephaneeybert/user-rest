@@ -21,6 +21,7 @@ import com.thalasoft.user.rest.utils.DomainConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
@@ -124,16 +125,25 @@ public class UserController {
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity<PagedResources<UserResource>> all(Pageable pageable,
+    public ResponseEntity<PagedResources<UserResource>> all(Pageable pageable, Sort sort,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
+        pageable.getSort().and(sort);
         Page<User> foundUsers = userService.all(pageable);
-        Link selfLink = linkTo(methodOn(UserController.class).all(pageable, pagedResourcesAssembler, builder))
+        Link selfLink = linkTo(methodOn(UserController.class).all(pageable, sort, pagedResourcesAssembler, builder))
         .withRel("all");
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
         userResourceAssembler, selfLink);
-        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS)
-            .queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize())
-            .buildAndExpand().toUri();
+        builder.path(RESTConstants.SLASH + DomainConstants.USERS)
+            .queryParam("page", pageable.getPageNumber())
+            .queryParam("size", pageable.getPageSize());
+        if (pageable.getSort() != null) {
+            for (Sort.Order order : pageable.getSort()) {
+                builder.path(RESTConstants.SLASH + DomainConstants.USERS)
+                .queryParam("sort", order.getProperty())
+                .queryParam(order.getProperty() + RESTConstants.PAGEABLE_SORT_SUFFIX, order.getDirection().name());
+            }
+        }
+        URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS).buildAndExpand().toUri();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(location);
         return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userPagedResources);
