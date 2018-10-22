@@ -129,10 +129,8 @@ public class UserController {
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.all(pageable);
-        Link selfLink = linkTo(methodOn(UserController.class).all(pageable, sort, pagedResourcesAssembler, builder))
-        .withRel("all");
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
-        userResourceAssembler, selfLink);
+        userResourceAssembler);
         builder.path(RESTConstants.SLASH + DomainConstants.USERS)
             .queryParam("page", pageable.getPageNumber())
             .queryParam("size", pageable.getPageSize());
@@ -155,9 +153,8 @@ public class UserController {
             Pageable pageable, Sort sort, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.search(searchTerm, pageable);
-        Link selfLink = linkTo(methodOn(UserController.class).search(searchTerm, pageable, sort, pagedResourcesAssembler, builder)).withRel("search");
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
-                userResourceAssembler, selfLink);
+                userResourceAssembler);
         builder.path(RESTConstants.SLASH + DomainConstants.USERS)
             .queryParam("searchTerm", searchTerm)
             .queryParam("page", pageable.getPageNumber())
