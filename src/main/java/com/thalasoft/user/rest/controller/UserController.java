@@ -127,8 +127,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<PagedResources<UserResource>> all(Pageable pageable, Sort sort,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
-        // TODO Try refactoring this and have it also on the other endpoints
-        pageable.getSort().and(sort);
+        userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.all(pageable);
         Link selfLink = linkTo(methodOn(UserController.class).all(pageable, sort, pagedResourcesAssembler, builder))
         .withRel("all");
