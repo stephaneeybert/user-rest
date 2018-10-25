@@ -144,6 +144,7 @@ public class UserController {
             Pageable pageable, Sort sort, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.search(searchTerm, pageable);
+        // TODO https://jira.spring.io/browse/DATAREST-1117
         Link selfLink = linkTo(methodOn(UserController.class).search(searchTerm, pageable, sort, pagedResourcesAssembler, builder)).withSelfRel();
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
                 userResourceAssembler, selfLink);
