@@ -35,11 +35,11 @@ public class UserAuthenticationTest extends SecuredBaseTest {
         .andReturn();
 
         this.mockMvc.perform(
-        get(RESTConstants.SLASH + DomainConstants.ERROR)
+        get(RESTConstants.SLASH + DomainConstants.ERROR + "/npe")
         .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(print())
-        .andExpect(status().isOk())
+        .andExpect(status().is5xxServerError())
         .andReturn();
 
         this.mockMvc.perform(
