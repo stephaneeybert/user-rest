@@ -118,15 +118,16 @@ public class UserControllerTest extends UnsecuredBaseTest {
                 .param("sort", "firstname,asc"))
                 .andDo(print())
                 .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.page.number").value(1)).andExpect(jsonPath("$.page.size").value(10))
+                .andExpect(jsonPath("$.page.number").value(0))
+                .andExpect(jsonPath("$.page.size").value(10))
                 .andExpect(jsonPath("$.page.totalPages").value(3)).andExpect(jsonPath("$.page.totalElements").value(30))
                 .andExpect(jsonPath("$._links.self.href").exists())
                 .andExpect(jsonPath("$._links.next.href").exists())
-                .andExpect(jsonPath("$._links.prev.href").exists())
+                .andExpect(jsonPath("$._links.prev.href").doesNotExist())
                 .andExpect(jsonPath("$._embedded.userResourceList[0].firstname").exists())
-                .andExpect(jsonPath("$._embedded.userResourceList[0].firstname").value(manyUserResources.get(10).getFirstname()))
-                .andExpect(jsonPath("$._embedded.userResourceList[0].lastname").value(manyUserResources.get(10).getLastname()))
-                .andExpect(jsonPath("$._embedded.userResourceList[0].email").value(manyUserResources.get(10).getEmail()))
+                .andExpect(jsonPath("$._embedded.userResourceList[0].firstname").value(manyUserResources.get(0).getFirstname()))
+                .andExpect(jsonPath("$._embedded.userResourceList[0].lastname").value(manyUserResources.get(0).getLastname()))
+                .andExpect(jsonPath("$._embedded.userResourceList[0].email").value(manyUserResources.get(0).getEmail()))
                 .andExpect(header().string("Location", Matchers.containsString("/users?searchTerm=")))
                 .andReturn();
     }
@@ -144,13 +145,13 @@ public class UserControllerTest extends UnsecuredBaseTest {
                 .andDo(print())
                 .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$._links.first.href", Matchers.containsString("page=0")))
-                .andExpect(jsonPath("$._links.prev.href", Matchers.containsString("page=1")))
+                .andExpect(jsonPath("$._links.prev.href", Matchers.containsString("page=0")))
                 .andExpect(jsonPath("$._links.self.href", Matchers.containsString("/users?searchTerm=irstnam")))
-                .andExpect(jsonPath("$._links.last.href", Matchers.containsString("page=2")))
+                .andExpect(jsonPath("$._links.next.href", Matchers.containsString("page=2")))
                 .andExpect(jsonPath("$.page.size").value(10))
                 .andExpect(jsonPath("$.page.totalElements").value(30))
                 .andExpect(jsonPath("$.page.totalPages").value(3))
-                .andExpect(jsonPath("$.page.number").value(2))
+                .andExpect(jsonPath("$.page.number").value(1))
                 .andReturn();
     }
 
