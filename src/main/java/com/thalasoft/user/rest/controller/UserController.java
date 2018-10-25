@@ -144,8 +144,9 @@ public class UserController {
             Pageable pageable, Sort sort, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.search(searchTerm, pageable);
+        Link selfLink = linkTo(methodOn(UserController.class).search(searchTerm, pageable, sort, pagedResourcesAssembler, builder)).withSelfRel();
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
-                userResourceAssembler);
+                userResourceAssembler, selfLink);
         UriComponentsBuilder uriComponentsBuilder = builder.path(RESTConstants.SLASH + DomainConstants.USERS);
         uriComponentsBuilder.queryParam("searchTerm", searchTerm);
         resourceService.addPageableToUri(uriComponentsBuilder, pageable);
