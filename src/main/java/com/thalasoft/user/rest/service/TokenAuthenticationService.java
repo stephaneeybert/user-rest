@@ -1,11 +1,16 @@
 package com.thalasoft.user.rest.service;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
+
+import io.jsonwebtoken.Claims;
 
 @Transactional
 public interface TokenAuthenticationService {
@@ -22,4 +27,10 @@ public interface TokenAuthenticationService {
 
 	public Authentication authenticateFromRefreshToken(HttpServletRequest request);
 	
+	public Date getIssuedAtDate();
+
+	public Date getExpirationDate();
+	
+	public Claims addClaimstoToken(UserDetails userDetails);
+
 }

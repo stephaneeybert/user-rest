@@ -85,28 +85,42 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	private String buildAccessToken(String username) {
 		return CommonConstants.AUTH_BEARER_HEADER + " " + buildAccessTokenValue(username);
 	}
+
+	@Override
+	public Date getIssuedAtDate() {
+		Date issuedAt = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+		return issuedAt;
+	}
+
+	@Override
+	public Date getExpirationDate() {
+		Date expirationDate = Date.from(LocalDateTime.now()
+		.plusMinutes(jwtProperties.getAccessTokenExpirationTime())
+		.atZone(ZoneId.systemDefault()).toInstant());
+		return expirationDate;
+	}
+
+	@Override
+	public Claims addClaimstoToken(UserDetails userDetails) {
+		Claims claims = Jwts.claims();
+		User user = userService.findByEmail(userDetails.getUsername());
+		claims.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
+		claims.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
+		claims.put("scopes", userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
+		return claims;
+	}
 	
 	private String buildAccessTokenValue(String username) {
 		String token = null;
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (userDetails != null) {
-			LocalDateTime currentTime = LocalDateTime.now();
-			Date expirationDate = Date.from(currentTime
-			.plusMinutes(jwtProperties.getAccessTokenExpirationTime())
-			.atZone(ZoneId.systemDefault()).toInstant());
-			// Date expirationDate = new Date(System.currentTimeMillis() + ONE_WEEK);
-			Claims claims = Jwts.claims();
-			User user = userService.findByEmail(userDetails.getUsername());
-			claims.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
-			claims.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
-			claims.put("scopes", userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 			token = Jwts.builder()
 			// If calling the setClaims method then call it before all other setters
-			.setClaims(claims)
+			.setClaims(addClaimstoToken(userDetails))
 			.setSubject(userDetails.getUsername())
 			.setIssuer(jwtProperties.getTokenIssuer())
-			.setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
-			.setExpiration(expirationDate)
+			.setIssuedAt(getIssuedAtDate())
+			.setExpiration(getExpirationDate())
 			.signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey())
 			.compact();
 		}
