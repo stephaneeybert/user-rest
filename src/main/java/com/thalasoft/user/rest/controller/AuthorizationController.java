@@ -33,7 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 @RequestMapping(RESTConstants.SLASH + DomainConstants.AUTH)
-public class AuthenticationController {
+public class AuthorizationController {
 
     @Autowired
     private TokenAuthenticationService tokenAuthenticationService;
