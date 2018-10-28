@@ -23,7 +23,7 @@ mvn clean install -Denv="test" -Ddb="h2" -Dmaven.surefire.debug="-Xdebug -Xrunjd
 Some example API requests
 curl -i -H "Accept:application/json" http://localhost:8080/api/error
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/auth/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtaXR0aXByb3ZlbmNlQHlhaG9vLnNlIiwic2NvcGVzIjpbIlJPTEVfQURNSU4iXSwiaXNzIjoiaHR0cDovL3RoYWxhc29mdC5jb20iLCJpYXQiOjE1MzU2MDgyMjAsImV4cCI6MTUzNTYwOTEyMH0.RXopXBufbzit9StoAvB_khA_lF9-UV0NwXSGVm_B9k5ijY89N0IMWDMeZyfE2AmJN_AAQ0doRni8d0RvDpGldQ" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UiLCJmdWxsbmFtZSI6IlN0ZXBoYW5lIEV5YmVydCIsInNjb3BlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoibWl0dGlwcm92ZW5jZUB5YWhvby5zZSIsImlzcyI6Imh0dHA6Ly90aGFsYXNvZnQuY29tIiwiaWF0IjoxNTQwNzQwMDA5LCJleHAiOjE1NDA3NDM2MDl9.jmfp22i1DQOaIlcgmCOB-g1m-i9PqWcXcZiztcPV3Juweivn1EvWq9LFzaTMt_XFECw-u6Sfp8Bx2wcNKQKujg" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
 
 To do list
 Create the refresh token in the credentials filter and add it to the response.
