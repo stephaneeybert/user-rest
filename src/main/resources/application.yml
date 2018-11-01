@@ -26,12 +26,10 @@ security.jwt:
 # Logging
 logging:
   level:
-    root: DEBUG
     org:
       hibernate:
-        SQL: DEBUG
-      springframework:
-        web: TRACE
+        SQL: debug
+      springframework: trace
 
 # Actuator
 management:
