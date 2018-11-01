@@ -26,6 +26,7 @@ security.jwt:
 # Logging
 logging:
   level:
+    com.thalasoft: debug
     org:
       hibernate:
         SQL: debug
