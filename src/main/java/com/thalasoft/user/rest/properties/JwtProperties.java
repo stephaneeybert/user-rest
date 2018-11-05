@@ -12,4 +12,12 @@ public interface JwtProperties {
  
     public Integer getAllowedClockSkewSeconds();
     
+    public Boolean getCheckUserScopes();
+
+    public String getSslKeystoreFilename();
+
+    public String getSslKeystorePassword();
+
+    public String getSslKeyPair();
+    
 }

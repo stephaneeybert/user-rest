@@ -8,6 +8,22 @@ security.jwt:
   accessTokenExpirationTime: 60 # Expressed in minutes
   refreshTokenExpirationTime: 10080 # Expressed in minutes
   allowedClockSkewSeconds: 300
+  checkUserScopes: false
+  sslKeystoreFilename: oauth2/thalasoft.keystore
+  sslKeystorePassword: mydearssl
+  sslKeyPair: user-rest.key
+
+# security: TODO use this or remove it
+  # oauth2:
+    # resource.filter-order: 3
+    # client:
+    #   registration:
+    #     google:
+    #       client-id: <your client id>
+    #       client-secret: <your client secret>
+    #     facebook:
+    #       client-id: <your client id> 
+    #       client-secret: <your client secret>
 
 # SSL
 # # Define a custom port instead of the default 8080
