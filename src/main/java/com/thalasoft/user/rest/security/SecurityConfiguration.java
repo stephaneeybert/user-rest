@@ -118,8 +118,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			RESTConstants.SLASH,
 			RESTConstants.SLASH + DomainConstants.ERROR + "/**",
 			RESTConstants.SLASH + DomainConstants.ACTUATOR + "/**",
-			RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN,
-			RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH
+			RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN
 		);
 		return unsecuredPaths;
 	}
