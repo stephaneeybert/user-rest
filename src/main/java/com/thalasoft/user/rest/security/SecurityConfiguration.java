@@ -38,6 +38,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationFromTokenFilter authenticationFromTokenFilter;
 
+	// We can’t inject directly the AuthenticationManager bean anymore in Spring-Boot 2.0,
+	// but it still is required by Spring Security and so we need to implement a small
+	// hack in order to gain access to this object
+	@Bean
     @Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
