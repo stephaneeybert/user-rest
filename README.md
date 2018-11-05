@@ -25,6 +25,9 @@ curl -i -H "Accept:application/json" http://localhost:8080/api/error
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/auth/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UiLCJmdWxsbmFtZSI6IlN0ZXBoYW5lIEV5YmVydCIsInNjb3BlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoibWl0dGlwcm92ZW5jZUB5YWhvby5zZSIsImlzcyI6Imh0dHA6Ly90aGFsYXNvZnQuY29tIiwiaWF0IjoxNTQwNzQwMDA5LCJleHAiOjE1NDA3NDM2MDl9.jmfp22i1DQOaIlcgmCOB-g1m-i9PqWcXcZiztcPV3Juweivn1EvWq9LFzaTMt_XFECw-u6Sfp8Bx2wcNKQKujg" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
 
+Some OAuth2 requests
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UiLCJmdWxsbmFtZSI6IlN0ZXBoYW5lIEV5YmVydCIsInNjb3BlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoibWl0dGlwcm92ZW5jZUB5YWhvby5zZSIsImlzcyI6Imh0dHA6Ly90aGFsYXNvZnQuY29tIiwiaWF0IjoxNTQxNDMwMzU0LCJleHAiOjE1NDE0MzM5NTR9.E8OEnyNdCM4rKNs6Xw2v8s6oMYa7mHu0-x7cda6owjLJxKiv8aYRmCVPfdX2tVmp2W1ws80x9djxu-rGc5vCKA" "http://localhost:8080/api/auth/authorize?client_id=ng-zero&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fcallback&state=DCEeFWf45A53sdfKef424&response_type=code&scope=read_profile" -X POST -d "{ \"username\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
+
 To do list
 Create the refresh token in the credentials filter and add it to the response.
 In the angular interceptor, if the access token is expired then try to renew it with the refresh token and try to authenticate with it.

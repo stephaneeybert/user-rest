@@ -7,7 +7,11 @@ public abstract class JwtAbstractProperties implements JwtProperties {
     private Integer accessTokenExpirationTime;
     private Integer refreshTokenExpirationTime;
     private Integer allowedClockSkewSeconds;
-    
+    private Boolean checkUserScopes;
+    private String sslKeystoreFilename;
+    private String sslKeystorePassword;
+    private String sslKeyPair;
+
     public String getTokenIssuer() {
         return tokenIssuer;
     }
@@ -46,6 +50,38 @@ public abstract class JwtAbstractProperties implements JwtProperties {
 
     public void setAllowedClockSkewSeconds(Integer allowedClockSkewSeconds) {
         this.allowedClockSkewSeconds = allowedClockSkewSeconds;
+    }
+    
+    public Boolean getCheckUserScopes() {
+        return this.checkUserScopes;
+    }
+
+    public void setCheckUserScopes(Boolean checkUserScopes) {
+        this.checkUserScopes = checkUserScopes;
+    }
+
+    public String getSslKeystoreFilename() {
+        return this.sslKeystoreFilename;
+    }
+
+    public void setSslKeystoreFilename(String sslKeystoreFilename) {
+        this.sslKeystoreFilename = sslKeystoreFilename;
+    }
+
+    public String getSslKeystorePassword() {
+        return this.sslKeystorePassword;
+    }
+
+    public void setSslKeystorePassword(String sslKeystorePassword) {
+        this.sslKeystorePassword = sslKeystorePassword;
+    }
+
+    public String getSslKeyPair() {
+        return this.sslKeyPair;
+    }
+
+    public void setSslKeyPair(String sslKeyPair) {
+        this.sslKeyPair = sslKeyPair;
     }
 
 }
