@@ -41,7 +41,9 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 	private static Logger logger = LoggerFactory.getLogger(TokenAuthenticationServiceImpl.class);
 
 	private static final String ACCESS_TOKEN_URL_PARAM_NAME = "access-token";
-	
+	private static final String JWT_CLAIM_EMAIL = "email";
+	private static final String JWT_CLAIM_SCOPES = "scopes";
+
     @Autowired
     private JwtProperties jwtProperties;
 
@@ -106,7 +108,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 		User user = userService.findByEmail(userDetails.getUsername());
 		claims.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
 		claims.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
-		claims.put("scopes", userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
+		claims.put(JWT_CLAIM_SCOPES, userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 		return claims;
 	}
 	
@@ -141,7 +143,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 			.atZone(ZoneId.systemDefault()).toInstant());
 			Claims claims = Jwts.claims();
 			User user = userService.findByEmail(userDetails.getUsername());
-			claims.put("email", user.getEmail().getEmailAddress()); // TODO Avoid such hard coded string
+			claims.put(JWT_CLAIM_EMAIL, user.getEmail().getEmailAddress());
 			token = Jwts.builder()
 			// If calling the setClaims method then call it before all other setters
 			.setClaims(claims)
@@ -193,7 +195,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 						String subject = getSubjectFromToken(token);
 						if (subject != null) {
 							Claims claims = getClaimsFromToken(token);
-							String email = (String) claims.get("email"); // TODO Avoid such hard coded string
+							String email = (String) claims.get(JWT_CLAIM_EMAIL);
 							UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 							UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 							authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
