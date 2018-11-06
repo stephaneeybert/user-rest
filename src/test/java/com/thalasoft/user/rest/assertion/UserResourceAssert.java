@@ -73,7 +73,7 @@ public class UserResourceAssert extends AbstractAssert<UserResourceAssert, UserR
 	public UserResourceAssert hasRole(String role) {
 		isNotNull();
 		boolean hasRole = false;
-		for (UserRoleResource userRoleResource : actual.getUserRoles()) {
+		for (UserRoleResource userRoleResource : actual.getUserRoleResources()) {
 			if (userRoleResource.getRole().equals(role)) {
 				hasRole = true;
 			}

@@ -42,7 +42,7 @@ public class ResourceServiceImpl implements ResourceService {
         user.setConfirmedEmail(userResource.isConfirmedEmail());
         user.setPassword(userResource.getPassword());
         user.setWorkPhone(userResource.getWorkPhone());
-        for (UserRoleResource userRoleResource : userResource.getUserRoles()) {
+        for (UserRoleResource userRoleResource : userResource.getUserRoleResources()) {
             user.addRole(userRoleResource.getRole());
         }
         return user;
@@ -65,7 +65,7 @@ public class ResourceServiceImpl implements ResourceService {
         	userRoleResource.setRole(userRole.getRole());
         	userRoleResources.add(userRoleResource);
         }
-        userResource.setUserRoles(userRoleResources);
+        userResource.setUserRoleResources(userRoleResources);
         return userResource;
     }
 
