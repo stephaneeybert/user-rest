@@ -6,22 +6,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.thalasoft.user.data.jpa.domain.AbstractEntity;
 
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AbstractResource extends ResourceSupport {
 
     @JsonProperty("id")
     private Long resourceId;
-
-    public AbstractResource() {
-    }
-
-    public Long getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(Long resourceId) {
-        this.resourceId = resourceId;
-    }
 
     @Override
     public boolean equals(Object obj) {

@@ -104,7 +104,7 @@ public abstract class BaseTest {
         UserRoleResource user0UserRoleResource = new UserRoleResource();
         user0UserRoleResource.setRole(AuthoritiesConstants.ROLE_USER.getRole());
         userRoleResources.add(user0UserRoleResource);
-        userResource0.setUserRoles(userRoleResources);
+        userResource0.setUserRoleResources(userRoleResources);
 
         manyUserResources = new ArrayList<UserResource>();
         for (int i = 0; i < 30; i++) {

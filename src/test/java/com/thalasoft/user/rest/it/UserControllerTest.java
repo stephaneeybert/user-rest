@@ -43,7 +43,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
         UserResource retrievedUserResource = deserializeResource(mvcResult, UserResource.class);
         assertThatUserResource(retrievedUserResource).hasEmail(userResource0.getEmail());
         assertThatUserResource(retrievedUserResource)
-                .hasRole(retrievedUserResource.getUserRoles().iterator().next().getRole());
+                .hasRole(retrievedUserResource.getUserRoleResources().iterator().next().getRole());
         userResource0.setResourceId(retrievedUserResource.getResourceId());
 
         mvcResult = this.mockMvc
