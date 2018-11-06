@@ -74,12 +74,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new PathRequestMatcher(getUnsecuredPaths(), "/**");
 	}
 
-	// Allow requests from another domain name like a front-end application
-	@Override
-    public void configure(WebSecurity webSecurity) throws Exception {
-        webSecurity.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
-	}
-	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO For now allow non https access as the browser non signed certificate
