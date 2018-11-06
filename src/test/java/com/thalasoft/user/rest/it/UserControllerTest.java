@@ -132,10 +132,9 @@ public class UserControllerTest extends UnsecuredBaseTest {
                 .andReturn();
     }
 
-    // TODO https://jira.spring.io/browse/DATACMNS-563    
     @Test
     public void testPaginationIsZeroIndexed() throws Exception {
-        this.mockMvc.perform(get(RESTConstants.SLASH + DomainConstants.USERS)
+            this.mockMvc.perform(get(RESTConstants.SLASH + DomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .param("searchTerm", "irstnam")
                 .param("page", "2")
@@ -151,6 +150,7 @@ public class UserControllerTest extends UnsecuredBaseTest {
                 .andExpect(jsonPath("$.page.size").value(10))
                 .andExpect(jsonPath("$.page.totalElements").value(30))
                 .andExpect(jsonPath("$.page.totalPages").value(3))
+                // TODO https://jira.spring.io/browse/DATACMNS-563    
                 .andExpect(jsonPath("$.page.number").value(1))
                 .andReturn();
     }
