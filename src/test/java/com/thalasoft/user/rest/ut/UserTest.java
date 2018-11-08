@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.ut.jpa;
+package com.thalasoft.user.rest.ut;
 
 import java.util.Set;
 
