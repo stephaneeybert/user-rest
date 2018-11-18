@@ -27,12 +27,12 @@ public abstract class SecuredBaseTest extends BaseTest {
 
 	@Before
     public void initFixture() {
-        userFixtureService.addUser();
+        userFixtureService.addAuthenticatedUser();
     }
 
     @After
     public void cleanFixture() {
-        userFixtureService.removeUser();
+        userFixtureService.removeAuthenticatedUser();
     }
 
 	@Before
