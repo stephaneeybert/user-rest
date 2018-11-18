@@ -22,7 +22,7 @@ public class UserFixtureService {
 
 	private User user0;
 
-	public void addUser() {
+	public void addAuthenticatedUser() {
         user0 = new User();
         user0.setFirstname("Stephane");
         user0.setLastname("Eybert");
@@ -37,7 +37,7 @@ public class UserFixtureService {
         user0.addRole(AuthoritiesConstants.ROLE_ADMIN.getRole());
 	}
 
-    public void removeUser() {
+    public void removeAuthenticatedUser() {
         userService.delete(user0.getId());
     }
 

@@ -16,7 +16,7 @@ public class BootstrapSQLData implements ApplicationListener<ContextRefreshedEve
 
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent event) {
-        userFixtureService.addUser();
+        userFixtureService.addAuthenticatedUser();
     }
 
 }
