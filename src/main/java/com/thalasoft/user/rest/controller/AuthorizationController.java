@@ -48,23 +48,23 @@ public class AuthorizationController {
     private UserResourceAssembler userResourceAssembler;
 
     // TODO This method is not needed since there is already a filter doing the job
-    // @PostMapping(value = RESTConstants.SLASH + DomainConstants.LOGIN)
-    // @ResponseBody
-    // public ResponseEntity<UserResource> login(@Valid @RequestBody CredentialsResource credentialsResource,
-    //         UriComponentsBuilder builder) {
-    //     HttpHeaders responseHeaders = new HttpHeaders();
-    //     try {
-    //         User user = credentialsService.checkPassword(credentialsResource);
-    //         userService.clearReadablePassword(user);
-    //         tokenAuthenticationService.addAccessTokenToResponseHeader(responseHeaders, credentialsResource.getEmail());
-    //         URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
-    //                 .buildAndExpand(user.getId()).toUri();
-    //         UserResource createdUserResource = userResourceAssembler.toResource(user);
-    //         return ResponseEntity.created(location).headers(responseHeaders).body(createdUserResource);
-    //     } catch (EntityNotFoundException e) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    // }
+    @PostMapping(value = RESTConstants.SLASH + DomainConstants.LOGIN)
+    @ResponseBody
+    public ResponseEntity<UserResource> login(@Valid @RequestBody CredentialsResource credentialsResource,
+            UriComponentsBuilder builder) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        try {
+            User user = credentialsService.checkPassword(credentialsResource);
+            userService.clearReadablePassword(user);
+            tokenAuthenticationService.addAccessTokenToResponseHeader(responseHeaders, credentialsResource.getEmail());
+            URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
+                    .buildAndExpand(user.getId()).toUri();
+            UserResource createdUserResource = userResourceAssembler.toResource(user);
+            return ResponseEntity.created(location).headers(responseHeaders).body(createdUserResource);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PostMapping(value = RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH)
     @ResponseBody
