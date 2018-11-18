@@ -82,16 +82,6 @@ public abstract class BaseTest {
     }
     
     @Before
-    public void initFixture() {
-        userFixtureService.addUser();
-    }
-
-    @After
-    public void cleanFixture() {
-        userFixtureService.removeUser();
-    }
-
-    @Before
     public void createUserResources() throws Exception {
         userResource0 = new UserResource();
         userResource0.setFirstname("Cyril");
