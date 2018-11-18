@@ -12,6 +12,7 @@ import com.thalasoft.user.rest.security.ProdSecurityConfiguration;
 import com.thalasoft.user.rest.service.TokenAuthenticationService;
 import com.thalasoft.user.rest.utils.CommonConstants;
 
+import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,16 @@ public abstract class SecuredBaseTest extends BaseTest {
 
 	@Autowired
 	private TokenAuthenticationService tokenAuthenticationService;
+
+	@Before
+    public void initFixture() {
+        userFixtureService.addUser();
+    }
+
+    @After
+    public void cleanFixture() {
+        userFixtureService.removeUser();
+    }
 
 	@Before
 	public void setup() throws Exception {
