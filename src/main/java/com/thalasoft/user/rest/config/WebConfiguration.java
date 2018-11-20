@@ -44,7 +44,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 		PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
 		resolver.setFallbackPageable(PageRequest.of(0, PAGE_DEFAULT_SIZE));
 		resolver.setMaxPageSize(PAGE_MAX_SIZE);
-		resolver.setOneIndexedParameters(true);
+		resolver.setOneIndexedParameters(false);
 		argumentResolvers.add(resolver);
 	}
 
