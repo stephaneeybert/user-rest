@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
@@ -125,7 +126,7 @@ public class UserController {
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity<PagedResources<UserResource>> all(Pageable pageable, Sort sort,
+    public ResponseEntity<PagedResources<UserResource>> all(@PageableDefault(sort = { "lastname", "firstname" }, direction = Sort.Direction.ASC) Pageable pageable, Sort sort,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.all(pageable);
@@ -141,7 +142,7 @@ public class UserController {
     @GetMapping(params = "searchTerm")
     @ResponseBody
     public ResponseEntity<PagedResources<UserResource>> search(@RequestParam(value = "searchTerm") String searchTerm,
-            Pageable pageable, Sort sort, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
+    @PageableDefault(sort = { "lastname", "firstname" }, direction = Sort.Direction.ASC) Pageable pageable, Sort sort, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.search(searchTerm, pageable);
         // TODO https://jira.spring.io/browse/DATAREST-1117
