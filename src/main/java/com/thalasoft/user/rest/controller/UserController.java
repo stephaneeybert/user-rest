@@ -4,6 +4,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -16,6 +19,7 @@ import com.thalasoft.user.rest.service.CredentialsService;
 import com.thalasoft.user.rest.service.ResourceService;
 import com.thalasoft.user.rest.service.UserActionService;
 import com.thalasoft.user.rest.utils.RESTConstants;
+import com.thalasoft.user.rest.utils.CommonUtils;
 import com.thalasoft.user.rest.utils.DomainConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +65,8 @@ public class UserController {
     @Autowired
     private UserResourceAssembler userResourceAssembler;
 
+    Set<String> nonSortableColumns = new HashSet<String>(Arrays.asList("id", "confirmedEmail"));
+  
     @GetMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
     public ResponseEntity<UserResource> findById(@PathVariable Long id, UriComponentsBuilder builder) {
@@ -128,6 +134,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<PagedResources<UserResource>> all(@PageableDefault(sort = { "lastname", "firstname" }, direction = Sort.Direction.ASC) Pageable pageable, Sort sort,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
+        sort = CommonUtils.stripColumnsFromSorting(sort, nonSortableColumns);
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.all(pageable);
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
@@ -143,7 +150,8 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<PagedResources<UserResource>> search(@RequestParam(value = "searchTerm") String searchTerm,
     @PageableDefault(sort = { "lastname", "firstname" }, direction = Sort.Direction.ASC) Pageable pageable, Sort sort, PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
-        userService.addSortToPageable(pageable, sort);
+      sort = CommonUtils.stripColumnsFromSorting(sort, nonSortableColumns);
+      userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.search(searchTerm, pageable);
         // TODO https://jira.spring.io/browse/DATAREST-1117
         Link selfLink = linkTo(methodOn(UserController.class).search(searchTerm, pageable, sort, pagedResourcesAssembler, builder)).withSelfRel();
