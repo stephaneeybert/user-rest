@@ -6,6 +6,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -22,6 +23,8 @@ import com.thalasoft.user.rest.utils.RESTConstants;
 import com.thalasoft.user.rest.utils.CommonUtils;
 import com.thalasoft.user.rest.utils.DomainConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,6 +67,8 @@ public class UserController {
 
     @Autowired
     private UserResourceAssembler userResourceAssembler;
+
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     Set<String> nonSortableColumns = new HashSet<String>(Arrays.asList("id", "confirmedEmail"));
   
@@ -130,11 +135,22 @@ public class UserController {
         return ResponseEntity.ok(userResource);
     }
 
+    private void logSort(Sort sort) {
+      Iterator<Sort.Order> sortIterator = sort.iterator();
+      logger.debug("===========");
+      while (sortIterator.hasNext()){
+        Sort.Order sortOrder = sortIterator.next();
+        logger.debug("Order: " + sortOrder.getProperty() + " " + sortOrder.getDirection());
+      }
+    }
+
     @GetMapping
     @ResponseBody
     public ResponseEntity<PagedResources<UserResource>> all(@PageableDefault(sort = { "lastname", "firstname" }, direction = Sort.Direction.ASC) Pageable pageable, Sort sort,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
+        logSort(sort);
         sort = CommonUtils.stripColumnsFromSorting(sort, nonSortableColumns);
+        logSort(sort);
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.all(pageable);
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
