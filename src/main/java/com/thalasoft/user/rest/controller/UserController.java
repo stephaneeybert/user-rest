@@ -70,7 +70,7 @@ public class UserController {
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    Set<String> nonSortableColumns = new HashSet<String>(Arrays.asList("id", "confirmedEmail"));
+    private static final Set<String> nonSortableColumns = new HashSet<String>(Arrays.asList("id", "confirmedEmail"));
   
     @GetMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
