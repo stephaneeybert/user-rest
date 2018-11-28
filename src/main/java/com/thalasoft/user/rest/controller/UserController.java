@@ -6,7 +6,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -135,22 +134,11 @@ public class UserController {
         return ResponseEntity.ok(userResource);
     }
 
-    private void logSort(Sort sort) {
-      Iterator<Sort.Order> sortIterator = sort.iterator();
-      logger.debug("===========");
-      while (sortIterator.hasNext()){
-        Sort.Order sortOrder = sortIterator.next();
-        logger.debug("Order: " + sortOrder.getProperty() + " " + sortOrder.getDirection());
-      }
-    }
-
     @GetMapping
     @ResponseBody
     public ResponseEntity<PagedResources<UserResource>> all(@PageableDefault(sort = { "lastname", "firstname" }, direction = Sort.Direction.ASC) Pageable pageable, Sort sort,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
-        logSort(sort);
         sort = CommonUtils.stripColumnsFromSorting(sort, nonSortableColumns);
-        logSort(sort);
         userService.addSortToPageable(pageable, sort);
         Page<User> foundUsers = userService.all(pageable);
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
