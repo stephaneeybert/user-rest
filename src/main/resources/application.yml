@@ -1,5 +1,14 @@
-server.error.whitelabel.enabled : false
-server.servlet.context-path : /api
+server.error.whitelabel.enabled: false
+server.servlet.context-path: /api
+
+# Logging
+logging:
+  level:
+    com.thalasoft: debug
+    org:
+      hibernate:
+        SQL: debug
+      springframework: trace
 
 # Security 
 security.jwt:
@@ -38,15 +47,6 @@ security.jwt:
 # server.ssl.key-store-password=password
 # # The alias mapped to the certificate
 # server.ssl.key-alias=tomcat
-
-# Logging
-logging:
-  level:
-    com.thalasoft: debug
-    org:
-      hibernate:
-        SQL: debug
-      springframework: trace
 
 # Actuator
 management:
