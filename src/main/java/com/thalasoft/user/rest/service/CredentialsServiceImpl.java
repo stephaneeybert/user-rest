@@ -7,7 +7,7 @@ import java.util.Locale;
 
 import javax.transaction.Transactional;
 
-import com.thalasoft.toolbox.utils.Common;
+import com.thalasoft.toolbox.utils.CommonTools;
 import com.thalasoft.toolbox.utils.Security;
 import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
@@ -150,7 +150,7 @@ public class CredentialsServiceImpl implements CredentialsService {
 	}
 
     private String generatePasswordSalt() {
-        return Common.generateUniqueId(ADMIN_PASSWORD_SALT_LENGTH);
+        return CommonTools.generateUniqueId(ADMIN_PASSWORD_SALT_LENGTH);
     }
     
     private String saltPassword(String password, String salt) {
