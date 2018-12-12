@@ -10,9 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = { NoSecurityConfiguration.class, TestConfiguration.class, WebConfiguration.class })
 public abstract class UnsecuredBaseTest extends BaseTest {
 
-    @Before
-	public void setup() throws Exception {
-		super.setup();
-	}
+  @Before
+  public void setup() throws Exception {
+    super.setup();
+  }
 
 }
