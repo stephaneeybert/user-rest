@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Base64;
 
 import com.thalasoft.user.rest.config.TestConfiguration;
-import com.thalasoft.user.rest.config.UserFixtureService;
+import com.thalasoft.user.rest.service.UserFixtureService;
 import com.thalasoft.user.rest.config.WebConfiguration;
 import com.thalasoft.user.rest.security.ProdSecurityConfiguration;
 import com.thalasoft.user.rest.service.TokenAuthenticationService;

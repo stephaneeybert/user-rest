@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.config;
+package com.thalasoft.user.rest.service;
 
 import com.thalasoft.user.data.exception.EntityNotFoundException;
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
