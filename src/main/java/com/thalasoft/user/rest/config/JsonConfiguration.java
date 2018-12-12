@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -36,15 +38,12 @@ public class JsonConfiguration implements WebMvcConfigurer {
     public ObjectMapper jacksonObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-        objectMapper.registerModule(jodaModule());
         objectMapper.setSerializationInclusion(Include.NON_NULL);
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+        objectMapper.registerModule(new ParameterNamesModule())
+        .registerModule(new Jdk8Module())
+        .registerModule(new JavaTimeModule());
         return objectMapper;
-    }
-
-    @Bean
-    public Module jodaModule() {
-        return new JodaModule();
     }
 
 }
