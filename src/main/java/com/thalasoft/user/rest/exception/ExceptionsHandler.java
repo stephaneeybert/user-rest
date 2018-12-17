@@ -61,7 +61,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<ErrorInfo> entityNotFoundException(HttpServletRequest request, EntityNotFoundException e) {
     String url = this.getFullRequestUrl(request).toString();
-		String errorMessage = localizeErrorMessage(e.getLocalizedMessage());
+    String errorMessage = localizeErrorMessage("error.entity.not.found");
 		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.NOT_FOUND, errorMessage);
 		logger.error(errorMessage);
 		logger.debug(getStackTrace(e));
