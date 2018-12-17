@@ -129,6 +129,10 @@ public abstract class BaseTest {
         return messageSource.getMessage(errorCode, null, locale);
     }
 
+    protected Locale getDefaultLocale() {
+      return localeResolver.getDefaultLocale();
+    }
+
     protected String localizeErrorMessage(String errorCode, Object args[]) {
         Locale locale = localeResolver.getDefaultLocale();
         return messageSource.getMessage(errorCode, args, locale);
