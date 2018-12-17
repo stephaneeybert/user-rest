@@ -1,5 +1,7 @@
 package com.thalasoft.user.rest.config;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -55,7 +57,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 		// If true, the key of the message will be displayed if the key is not
 		// found, instead of throwing an exception
 		messageSource.setUseCodeAsDefaultMessage(true);
-		messageSource.setDefaultEncoding("UTF-8");
+		messageSource.setDefaultEncoding(UTF_8.name());
 		// The value 0 means always reload the messages to be developer friendly
 		messageSource.setCacheSeconds(0);
 		return messageSource;

@@ -1,5 +1,7 @@
 package com.thalasoft.user.rest.service;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,13 +142,7 @@ public class CredentialsServiceImpl implements CredentialsService {
 	}
 	
 	private String encodePassword(String email, String password, String passwordSalt) {
-		String encodedPassword = null;
-		try {
-			encodedPassword = new String(Security.encodeBase64(email, saltPassword(password, passwordSalt)), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new CannotEncodePasswordException();
-		}
-		return encodedPassword;
+		return new String(Security.encodeBase64(email, saltPassword(password, passwordSalt)), UTF_8);
 	}
 
     private String generatePasswordSalt() {
