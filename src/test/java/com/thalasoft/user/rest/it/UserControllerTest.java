@@ -21,11 +21,14 @@ import com.thalasoft.user.rest.utils.DomainConstants;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserControllerTest extends UnsecuredBaseTest {
+
+    private static final String LOCALE_LANGUAGE_PARAM = "lang";
 
     @Test
     public void testCrudOperations() throws Exception {
@@ -94,6 +97,26 @@ public class UserControllerTest extends UnsecuredBaseTest {
         faultyUserResource.setEmail("notvalidemail");
         MvcResult mvcResult = this.mockMvc
                 .perform(post(RESTConstants.SLASH + DomainConstants.USERS)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .content(jacksonObjectMapper.writeValueAsString(faultyUserResource)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.failed.controller.validation")))
+                .andReturn();
+        ErrorFormInfo retrievedMessage = deserialize(mvcResult, ErrorFormInfo.class);
+        assertEquals(retrievedMessage.getHttpStatus(), HttpStatus.BAD_REQUEST);
+        assertEquals(retrievedMessage.getMessage(), localizeErrorMessage("error.failed.controller.validation"));
+        assertEquals(retrievedMessage.getFieldErrors().size(), 1);
+    }
+
+    @Test
+    public void testPostWithLocaleHeaderReturnsLocalizedErrorMessages() throws Exception {
+        UserResource faultyUserResource = new UserResource();
+        faultyUserResource.setFirstname("Stephane");
+        faultyUserResource.setLastname("Eybert");
+        faultyUserResource.setEmail("notvalidemail");
+        MvcResult mvcResult = this.mockMvc
+                .perform(post(RESTConstants.SLASH + DomainConstants.USERS)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).locale(Locale.FRENCH)
                 .content(jacksonObjectMapper.writeValueAsString(faultyUserResource)))
                 .andDo(print())
@@ -101,12 +124,50 @@ public class UserControllerTest extends UnsecuredBaseTest {
                 .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.failed.controller.validation", Locale.FRENCH)))
                 .andReturn();
         ErrorFormInfo retrievedMessage = deserialize(mvcResult, ErrorFormInfo.class);
-        assertEquals(retrievedMessage.getHttpStatus(), HttpStatus.BAD_REQUEST);
         assertEquals(retrievedMessage.getMessage(), localizeErrorMessage("error.failed.controller.validation", Locale.FRENCH));
-        assertEquals(retrievedMessage.getFieldErrors().size(), 1);
     }
 
     @Test
+    public void testRequestWithLocaleUrlParamReturnsLocalizedErrorMessages() throws Exception {
+      MvcResult mvcResult = this.mockMvc
+      .perform(get(RESTConstants.SLASH + DomainConstants.USERS)
+      .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+      .param("searchTerm", "nothing to be found")
+      // .param(LOCALE_LANGUAGE_PARAM, "fr") TODO Trigger a 500 error - See https://jira.spring.io/browse/SPR-16775
+      )
+      .andDo(print())
+      .andExpect(status().isNotFound())
+      // TODO .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.entity.not.found", Locale.FRENCH)))
+      .andReturn();
+      // ErrorFormInfo retrievedMessage = deserialize(mvcResult, ErrorFormInfo.class);
+      // TODO assertEquals(retrievedMessage.getMessage(), localizeErrorMessage("error.failed.controller.validation", Locale.FRENCH));
+    }
+
+    @Test
+    public void testDefaultLocaleIsEnglish() throws Exception {
+      assertEquals(Locale.ENGLISH.getLanguage(), getDefaultLocale().getLanguage());
+      assertEquals(Locale.ENGLISH.getLanguage(), getDefaultLocale().getLanguage());
+    }
+
+    @Test
+    public void testRequestWithNonSupportedLocaleReturnsDefaultLocaleErrorMessages() throws Exception {
+      UserResource faultyUserResource = new UserResource();
+      faultyUserResource.setFirstname("Stephane");
+      faultyUserResource.setLastname("Eybert");
+      faultyUserResource.setEmail("notvalidemail");
+      MvcResult mvcResult = this.mockMvc
+              .perform(post(RESTConstants.SLASH + DomainConstants.USERS)
+              .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).locale(Locale.GERMAN)
+              .content(jacksonObjectMapper.writeValueAsString(faultyUserResource)))
+              .andDo(print())
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.message").value(localizeErrorMessage("error.failed.controller.validation", getDefaultLocale())))
+              .andReturn();
+      ErrorFormInfo retrievedMessage = deserialize(mvcResult, ErrorFormInfo.class);
+      assertEquals(retrievedMessage.getMessage(), localizeErrorMessage("error.failed.controller.validation", getDefaultLocale()));
+    }
+
+  @Test
     public void testSearchShouldReturnSome() throws Exception {
         this.mockMvc
                 .perform(get(RESTConstants.SLASH + DomainConstants.USERS)
