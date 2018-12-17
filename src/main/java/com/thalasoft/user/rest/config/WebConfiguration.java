@@ -90,7 +90,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 		return localeChangeInterceptor;
 	}
 
-	// Avoid caching issue with AngularJS on IE
+	// Do not notify the front-end that it should cache the response
 	@Bean
 	public WebContentInterceptor webContentInterceptor() {
 		WebContentInterceptor interceptor = new WebContentInterceptor();
