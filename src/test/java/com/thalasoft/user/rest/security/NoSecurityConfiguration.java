@@ -16,27 +16,23 @@ import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.filter" })
 public class NoSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private SimpleCORSFilter simpleCORSFilter;
+  @Autowired
+  private SimpleCORSFilter simpleCORSFilter;
 
-    @Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.cors();
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
 
-		http
-		.csrf().disable()
-		.formLogin().disable()
-		.httpBasic().disable()
-		.logout().disable();
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.cors();
 
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.csrf().disable().formLogin().disable().httpBasic().disable().logout().disable();
 
-		http.addFilterBefore(simpleCORSFilter, ChannelProcessingFilter.class);
-	}
-	
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    http.addFilterBefore(simpleCORSFilter, ChannelProcessingFilter.class);
+  }
+
 }

@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.config",
-                "com.thalasoft.user.rest.service" })
+    "com.thalasoft.user.rest.service" })
 public class TestConfiguration {
 }
