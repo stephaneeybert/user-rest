@@ -64,7 +64,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-    private JwtProperties jwtProperties;
+  private JwtProperties jwtProperties;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -73,7 +73,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private TokenAuthenticationService tokenAuthenticationService;
 
 	@Autowired
-    @Qualifier("authenticationManagerBean")
+  @Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
 	
 	@Bean
@@ -108,7 +108,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		// Spring Security OAuth exposes two endpoints for checking tokens
 		// /oauth/check_token and /oauth/token_key
-		//  Those endpoints are not exposed by default as the have access denyAll()
+		// Those endpoints are not exposed by default as they have access denyAll()
 		// To verify the tokens with these endpoints, add the following configuration
 		security
 		.tokenKeyAccess("permitAll()")
@@ -125,10 +125,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
 		.authenticationManager(authenticationManager)
-        .tokenServices(tokenServices())
-        .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
-		.tokenEnhancer(jwtAccessTokenConverter())
-        .accessTokenConverter(jwtAccessTokenConverter())
+    .tokenServices(tokenServices())
+    .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
+    .tokenEnhancer(jwtAccessTokenConverter())
+    .accessTokenConverter(jwtAccessTokenConverter())
 		.userDetailsService(userDetailsService);
 
 		// The URL paths provided by the framework are:
@@ -144,7 +144,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		
 		// if (jwtProperties.getCheckUserScopes()) {
 		// 	endpoints.requestFactory(requestFactory());
-        // }
+    // }
 	}
 
 	// Add user information to the token
@@ -154,13 +154,13 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 			User user = (User) authentication.getPrincipal();
 			Map<String, Object> info = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
-            info.put("email", user.getEmail());
-            info.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
+      info.put("email", user.getEmail());
+      info.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
 			info.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
 			info.put("scopes", authentication.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 			DefaultOAuth2AccessToken customAccessToken = new DefaultOAuth2AccessToken(accessToken);
-            customAccessToken.setAdditionalInformation(info);
-            customAccessToken.setExpiration(tokenAuthenticationService.getExpirationDate());
+      customAccessToken.setAdditionalInformation(info);
+      customAccessToken.setExpiration(tokenAuthenticationService.getExpirationDate());
 			return super.enhance(customAccessToken, authentication);
 		}
 
