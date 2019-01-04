@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	// but it still is required by Spring Security and so we need to implement a small
 	// hack in order to gain access to this object
 	@Bean
-    @Override
+  @Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}

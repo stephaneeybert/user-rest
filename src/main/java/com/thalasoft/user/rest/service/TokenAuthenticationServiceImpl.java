@@ -38,250 +38,242 @@ import io.jsonwebtoken.SignatureException;
 @Service
 public class TokenAuthenticationServiceImpl implements TokenAuthenticationService {
 
-	private static Logger logger = LoggerFactory.getLogger(TokenAuthenticationServiceImpl.class);
+  private static Logger logger = LoggerFactory.getLogger(TokenAuthenticationServiceImpl.class);
 
-	private static final String ACCESS_TOKEN_URL_PARAM_NAME = "access-token";
-	private static final String JWT_CLAIM_EMAIL = "email";
-	private static final String JWT_CLAIM_SCOPES = "scopes";
+  private static final String ACCESS_TOKEN_URL_PARAM_NAME = "access-token";
+  private static final String JWT_CLAIM_EMAIL = "email";
+  private static final String JWT_CLAIM_SCOPES = "scopes";
 
-    @Autowired
-    private JwtProperties jwtProperties;
+  @Autowired
+  private JwtProperties jwtProperties;
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+  @Autowired
+  private UserDetailsService userDetailsService;
 
-	@Autowired
-	private UserService userService;
+  @Autowired
+  private UserService userService;
 
-	@Override
-	public void addAccessTokenToResponseHeader(HttpHeaders headers, String username) {
-		String token = buildAccessToken(username);
-		headers.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME, token);
-	}
-	
-	@Override
-	public void addRefreshTokenToResponseHeader(HttpHeaders headers, String username, String clientId) {
-		String token = buildRefreshToken(username, clientId);
-		headers.add(CommonConstants.REFRESH_TOKEN_HEADER_NAME, token);
-	}
-	
-	@Override
-	public void addAccessTokenToResponseHeader(HttpServletResponse response, Authentication authentication) {
-		String username = authentication.getName();
-		if (username != null) {
-			String token = buildAccessToken(username);
-			response.addHeader(CommonConstants.ACCESS_TOKEN_HEADER_NAME, token);
-		}
-	}
+  @Override
+  public void addAccessTokenToResponseHeader(HttpHeaders headers, String username) {
+    String token = buildAccessToken(username);
+    headers.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME, token);
+  }
 
-	@Override
-	public void addRefreshTokenToResponseHeader(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-		String username = authentication.getName();
-		if (username != null) {
-			String clientId = extractClientIdFromRequest(request);
-			String token = buildRefreshToken(username, clientId);
-			response.addHeader(CommonConstants.REFRESH_TOKEN_HEADER_NAME, token);
-		}
-	}
+  @Override
+  public void addRefreshTokenToResponseHeader(HttpHeaders headers, String username, String clientId) {
+    String token = buildRefreshToken(username, clientId);
+    headers.add(CommonConstants.REFRESH_TOKEN_HEADER_NAME, token);
+  }
 
-	private String buildAccessToken(String username) {
-		return CommonConstants.AUTH_BEARER_HEADER + " " + buildAccessTokenValue(username);
-	}
+  @Override
+  public void addAccessTokenToResponseHeader(HttpServletResponse response, Authentication authentication) {
+    String username = authentication.getName();
+    if (username != null) {
+      String token = buildAccessToken(username);
+      response.addHeader(CommonConstants.ACCESS_TOKEN_HEADER_NAME, token);
+    }
+  }
 
-	@Override
-	public Date getIssuedAtDate() {
-		Date issuedAt = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-		return issuedAt;
-	}
+  @Override
+  public void addRefreshTokenToResponseHeader(HttpServletRequest request, HttpServletResponse response,
+      Authentication authentication) {
+    String username = authentication.getName();
+    if (username != null) {
+      String clientId = extractClientIdFromRequest(request);
+      String token = buildRefreshToken(username, clientId);
+      response.addHeader(CommonConstants.REFRESH_TOKEN_HEADER_NAME, token);
+    }
+  }
 
-	@Override
-	public Date getExpirationDate() {
-		Date expirationDate = Date.from(LocalDateTime.now()
-		.plusMinutes(jwtProperties.getAccessTokenExpirationTime())
-		.atZone(ZoneId.systemDefault()).toInstant());
-		return expirationDate;
-	}
+  private String buildAccessToken(String username) {
+    return CommonConstants.AUTH_BEARER_HEADER + " " + buildAccessTokenValue(username);
+  }
 
-	@Override
-	public Claims addClaimstoToken(UserDetails userDetails) {
-		Claims claims = Jwts.claims();
-		User user = userService.findByEmail(userDetails.getUsername());
-		claims.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
-		claims.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
-		claims.put(JWT_CLAIM_SCOPES, userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
-		return claims;
-	}
-	
-	private String buildAccessTokenValue(String username) {
-		String token = null;
-		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-		if (userDetails != null) {
-			token = Jwts.builder()
-			// If calling the setClaims method then call it before all other setters
-			.setClaims(addClaimstoToken(userDetails))
-			.setSubject(userDetails.getUsername())
-			.setIssuer(jwtProperties.getTokenIssuer())
-			.setIssuedAt(getIssuedAtDate())
-			.setExpiration(getExpirationDate())
-			.signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey())
-			.compact();
-		}
-		return token;
-	}
-	
-	private String buildRefreshToken(String username, String clientId) {
-		return CommonConstants.AUTH_BEARER_HEADER + " " + buildRefreshTokenValue(username, clientId);
-	}
-	
-	public String buildRefreshTokenValue(String username, String clientId) {
-		String token = null;
-		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-		if (userDetails != null) {
-			LocalDateTime currentTime = LocalDateTime.now();
-			Date expirationDate = Date.from(currentTime
-			.plusMinutes(jwtProperties.getRefreshTokenExpirationTime())
-			.atZone(ZoneId.systemDefault()).toInstant());
-			Claims claims = Jwts.claims();
-			User user = userService.findByEmail(userDetails.getUsername());
-			claims.put(JWT_CLAIM_EMAIL, user.getEmail().getEmailAddress());
-			token = Jwts.builder()
-			// If calling the setClaims method then call it before all other setters
-			.setClaims(claims)
-			.setSubject(clientId)
-			.setId(UUID.randomUUID().toString())
-			.setIssuer(jwtProperties.getTokenIssuer())
-			.setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
-			.setExpiration(expirationDate)
-			.signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey())
-			.compact();
-		}
-        return token;
-	}
+  @Override
+  public Date getIssuedAtDate() {
+    Date issuedAt = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+    return issuedAt;
+  }
 
-	public Authentication authenticate(HttpServletRequest request) {
-		String token = extractAccessTokenFromRequest(request);
-        logger.debug("The request should contain an authentication token: " + token);
-		if (token != null) {
-			if (!token.isEmpty()) {
-				try {
-					String subject = getSubjectFromToken(token);
-					if (subject != null) {
-						UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
-						UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-						authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-						logger.debug("Security - The request authenticated fine from the JWT Access token");
-						return authentication;
-					} else {
-						throw new BadCredentialsException("The authentication token " + token + " did not contain a subject.");
-					}
-				} catch (SignatureException e) {
-					throw new BadCredentialsException("The authentication token " + token + " could not be parsed.");
-				}
-			} else {
-				throw new BadCredentialsException("The authentication token was empty.");
-			}
-		} else {
-			throw new BadCredentialsException("The authentication token was missing.");
-		}
-	}
+  @Override
+  public Date getExpirationDate() {
+    Date expirationDate = Date.from(LocalDateTime.now().plusMinutes(jwtProperties.getAccessTokenExpirationTime())
+        .atZone(ZoneId.systemDefault()).toInstant());
+    return expirationDate;
+  }
 
-	public Authentication authenticateFromRefreshToken(HttpServletRequest request) {
-		String token = extractRefreshTokenFromRequest(request);
-		if (token != null) {
-			if (!token.isEmpty()) {
-				try {
-					String jti = getJtiFromToken(token);
-					if (jti != null) {
-						String subject = getSubjectFromToken(token);
-						if (subject != null) {
-							Claims claims = getClaimsFromToken(token);
-							String email = (String) claims.get(JWT_CLAIM_EMAIL);
-							UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-							UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-							authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-							logger.debug("Security - The request authenticated fine from the JWT Refresh token");
-							return authentication;
-						} else {
-							throw new BadCredentialsException("The refresh token " + token + " did not contain a subject.");
-						}
-					} else {
-						throw new BadCredentialsException("The refresh token " + token + " did not contain a JTI.");
-					}
-				} catch (SignatureException e) {
-					throw new BadCredentialsException("The refresh token " + token + " could not be parsed.");
-				}
-			} else {
-				throw new BadCredentialsException("The refresh token was empty.");
-			}
-		} else {
-			throw new BadCredentialsException("The refresh token was missing from the request.");
-		}
-	}
+  @Override
+  public Claims addClaimstoToken(UserDetails userDetails) {
+    Claims claims = Jwts.claims();
+    User user = userService.findByEmail(userDetails.getUsername());
+    claims.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
+    claims.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
+    claims.put(JWT_CLAIM_SCOPES,
+      userDetails.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
+    return claims;
+  }
 
-	private String getSubjectFromToken(String token) {
-		Claims claims = getClaimsFromToken(token);
-		if (null != claims) {
-			return claims.getSubject();
-		} else {
-			return null;
-		}
-	}
+  private String buildAccessTokenValue(String username) {
+    String token = null;
+    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    if (userDetails != null) {
+      token = Jwts.builder()
+        // If calling the setClaims method then call it before all other setters
+        .setClaims(addClaimstoToken(userDetails)).setSubject(userDetails.getUsername())
+        .setIssuer(jwtProperties.getTokenIssuer()).setIssuedAt(getIssuedAtDate()).setExpiration(getExpirationDate())
+        .signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey()).compact();
+    }
+    return token;
+  }
 
-	private String getJtiFromToken(String token) {
-		Claims claims = getClaimsFromToken(token);
-		if (null != claims) {
-			return claims.getId();
-		} else {
-			return null;
-		}
-	}
+  private String buildRefreshToken(String username, String clientId) {
+    return CommonConstants.AUTH_BEARER_HEADER + " " + buildRefreshTokenValue(username, clientId);
+  }
 
-	private Claims getClaimsFromToken(String token) {
-		try {
-			return Jwts.parser()
-			.setAllowedClockSkewSeconds(jwtProperties.getAllowedClockSkewSeconds())
-			.setSigningKey(getEncodedPrivateKey())
-			.parseClaimsJws(token)
-			.getBody();
-		} catch (ExpiredJwtException e) {
-			throw new BadCredentialsException("The token " + token + " expired.");
-		}
-	}
+  public String buildRefreshTokenValue(String username, String clientId) {
+    String token = null;
+    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    if (userDetails != null) {
+      LocalDateTime currentTime = LocalDateTime.now();
+      Date expirationDate = Date.from(currentTime.plusMinutes(jwtProperties.getRefreshTokenExpirationTime())
+          .atZone(ZoneId.systemDefault()).toInstant());
+      Claims claims = Jwts.claims();
+      User user = userService.findByEmail(userDetails.getUsername());
+      claims.put(JWT_CLAIM_EMAIL, user.getEmail().getEmailAddress());
+      token = Jwts.builder()
+          // If calling the setClaims method then call it before all other setters
+          .setClaims(claims).setSubject(clientId).setId(UUID.randomUUID().toString())
+          .setIssuer(jwtProperties.getTokenIssuer())
+          .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant())).setExpiration(expirationDate)
+          .signWith(SignatureAlgorithm.HS512, getEncodedPrivateKey()).compact();
+    }
+    return token;
+  }
 
-	private String extractAccessTokenFromRequest(HttpServletRequest request) {
-	    String token = null;
-        String header = request.getHeader(CommonConstants.ACCESS_TOKEN_HEADER_NAME);
-        if (header != null && header.contains(CommonConstants.AUTH_BEARER_HEADER)) {
-			int start = (CommonConstants.AUTH_BEARER_HEADER + " ").length();
-            if (header.length() > start) {
-                token = header.substring(start);
+  public Authentication authenticate(HttpServletRequest request) {
+    String token = extractAccessTokenFromRequest(request);
+    logger.debug("The request should contain an authentication token: " + token);
+    if (token != null) {
+      if (!token.isEmpty()) {
+        try {
+          String subject = getSubjectFromToken(token);
+          if (subject != null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            logger.debug("Security - The request authenticated fine from the JWT Access token");
+            return authentication;
+          } else {
+            throw new BadCredentialsException("The authentication token " + token + " did not contain a subject.");
+          }
+        } catch (SignatureException e) {
+          throw new BadCredentialsException("The authentication token " + token + " could not be parsed.");
+        }
+      } else {
+        throw new BadCredentialsException("The authentication token was empty.");
+      }
+    } else {
+      throw new BadCredentialsException("The authentication token was missing.");
+    }
+  }
+
+  public Authentication authenticateFromRefreshToken(HttpServletRequest request) {
+    String token = extractRefreshTokenFromRequest(request);
+    if (token != null) {
+      if (!token.isEmpty()) {
+        try {
+          String jti = getJtiFromToken(token);
+          if (jti != null) {
+            String subject = getSubjectFromToken(token);
+            if (subject != null) {
+              Claims claims = getClaimsFromToken(token);
+              String email = (String) claims.get(JWT_CLAIM_EMAIL);
+              UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+              UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                  null, userDetails.getAuthorities());
+              authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+              logger.debug("Security - The request authenticated fine from the JWT Refresh token");
+              return authentication;
+            } else {
+              throw new BadCredentialsException("The refresh token " + token + " did not contain a subject.");
             }
-        } else {
-            // The token may be set as an HTTP parameter in case the client could not set it as an HTTP header
-			token = request.getParameter(ACCESS_TOKEN_URL_PARAM_NAME);
-		}
-		return token;
-	}
+          } else {
+            throw new BadCredentialsException("The refresh token " + token + " did not contain a JTI.");
+          }
+        } catch (SignatureException e) {
+          throw new BadCredentialsException("The refresh token " + token + " could not be parsed.");
+        }
+      } else {
+        throw new BadCredentialsException("The refresh token was empty.");
+      }
+    } else {
+      throw new BadCredentialsException("The refresh token was missing from the request.");
+    }
+  }
 
-	private String extractClientIdFromRequest(HttpServletRequest request) {
-        return request.getHeader(CommonConstants.CLIENT_ID_HEADER_NAME);
-	}
+  private String getSubjectFromToken(String token) {
+    Claims claims = getClaimsFromToken(token);
+    if (null != claims) {
+      return claims.getSubject();
+    } else {
+      return null;
+    }
+  }
 
-	private String extractRefreshTokenFromRequest(HttpServletRequest request) {
-	    String token = null;
-        String header = request.getHeader(CommonConstants.REFRESH_TOKEN_HEADER_NAME);
-        if (header != null && header.contains(CommonConstants.AUTH_BEARER_HEADER)) {
-			int start = (CommonConstants.AUTH_BEARER_HEADER + " ").length();
-            if (header.length() > start) {
-                token = header.substring(start);
-            }
-		}
-		return token;
-	}
+  private String getJtiFromToken(String token) {
+    Claims claims = getClaimsFromToken(token);
+    if (null != claims) {
+      return claims.getId();
+    } else {
+      return null;
+    }
+  }
 
-	private String getEncodedPrivateKey() {
-		String privateKey = jwtProperties.getTokenPrivateKey();
-		return Base64.getEncoder().encodeToString(privateKey.getBytes(UTF_8));
-	}
-	
+  private Claims getClaimsFromToken(String token) {
+    try {
+      return Jwts.parser().setAllowedClockSkewSeconds(jwtProperties.getAllowedClockSkewSeconds())
+          .setSigningKey(getEncodedPrivateKey()).parseClaimsJws(token).getBody();
+    } catch (ExpiredJwtException e) {
+      throw new BadCredentialsException("The token " + token + " expired.");
+    }
+  }
+
+  private String extractAccessTokenFromRequest(HttpServletRequest request) {
+    String token = null;
+    String header = request.getHeader(CommonConstants.ACCESS_TOKEN_HEADER_NAME);
+    if (header != null && header.contains(CommonConstants.AUTH_BEARER_HEADER)) {
+      int start = (CommonConstants.AUTH_BEARER_HEADER + " ").length();
+      if (header.length() > start) {
+        token = header.substring(start);
+      }
+    } else {
+      // The token may be set as an HTTP parameter in case the client could not set it
+      // as an HTTP header
+      token = request.getParameter(ACCESS_TOKEN_URL_PARAM_NAME);
+    }
+    return token;
+  }
+
+  private String extractClientIdFromRequest(HttpServletRequest request) {
+    return request.getHeader(CommonConstants.CLIENT_ID_HEADER_NAME);
+  }
+
+  private String extractRefreshTokenFromRequest(HttpServletRequest request) {
+    String token = null;
+    String header = request.getHeader(CommonConstants.REFRESH_TOKEN_HEADER_NAME);
+    if (header != null && header.contains(CommonConstants.AUTH_BEARER_HEADER)) {
+      int start = (CommonConstants.AUTH_BEARER_HEADER + " ").length();
+      if (header.length() > start) {
+        token = header.substring(start);
+      }
+    }
+    return token;
+  }
+
+  private String getEncodedPrivateKey() {
+    String privateKey = jwtProperties.getTokenPrivateKey();
+    return Base64.getEncoder().encodeToString(privateKey.getBytes(UTF_8));
+  }
+
 }
