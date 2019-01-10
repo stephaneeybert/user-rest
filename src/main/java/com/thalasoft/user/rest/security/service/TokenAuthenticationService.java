@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.service;
+package com.thalasoft.user.rest.security.service;
 
 import java.util.Date;
 
@@ -15,14 +15,16 @@ import io.jsonwebtoken.Claims;
 @Transactional
 public interface TokenAuthenticationService {
 
-	public void addAccessTokenToResponseHeader(HttpHeaders headers, String username);
+	public void addAccessTokenToHeader(HttpHeaders headers, String username);
 
-	public void addRefreshTokenToResponseHeader(HttpHeaders headers, String username, String clientId);
+	public void addRefreshTokenToHeader(HttpHeaders headers, String username, String clientId);
 
-	public void addAccessTokenToResponseHeader(HttpServletResponse response, Authentication authentication);
+	public void addAccessTokenToHeader(HttpServletResponse response, Authentication authentication);
 	
-	public void addRefreshTokenToResponseHeader(HttpServletRequest request, HttpServletResponse response, Authentication authentication);
-	
+	public void addRefreshTokenToHeader(HttpServletRequest request, HttpServletResponse response, Authentication authentication);
+  
+  public String buildOAuthAccessToken(String token);
+  
 	public Authentication authenticate(HttpServletRequest request);
 
 	public Authentication authenticateFromRefreshToken(HttpServletRequest request);

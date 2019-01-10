@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.service;
+package com.thalasoft.user.rest.security.service;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

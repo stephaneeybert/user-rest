@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.service;
+package com.thalasoft.user.rest.security.service;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -54,19 +54,19 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
   private UserService userService;
 
   @Override
-  public void addAccessTokenToResponseHeader(HttpHeaders headers, String username) {
+  public void addAccessTokenToHeader(HttpHeaders headers, String username) {
     String token = buildAccessToken(username);
     headers.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME, token);
   }
 
   @Override
-  public void addRefreshTokenToResponseHeader(HttpHeaders headers, String username, String clientId) {
+  public void addRefreshTokenToHeader(HttpHeaders headers, String username, String clientId) {
     String token = buildRefreshToken(username, clientId);
     headers.add(CommonConstants.REFRESH_TOKEN_HEADER_NAME, token);
   }
 
   @Override
-  public void addAccessTokenToResponseHeader(HttpServletResponse response, Authentication authentication) {
+  public void addAccessTokenToHeader(HttpServletResponse response, Authentication authentication) {
     String username = authentication.getName();
     if (username != null) {
       String token = buildAccessToken(username);
@@ -75,7 +75,7 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
   }
 
   @Override
-  public void addRefreshTokenToResponseHeader(HttpServletRequest request, HttpServletResponse response,
+  public void addRefreshTokenToHeader(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) {
     String username = authentication.getName();
     if (username != null) {
@@ -83,6 +83,11 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
       String token = buildRefreshToken(username, clientId);
       response.addHeader(CommonConstants.REFRESH_TOKEN_HEADER_NAME, token);
     }
+  }
+
+  @Override
+  public String buildOAuthAccessToken(String token) {
+    return CommonConstants.AUTH_BEARER_HEADER + " " + token;
   }
 
   private String buildAccessToken(String username) {

@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.controller;
+package com.thalasoft.user.rest.security.controller;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,8 +13,8 @@ import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.assembler.UserResourceAssembler;
 import com.thalasoft.user.rest.resource.UserResource;
-import com.thalasoft.user.rest.service.CredentialsService;
-import com.thalasoft.user.rest.service.TokenAuthenticationService;
+import com.thalasoft.user.rest.security.service.CredentialsService;
+import com.thalasoft.user.rest.security.service.TokenAuthenticationService;
 import com.thalasoft.user.rest.service.resource.CredentialsResource;
 import com.thalasoft.user.rest.utils.DomainConstants;
 import com.thalasoft.user.rest.utils.RESTConstants;
@@ -56,7 +56,7 @@ public class AuthorizationController {
         try {
             User user = credentialsService.checkPassword(credentialsResource);
             userService.clearReadablePassword(user);
-            tokenAuthenticationService.addAccessTokenToResponseHeader(responseHeaders, credentialsResource.getEmail());
+            tokenAuthenticationService.addAccessTokenToHeader(responseHeaders, credentialsResource.getEmail());
             URI location = builder.path(RESTConstants.SLASH + DomainConstants.USERS + RESTConstants.SLASH + "{id}")
                     .buildAndExpand(user.getId()).toUri();
             UserResource createdUserResource = userResourceAssembler.toResource(user);
@@ -73,7 +73,7 @@ public class AuthorizationController {
         Authentication authentication = tokenAuthenticationService.authenticateFromRefreshToken(request);
         // Only the access token is refreshed
         // Refresing the refresh token would be like giving a never expiring refresh token
-        tokenAuthenticationService.addAccessTokenToResponseHeader(response, authentication);
+        tokenAuthenticationService.addAccessTokenToHeader(response, authentication);
         ResourceSupport resource = new ResourceSupport();
         URI location = builder.path(RESTConstants.SLASH + DomainConstants.TOKEN_REFRESH).buildAndExpand().toUri();
         return ResponseEntity.created(location).body(resource);

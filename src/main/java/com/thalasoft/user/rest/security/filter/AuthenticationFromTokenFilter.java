@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.security;
+package com.thalasoft.user.rest.security.filter;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.thalasoft.user.rest.service.TokenAuthenticationService;
+import com.thalasoft.user.rest.security.service.TokenAuthenticationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

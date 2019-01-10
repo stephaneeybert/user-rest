@@ -39,8 +39,6 @@ public class UserExceptionTest extends UnsecuredBaseTest {
         user0.setFirstname("Marie");
         user0.setLastname("Eybert");
         user0.setEmail(new EmailAddress("marie@yahoo.se"));
-        user0.setPassword("e41de4c55873f9c000f4cdaac6efd3aa");
-        user0.setPasswordSalt("7bc7bf5f94fef7c7106afe5c3a40a2");
     }
 
     @After

@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.security;
+package com.thalasoft.user.rest.security.filter;
 
 import java.io.IOException;
 
@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thalasoft.user.rest.service.CredentialsService;
-import com.thalasoft.user.rest.service.TokenAuthenticationService;
+import com.thalasoft.user.rest.security.service.CredentialsService;
+import com.thalasoft.user.rest.security.service.TokenAuthenticationService;
 import com.thalasoft.user.rest.service.resource.CredentialsResource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +45,8 @@ public class AuthenticationFromCredentialsFilter extends AbstractAuthenticationP
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authentication) throws IOException, ServletException {
-		tokenAuthenticationService.addAccessTokenToResponseHeader(response, authentication);
-		tokenAuthenticationService.addRefreshTokenToResponseHeader(request, response, authentication);
+		tokenAuthenticationService.addAccessTokenToHeader(response, authentication);
+		tokenAuthenticationService.addRefreshTokenToHeader(request, response, authentication);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.thalasoft.user.rest.config;
 
-import com.thalasoft.user.rest.service.CredentialsServiceImpl;
+import com.thalasoft.user.rest.security.service.CredentialsServiceImpl;
 import com.thalasoft.user.rest.service.MetricsServiceImpl;
 import com.thalasoft.user.rest.service.ResourceServiceImpl;
 

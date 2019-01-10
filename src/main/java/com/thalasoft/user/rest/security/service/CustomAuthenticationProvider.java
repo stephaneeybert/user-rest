@@ -1,6 +1,6 @@
-package com.thalasoft.user.rest.security;
+package com.thalasoft.user.rest.security.service;
 
-import com.thalasoft.user.rest.service.CredentialsService;
+import com.thalasoft.user.rest.security.service.CredentialsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;

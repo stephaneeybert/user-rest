@@ -1,4 +1,4 @@
-package com.thalasoft.user.rest.service;
+package com.thalasoft.user.rest.security.service;
 
 import com.thalasoft.user.data.jpa.domain.EmailAddress;
 import com.thalasoft.user.data.jpa.domain.User;

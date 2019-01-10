@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.thalasoft.toolbox.spring.PackageBeanNameGenerator;
 import com.thalasoft.user.rest.filter.SimpleCORSFilter;
-import com.thalasoft.user.rest.security.AuthenticationFromCredentialsFilter;
-import com.thalasoft.user.rest.security.AuthenticationFromTokenFilter;
+import com.thalasoft.user.rest.security.filter.AuthenticationFromCredentialsFilter;
+import com.thalasoft.user.rest.security.filter.AuthenticationFromTokenFilter;
 import com.thalasoft.user.rest.security.RESTAuthenticationEntryPoint;
 import com.thalasoft.user.rest.utils.DomainConstants;
 import com.thalasoft.user.rest.utils.RESTConstants;
@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@EnableWebSecurity
+// @EnableWebSecurity
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.service", "com.thalasoft.user.rest.filter" })
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 

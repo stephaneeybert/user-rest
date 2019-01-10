@@ -8,7 +8,10 @@ logging:
     org:
       hibernate:
         SQL: debug
-      springframework: trace
+      springframework:
+        security:
+          jwt: debug
+          oauth2: debug
 
 # Security 
 security.jwt:
