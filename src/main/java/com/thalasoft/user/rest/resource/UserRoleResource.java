@@ -2,7 +2,11 @@ package com.thalasoft.user.rest.resource;
 
 import javax.validation.constraints.NotEmpty;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -11,11 +15,11 @@ import lombok.*;
 @ToString
 public class UserRoleResource extends AbstractResource {
 
-    @NotEmpty
-    private String role;
+  @NotEmpty
+  private String role;
 
-	public int hashCode() {
-		return role.hashCode();
-	}
-	
+  public int hashCode() {
+    return role.hashCode();
+  }
+
 }
