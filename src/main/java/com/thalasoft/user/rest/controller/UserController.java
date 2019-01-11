@@ -5,7 +5,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -35,6 +37,9 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +56,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Controller
 @RequestMapping(RESTConstants.SLASH + DomainConstants.USERS)
 public class UserController {
+  
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private ResourceService resourceService;
@@ -67,8 +74,9 @@ public class UserController {
     @Autowired
     private UserResourceAssembler userResourceAssembler;
 
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
-
+    @Autowired
+    private AuthorizationServerTokenServices tokenServices;
+  
     private static final Set<String> nonSortableColumns = new HashSet<String>(Arrays.asList("id", "confirmedEmail"));
   
     @GetMapping(value = RESTConstants.SLASH + "{id}")
@@ -234,6 +242,15 @@ public class UserController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping(value = "/getAccessToken") // TODO
+    public String getSection(OAuth2Authentication authentication) {
+        Map<String, Object> additionalInfo = tokenServices.getAccessToken(authentication).getAdditionalInformation();
+        String customInfo = (String) additionalInfo.get("customInfo");
+        Collection<? extends GrantedAuthority> authorities = (Collection<? extends GrantedAuthority>) additionalInfo.get("authorities");
+        // Play with authorities
+        return customInfo;
     }
 
 }

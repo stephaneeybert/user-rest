@@ -1,5 +1,6 @@
 package com.thalasoft.user.rest.security.oauth2;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -71,21 +73,18 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-  // @Autowired
+  // @Autowired TODO
   // private ClientDetailsService clientDetailsService;
-
-	@Autowired
-	private TokenAuthenticationService tokenAuthenticationService;
 
 	@Autowired
   @Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
-  
+
   @Bean
   public OAuth2AccessDeniedHandler oauthAccessDeniedHandler() {
     return new OAuth2AccessDeniedHandler();
   }
-  
+
 	// Define the client applications
 	// TODO The client applications should be defined in a database instead of in memory
 	@Override
@@ -108,7 +107,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		.accessTokenValiditySeconds(jwtProperties.getAccessTokenExpirationTime())
 		.refreshTokenValiditySeconds(jwtProperties.getRefreshTokenExpirationTime());
 	}
-	
+
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
     // For an asymmetric encryption, that is, a certificate with a private key and a public key,
@@ -134,11 +133,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
-		.authenticationManager(authenticationManager)
     .tokenServices(defaultTokenServices())
     .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
-    .tokenEnhancer(jwtAccessTokenConverter())
-    .accessTokenConverter(jwtAccessTokenConverter())
 		.userDetailsService(userDetailsService);
 
 		// The URL paths provided by the framework are:
@@ -151,64 +147,48 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		endpoints
 		// .pathMapping("/oauth/authorize", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.AUTHORIZE)
 		.pathMapping("/oauth/token", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN);
-		
+
 		// if (jwtProperties.getCheckUserScopes()) {
 		// 	endpoints.requestFactory(requestFactory());
     // }
-	}
 
-  // @Bean
-  // public JwtAccessTokenConverter jwtAccessTokenConverter() {
-  //   JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-  //   tokenConverter.setSigningKey(PRIVATE_KEY);
-  //   tokenConverter.setVerifierKey(PUBLIC_KEY);
-  //   return tokenConverter;
-  // }
-
-  @Bean
-	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-		JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-		jwtAccessTokenConverter.setKeyPair(new KeyStoreKeyFactory(new ClassPathResource(jwtProperties.getSslKeystoreFilename()), jwtProperties.getSslKeystorePassword().toCharArray()).getKeyPair(jwtProperties.getSslKeyPair()));
-		return jwtAccessTokenConverter;
+    TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+    tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
+    endpoints
+    // .tokenStore(tokenStore())
+    .tokenEnhancer(tokenEnhancerChain)
+    // .tokenEnhancer(jwtAccessTokenConverter())
+    // .accessTokenConverter(jwtAccessTokenConverter())
+    .authenticationManager(authenticationManager);
 	}
 
   @Bean
-  public TokenEnhancer tokenEnhancer() {
-      return new CustomTokenEnhancer();
-  }
-
-	// Add user information to the token
-	class CustomTokenEnhancer implements TokenEnhancer {
-
-		@Override
-		public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-			User user = (User) authentication.getPrincipal();
-			Map<String, Object> info = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
-      info.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
-			info.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
-      info.put("scopes", authentication.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
-      info.put("organization", authentication.getName());
-			DefaultOAuth2AccessToken customAccessToken = new DefaultOAuth2AccessToken(accessToken);
-      customAccessToken.setAdditionalInformation(info);
-      customAccessToken.setExpiration(tokenAuthenticationService.getExpirationDate());
-			return customAccessToken;
-    }
-    
+  @Primary
+  public DefaultTokenServices defaultTokenServices() {
+		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+    defaultTokenServices.setTokenStore(tokenStore());
+		defaultTokenServices.setSupportRefreshToken(true);
+    // defaultTokenServices.setClientDetailsService(clientDetailsService);
+		return defaultTokenServices;
 	}
-			
+
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(jwtAccessTokenConverter());
 	}
 
-	@Bean
-	@Primary
-	public DefaultTokenServices defaultTokenServices() {
-		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-    defaultTokenServices.setTokenStore(tokenStore());
-    // defaultTokenServices.setClientDetailsService(clientDetailsService);
-		defaultTokenServices.setSupportRefreshToken(true);
-		return defaultTokenServices;
+  @Bean
+	public JwtAccessTokenConverter jwtAccessTokenConverter() {
+		JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+		jwtAccessTokenConverter.setKeyPair(new KeyStoreKeyFactory(new ClassPathResource(jwtProperties.getSslKeystoreFilename()), jwtProperties.getSslKeystorePassword().toCharArray()).getKeyPair(jwtProperties.getSslKeyPair()));
+  //   jwtAccessTokenConverter.setSigningKey(PRIVATE_KEY);
+  //   jwtAccessTokenConverter.setVerifierKey(PUBLIC_KEY);
+  return jwtAccessTokenConverter;
 	}
+
+  @Bean
+  public TokenEnhancer tokenEnhancer() {
+    return new CustomTokenEnhancer();
+  }
 
 }

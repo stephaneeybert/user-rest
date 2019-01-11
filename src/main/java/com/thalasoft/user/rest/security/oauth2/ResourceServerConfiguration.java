@@ -1,7 +1,11 @@
 package com.thalasoft.user.rest.security.oauth2;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.thalasoft.user.rest.filter.SimpleCORSFilter;
 import com.thalasoft.user.rest.properties.JwtProperties;
@@ -10,21 +14,23 @@ import com.thalasoft.user.rest.utils.DomainConstants;
 import com.thalasoft.user.rest.utils.RESTConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.stereotype.Component;
 
 @Configuration
 @EnableResourceServer
@@ -32,7 +38,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
   private static final String SECURED_READ_SCOPE = "#oauth2.hasScope('read')";
   private static final String SECURED_WRITE_SCOPE = "#oauth2.hasScope('write')";
-
+  private static final String SSL_PUBLIC_KEY_BORDER = "-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----";
+  @Autowired
+  private CustomAccessTokenConverter customAccessTokenConverter;
+  
   @Autowired
   private JwtProperties jwtProperties;
 
@@ -42,38 +51,51 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
   @Autowired
   private SimpleCORSFilter simpleCORSFilter;
 
-  @Autowired
-  private DefaultTokenServices defaultTokenServices;
-
   @Override
   public void configure(ResourceServerSecurityConfigurer configurer) {
     configurer.resourceId(AuthorizationServerConfiguration.RESOURCE_SERVER_ID);
-    configurer.tokenServices(defaultTokenServices);
+    configurer.tokenServices(resourceServerDefaultTokenServices());
   }
 
-  // // Start duplicate code of token store
-  // @Bean
-	// public TokenStore resourceServerTokenStore() {
-	// 	return new JwtTokenStore(resourceServerJwtAccessTokenConverter());
-  // }
+  public Map<String, Object> getExtraInfo(OAuth2Authentication auth) {
+    OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) auth.getDetails();
+    OAuth2AccessToken accessToken = resourceServerTokenStore().readAccessToken(details.getTokenValue());
+    return accessToken.getAdditionalInformation();
+  }
+
+	private DefaultTokenServices resourceServerDefaultTokenServices() {
+		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+    defaultTokenServices.setTokenStore(resourceServerTokenStore());
+    // defaultTokenServices.setClientDetailsService(clientDetailsService);
+		defaultTokenServices.setSupportRefreshToken(true);
+		return defaultTokenServices;
+	}
+
+  private TokenStore resourceServerTokenStore() {
+    return new JwtTokenStore(jwtAccessTokenConverter());
+  }
   
-  // @Bean
-	// public JwtAccessTokenConverter resourceServerJwtAccessTokenConverter() {
-	// 	JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-	// 	jwtAccessTokenConverter.setKeyPair(new KeyStoreKeyFactory(new ClassPathResource(jwtProperties.getSslKeystoreFilename()), jwtProperties.getSslKeystorePassword().toCharArray()).getKeyPair(jwtProperties.getSslKeyPair()));
-	// 	return jwtAccessTokenConverter;
-  // }
-  
-  // @Bean
-	// @Primary
-	// public DefaultTokenServices resourceServerDefaultTokenServices() {
-	// 	DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-  //   defaultTokenServices.setTokenStore(resourceServerTokenStore());
-  //   // defaultTokenServices.setClientDetailsService(clientDetailsService);
-	// 	defaultTokenServices.setSupportRefreshToken(true);
-	// 	return defaultTokenServices;
-	// }
-  // // End duplicate code of token store
+  private JwtAccessTokenConverter jwtAccessTokenConverter() {
+    JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+
+    // TODO Instead of having the public key in a resource file, try obtaining it from
+    // the authorization server from the /oauth/token_key endpoint
+    // See https://github.com/spring-projects/spring-security-oauth/blob/master/docs/oauth2.md#jwt-tokens
+    String publicKey = null;
+    try {
+      File resource = new ClassPathResource(jwtProperties.getSslPublicKeyFilename()).getFile();
+      publicKey = new String(Files.readAllBytes(resource.toPath()));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    String verifierKey = String.format(SSL_PUBLIC_KEY_BORDER, publicKey);
+    jwtAccessTokenConverter.setVerifierKey(verifierKey);
+
+    jwtAccessTokenConverter.setAccessTokenConverter(customAccessTokenConverter);
+
+    return jwtAccessTokenConverter;
+  }
 
   @Override
   public void configure(HttpSecurity http) throws Exception {
