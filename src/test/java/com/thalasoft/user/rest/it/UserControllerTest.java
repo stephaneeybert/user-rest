@@ -185,10 +185,10 @@ public class UserControllerTest extends UnsecuredBaseTest {
                 .andExpect(jsonPath("$._links.self.href").exists())
                 .andExpect(jsonPath("$._links.next.href").exists())
                 .andExpect(jsonPath("$._links.prev.href").exists())
-                .andExpect(jsonPath("$._embedded.items[0].firstname").exists())
-                .andExpect(jsonPath("$._embedded.items[0].firstname").value(manyUserResources.get(10).getFirstname()))
-                .andExpect(jsonPath("$._embedded.items[0].lastname").value(manyUserResources.get(10).getLastname()))
-                .andExpect(jsonPath("$._embedded.items[0].email").value(manyUserResources.get(10).getEmail()))
+                .andExpect(jsonPath("$._embedded.userResourceList[0].firstname").exists())
+                .andExpect(jsonPath("$._embedded.userResourceList[0].firstname").value(manyUserResources.get(10).getFirstname()))
+                .andExpect(jsonPath("$._embedded.userResourceList[0].lastname").value(manyUserResources.get(10).getLastname()))
+                .andExpect(jsonPath("$._embedded.userResourceList[0].email").value(manyUserResources.get(10).getEmail()))
                 .andExpect(header().string("Location", Matchers.containsString("/users?searchTerm=")))
                 .andReturn();
     }
