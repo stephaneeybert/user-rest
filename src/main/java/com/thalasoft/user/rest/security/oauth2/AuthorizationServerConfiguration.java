@@ -157,19 +157,13 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     // }
 	}
 
-  // @Bean
-  // public JwtAccessTokenConverter jwtAccessTokenConverter() {
-  //   JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-  //   tokenConverter.setSigningKey(PRIVATE_KEY);
-  //   tokenConverter.setVerifierKey(PUBLIC_KEY);
-  //   return tokenConverter;
-  // }
-
   @Bean
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
 		JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
 		jwtAccessTokenConverter.setKeyPair(new KeyStoreKeyFactory(new ClassPathResource(jwtProperties.getSslKeystoreFilename()), jwtProperties.getSslKeystorePassword().toCharArray()).getKeyPair(jwtProperties.getSslKeyPair()));
-		return jwtAccessTokenConverter;
+  //   jwtAccessTokenConverter.setSigningKey(PRIVATE_KEY);
+  //   jwtAccessTokenConverter.setVerifierKey(PUBLIC_KEY);
+  return jwtAccessTokenConverter;
 	}
 
   @Bean
@@ -197,11 +191,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	}
 			
 	@Bean
-	public TokenStore tokenStore() {
-		return new JwtTokenStore(jwtAccessTokenConverter());
-	}
-
-	@Bean
 	@Primary
 	public DefaultTokenServices defaultTokenServices() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
@@ -209,6 +198,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     // defaultTokenServices.setClientDetailsService(clientDetailsService);
 		defaultTokenServices.setSupportRefreshToken(true);
 		return defaultTokenServices;
+	}
+
+	@Bean
+	public TokenStore tokenStore() {
+		return new JwtTokenStore(jwtAccessTokenConverter());
 	}
 
 }

@@ -20,4 +20,6 @@ public interface JwtProperties {
 
     public String getSslKeyPair();
     
+    public String getSslPublicKeyFilename();
+    
 }

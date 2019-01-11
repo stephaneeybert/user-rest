@@ -24,6 +24,7 @@ security.jwt:
   sslKeystoreFilename: oauth2/thalasoft.keystore
   sslKeystorePassword: mydearssl
   sslKeyPair: user-rest.key
+  sslPublicKeyFilename: oauth2/thalasoft.pub  
 
 # security: TODO use this or remove it
   # oauth2:
