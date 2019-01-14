@@ -24,13 +24,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
-import org.springframework.stereotype.Component;
 
 @Configuration
 @EnableResourceServer
@@ -41,7 +39,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
   private static final String SSL_PUBLIC_KEY_BORDER = "-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----";
   @Autowired
   private CustomAccessTokenConverter customAccessTokenConverter;
-  
+
   @Autowired
   private JwtProperties jwtProperties;
 
@@ -74,7 +72,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
   private TokenStore resourceServerTokenStore() {
     return new JwtTokenStore(jwtAccessTokenConverter());
   }
-  
+
   private JwtAccessTokenConverter jwtAccessTokenConverter() {
     JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
 
