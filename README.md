@@ -11,7 +11,6 @@ mvn clean install -Denv="test" -Ddb="h2"
 The data layer is compatible with MySQL and Oracle
 ```
 -Denv="prod" (an empty env string is considered as prod)
--Denv="preprod"
 -Denv="test"
 -Ddb="mysql"
 -Ddb="oracle"
@@ -42,7 +41,9 @@ curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Aut
 Some OAuth2 requests
 ```
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" "http://localhost:8080/api/auth/authorize?client_id=ng-zero&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fcallback&state=DCEeFWf45A53sdfKef424&response_type=code&scope=read_profile" -X POST
+```
 Using httpie
+```
 http -f POST http://localhost:8080/api/auth/authorize client_id=="ng-zero" redirect_uri=="http://localhost:4200/callback" state=="DCEeFWf45A53sdfKef424" response_type=="code" scope=="read_profile" "Accept:application/json" "Content-Type:application/json" "Authorization:Bearer $TOKEN" user_oauth_approval="true" authorize="Authorize"
 ```
 
