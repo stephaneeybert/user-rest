@@ -11,7 +11,6 @@ mvn clean install -Denv="test" -Ddb="h2"
 The data layer is compatible with MySQL and Oracle
 ```
 -Denv="prod" (an empty env string is considered as prod)
--Denv="preprod"
 -Denv="test"
 -Ddb="mysql"
 -Ddb="oracle"
