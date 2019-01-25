@@ -29,6 +29,11 @@ mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:tran
 mvn clean install -Denv="test" -Ddb="h2" -Dmaven.surefire.debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -Xnoagent -Djava.compiler=NONE"
 ```
 
+Some HTTPS request(s)
+```
+curl -i -H "Accept:application/json" --insecure https://localhost:8443/api/
+```
+
 Some example API requests
 ```
 curl -i -H "Accept:application/json" http://localhost:8080/api/error
