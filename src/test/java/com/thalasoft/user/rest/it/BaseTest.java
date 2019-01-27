@@ -80,7 +80,7 @@ public abstract class BaseTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain).build();
         httpHeaders = new HttpHeaders();
     }
-    
+
     @Before
     public void createUserResources() throws Exception {
         userResource0 = new UserResource();
