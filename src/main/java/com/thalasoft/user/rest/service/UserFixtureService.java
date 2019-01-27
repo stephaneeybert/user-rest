@@ -14,7 +14,7 @@ public class UserFixtureService {
 
 	@Autowired
 	private UserService userService;
-	
+
     public static final String USER_EMAIL = "mittiprovence@yahoo.se";
     public static final String USER_PASSWORD = "mignet";
     public static final String USER_ENCODED_PASSWORD = "bWl0dGlwcm92ZW5jZUB5YWhvby5zZTptaWduZXQ4ZDE5MjcyOS0zZjRiLTQ1Y2QtYmQ5Yy00MDMxYWY=";
