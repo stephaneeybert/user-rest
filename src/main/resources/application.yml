@@ -3,11 +3,12 @@ server.port: 8443
 # The format used for the keystore
 server.ssl.key-store-type: PKCS12
 # The path to the keystore containing the certificate
-server.ssl.key-store: classpath:oauth2/thalasoft.keystore
+server.ssl.key-store: file:thalasoft.keystore
 # The password used to generate the certificate
 server.ssl.key-store-password: mydearssl
 # The alias mapped to the certificate
 server.ssl.key-alias: thalasoft.key
+server.ssl.key-password: littlep
 
 server.error.whitelabel.enabled: false
 server.servlet.context-path: /api
