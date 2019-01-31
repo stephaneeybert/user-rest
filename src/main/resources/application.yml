@@ -20,6 +20,7 @@ logging:
       hibernate:
         SQL: debug
       springframework: trace
+  file: logs/user-rest.log
 
 # Security 
 security.jwt:
