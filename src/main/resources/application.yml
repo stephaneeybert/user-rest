@@ -7,7 +7,7 @@ server.ssl.key-store: classpath:oauth2/thalasoft.keystore
 # The password used to generate the certificate
 server.ssl.key-store-password: mydearssl
 # The alias mapped to the certificate
-server.ssl.key-alias: user-rest.key
+server.ssl.key-alias: thalasoft.key
 
 server.error.whitelabel.enabled: false
 server.servlet.context-path: /api
