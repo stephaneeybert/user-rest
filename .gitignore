@@ -25,6 +25,4 @@
 /.nb-gradle/
 
 thalasoft.keystore
-src/main/resources/oauth2/thalasoft.keystore
-src/main/resources/oauth2/thalasoft.keystore
-src/main/resources/oauth2/thalasoft.keystore
+logs
