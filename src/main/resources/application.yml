@@ -19,7 +19,7 @@ logging:
     org:
       hibernate:
         SQL: debug
-      springframework: trace
+      springframework: debug
   file: logs/user-rest.log
 
 # Security 
