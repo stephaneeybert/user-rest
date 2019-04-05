@@ -75,7 +75,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Autowired
   @Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -103,7 +103,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		.accessTokenValiditySeconds(jwtProperties.getAccessTokenExpirationTime())
 		.refreshTokenValiditySeconds(jwtProperties.getRefreshTokenExpirationTime());
 	}
-	
+
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		// Spring Security OAuth exposes two endpoints for checking tokens
@@ -141,7 +141,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		endpoints
 		.pathMapping("/oauth/authorize", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.AUTHORIZE)
 		.pathMapping("/oauth/token", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN);
-		
+
 		// if (jwtProperties.getCheckUserScopes()) {
 		// 	endpoints.requestFactory(requestFactory());
     // }
@@ -165,7 +165,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		}
 
 	}
-			
+
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(jwtAccessTokenConverter());
