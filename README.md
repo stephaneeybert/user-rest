@@ -36,20 +36,20 @@ curl -i -H "Accept:application/json" --insecure https://localhost:8443/api/
 
 Some example API requests
 ```
-curl -i -H "Accept:application/json" http://localhost:8080/api/error
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" "http://localhost:8080/api/auth/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "TokenRefresh: Bearer eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UiLCJzdWIiOiJORy1aRVJPIiwianRpIjoiNzBjYmYzZmItYmJhMC00Y2E3LWI4MTItZjNmYmM5NjMzNjU3IiwiaXNzIjoiaHR0cDovL3RoYWxhc29mdC5jb20iLCJpYXQiOjE1NDE0MTEyNzcsImV4cCI6MTU0MjAxNjA3N30.7soHggVsKkOU8SwepvF99c0JKltEWzgsOOyrtTWpPCODdH_TPyXFIVog_NWOOM1gmcFyqwbbZ3HDUQ6rgzdIaA" -H "ClientId: ng-zero" "http://localhost:8080/api/auth/token-refresh" -X POST
+curl -i -H "Accept:application/json" https://dev.thalasoft.com:8443/api/error
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" "https://dev.thalasoft.com:8443/api/auth/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
 export TOKEN=...
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6Im1pdHRpcHJvdmVuY2VAeWFob28uc2UiLCJmdWxsbmFtZSI6IlN0ZXBoYW5lIEV5YmVydCIsInNjb3BlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoibWl0dGlwcm92ZW5jZUB5YWhvby5zZSIsImlzcyI6Imh0dHA6Ly90aGFsYXNvZnQuY29tIiwiaWF0IjoxNTQwNzQwMDA5LCJleHAiOjE1NDA3NDM2MDl9.jmfp22i1DQOaIlcgmCOB-g1m-i9PqWcXcZiztcPV3Juweivn1EvWq9LFzaTMt_XFECw-u6Sfp8Bx2wcNKQKujg" "http://localhost:8080/api/users/1/password" -X PUT -d "\"mignet\""
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "TokenRefresh: Bearer $TOKEN" -H "ClientId: ng-zero" "https://dev.thalasoft.com:8443/api/auth/token-refresh" -X POST
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" "https://dev.thalasoft.com:8443/api/users/1/password" -X PUT -d "\"mignet\""
 ```
 
 Some OAuth2 requests
 ```
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" "http://localhost:8080/api/auth/authorize?client_id=ng-zero&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fcallback&state=DCEeFWf45A53sdfKef424&response_type=code&scope=read_profile" -X POST
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" "https://dev.thalasoft.com:8443/api/auth/authorize?client_id=ng-zero&redirect_uri=https%3A%2F%2Fdev.thalasoft.com%3A84%2Fcallback&state=DCEeFWf45A53sdfKef424&response_type=code&scope=read_profile" -X POST
 ```
 Using httpie
 ```
-http -f POST http://localhost:8080/api/auth/authorize client_id=="ng-zero" redirect_uri=="http://localhost:4200/callback" state=="DCEeFWf45A53sdfKef424" response_type=="code" scope=="read_profile" "Accept:application/json" "Content-Type:application/json" "Authorization:Bearer $TOKEN" user_oauth_approval="true" authorize="Authorize"
+http -f POST https://dev.thalasoft.com:8443/api/auth/authorize client_id=="ng-zero" redirect_uri=="https://dev.thalasoft.com:84/callback" state=="DCEeFWf45A53sdfKef424" response_type=="code" scope=="read_profile" "Accept:application/json" "Content-Type:application/json" "Authorization:Bearer $TOKEN" user_oauth_approval="true" authorize="Authorize"
 ```
 
 To do list
