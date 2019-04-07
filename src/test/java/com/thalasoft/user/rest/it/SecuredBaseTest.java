@@ -59,15 +59,6 @@ public abstract class SecuredBaseTest extends BaseTest {
     headers.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME, tokenAuthenticationService.buildOAuthAccessToken(token));
   }
 
-  private void addBase64UserPasswordHeaders(String username, String password, HttpHeaders httpHeaders) {
-    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-    httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    String usernamePassword = username + ":" + password;
-    String encodedAuthorisation = Base64.getEncoder().encodeToString(usernamePassword.getBytes(UTF_8));
-    httpHeaders.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME,
-        CommonConstants.AUTH_BASIC + " " + new String(encodedAuthorisation));
-  }
-
   private String getOAuthAccessToken(String oauthClientId, String username, String password) throws Exception {
     MultiValueMap<String, String> oauthParams = new LinkedMultiValueMap<>();
     oauthParams.add("grant_type", AuthorizationServerConfiguration.OAUTH_GRANT_TYPE_PASSWORD);
@@ -85,6 +76,15 @@ public abstract class SecuredBaseTest extends BaseTest {
     String resultString = mvcResult.andReturn().getResponse().getContentAsString();
     JacksonJsonParser jsonParser = new JacksonJsonParser();
     return jsonParser.parseMap(resultString).get("access_token").toString();
+  }
+
+  private void addBase64UserPasswordHeaders(String username, String password, HttpHeaders httpHeaders) {
+    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+    httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+    String usernamePassword = username + ":" + password;
+    String encodedAuthorisation = Base64.getEncoder().encodeToString(usernamePassword.getBytes(UTF_8));
+    httpHeaders.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME,
+        CommonConstants.AUTH_BASIC + " " + new String(encodedAuthorisation));
   }
 
 }
