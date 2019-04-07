@@ -23,7 +23,7 @@ logging:
         SQL: debug
       springframework: debug
 
-# Security 
+# Security
 security.jwt:
   tokenIssuer: http://thalasoft.com
   tokenPrivateKey: xm8EOfkdu4d653D_GGIDAwQus
@@ -31,10 +31,10 @@ security.jwt:
   refreshTokenExpirationTime: 10080 # Expressed in minutes
   allowedClockSkewSeconds: 300
   checkUserScopes: false
-  sslKeystoreFilename: oauth2/thalasoft.keystore
+  sslKeystoreFilename: ssl/thalasoft.keystore
   sslKeystorePassword: mydearssl
   sslKeyPair: user-rest.key
-  sslPublicKeyFilename: oauth2/thalasoft.pub  
+  sslPublicKeyFilename: ssl/thalasoft.pub
 
 # security: TODO use this or remove it
   # oauth2:
@@ -45,7 +45,7 @@ security.jwt:
     #       client-id: <your client id>
     #       client-secret: <your client secret>
     #     facebook:
-    #       client-id: <your client id> 
+    #       client-id: <your client id>
     #       client-secret: <your client secret>
 
 # SSL
@@ -53,7 +53,7 @@ security.jwt:
 # server.port=8443
 # # Tell Spring Security (if used) to require requests over HTTPS
 # security.require-ssl=true
-# # The format used for the keystore 
+# # The format used for the keystore
 # server.ssl.key-store-type=PKCS12
 # # The path to the keystore containing the certificate
 # server.ssl.key-store=classpath:keystore.p12
