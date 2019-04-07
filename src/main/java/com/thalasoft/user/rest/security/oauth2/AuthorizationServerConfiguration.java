@@ -46,6 +46,8 @@ import org.springframework.security.oauth2.provider.request.DefaultOAuth2Request
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -77,6 +79,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
   // private ClientDetailsService clientDetailsService;
 
 	@Autowired
+	private TokenAuthenticationService tokenAuthenticationService;
+
+	@Autowired
   @Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
 
@@ -84,6 +89,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
   public OAuth2AccessDeniedHandler oauthAccessDeniedHandler() {
     return new OAuth2AccessDeniedHandler();
   }
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
 
 	// Define the client applications
 	// TODO The client applications should be defined in a database instead of in memory
@@ -134,7 +144,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
     .tokenServices(defaultTokenServices())
+		.authenticationManager(authenticationManager)
     .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
+    .tokenEnhancer(jwtAccessTokenConverter())
+    .accessTokenConverter(jwtAccessTokenConverter())
 		.userDetailsService(userDetailsService);
 
 		// The URL paths provided by the framework are:
@@ -145,7 +158,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		// /oauth/check_token (used by Resource Servers to decode access tokens)
 		// /oauth/token_key (exposes public key for token verification if using JWT tokens)
 		endpoints
-		// .pathMapping("/oauth/authorize", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.AUTHORIZE)
+		.pathMapping("/oauth/authorize", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.AUTHORIZE)
 		.pathMapping("/oauth/token", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN);
 
 		// if (jwtProperties.getCheckUserScopes()) {
@@ -169,7 +182,27 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     defaultTokenServices.setTokenStore(tokenStore());
 		defaultTokenServices.setSupportRefreshToken(true);
     // defaultTokenServices.setClientDetailsService(clientDetailsService);
+		//defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter());
 		return defaultTokenServices;
+	}
+
+	// Add user information to the token
+	class CustomTokenEnhancer extends JwtAccessTokenConverter {
+
+		@Override
+		public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+			User user = (User) authentication.getPrincipal();
+			Map<String, Object> info = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
+      info.put("email", user.getEmail());
+      info.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
+			info.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
+			info.put("scopes", authentication.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
+			DefaultOAuth2AccessToken customAccessToken = new DefaultOAuth2AccessToken(accessToken);
+      customAccessToken.setAdditionalInformation(info);
+      customAccessToken.setExpiration(tokenAuthenticationService.getExpirationDate());
+			return super.enhance(customAccessToken, authentication);
+		}
+
 	}
 
 	@Bean

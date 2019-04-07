@@ -59,10 +59,6 @@ public abstract class SecuredBaseTest extends BaseTest {
     headers.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME, tokenAuthenticationService.buildOAuthAccessToken(token));
   }
 
-  private void addTokenToRequestHeader(HttpHeaders headers, String username) {
-    tokenAuthenticationService.addAccessTokenToHeader(headers, username);
-  }
-
   private void addBase64UserPasswordHeaders(String username, String password, HttpHeaders httpHeaders) {
     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
     httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));

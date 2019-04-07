@@ -31,10 +31,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private RESTAuthenticationEntryPoint restAuthenticationEntryPoint;
-	
+
 	@Autowired
 	private SimpleCORSFilter simpleCORSFilter;
-	
+
 	@Autowired
 	private AuthenticationFromTokenFilter authenticationFromTokenFilter;
 
@@ -46,14 +46,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
+
 	@Bean
 	public AuthenticationFromCredentialsFilter authenticationFromCredentialsFilter() throws Exception {
 		AuthenticationFromCredentialsFilter authenticationFromCredentialsFilter = new AuthenticationFromCredentialsFilter(new AntPathRequestMatcher(RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.LOGIN, RequestMethod.POST.name()));
 		authenticationFromCredentialsFilter.setAuthenticationManager(authenticationManagerBean());
 		return authenticationFromCredentialsFilter;
 	}
-	
+
 	@Bean
 	public AuthenticationFromTokenFilter authenticationFromTokenFilter() throws Exception {
 		AuthenticationFromTokenFilter authenticationFromTokenFilter = new AuthenticationFromTokenFilter(securedPathRequestMatcher());
@@ -91,8 +91,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.httpBasic().disable()
 		.logout().disable();
 
-		http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
-					
+    http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
+
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(simpleCORSFilter, ChannelProcessingFilter.class);

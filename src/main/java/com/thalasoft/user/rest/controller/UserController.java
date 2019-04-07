@@ -56,8 +56,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Controller
 @RequestMapping(RESTConstants.SLASH + DomainConstants.USERS)
 public class UserController {
-  
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private ResourceService resourceService;
@@ -76,9 +74,11 @@ public class UserController {
 
     @Autowired
     private AuthorizationServerTokenServices tokenServices;
-  
+
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
+
     private static final Set<String> nonSortableColumns = new HashSet<String>(Arrays.asList("id", "confirmedEmail"));
-  
+
     @GetMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
     public ResponseEntity<UserResource> findById(@PathVariable Long id, UriComponentsBuilder builder) {
