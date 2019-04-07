@@ -24,6 +24,6 @@ public final class DomainConstants {
     private DomainConstants() {
         throw new AssertionError();
     }
-    
+
 }
 
