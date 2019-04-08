@@ -1,15 +1,3 @@
-# Enabling HTTPS
-server.port: 8443
-# The format used for the keystore
-server.ssl.key-store-type: PKCS12
-# The path to the keystore containing the certificate
-server.ssl.key-store: classpath:ssl/thalasoft.keystore
-# The password used to generate the certificate
-server.ssl.key-store-password: mydearssl
-# The alias mapped to the certificate
-server.ssl.key-alias: thalasoft.key
-server.ssl.key-password: littlep
-
 server.error.whitelabel.enabled: false
 server.servlet.context-path: /api
 
@@ -23,6 +11,18 @@ logging:
         SQL: debug
       springframework: debug
 
+# Enabling HTTPS
+server.port: 8443
+# The format used for the keystore
+server.ssl.key-store-type: PKCS12
+# The path to the keystore containing the certificate
+server.ssl.key-store: classpath:thalasoft-https.keystore
+# The password used to generate the certificate
+server.ssl.key-store-password: mydearssl
+# The alias mapped to the certificate
+server.ssl.key-alias: thalasoft.key
+server.ssl.key-password: littlep
+
 # Security
 security.jwt:
   tokenIssuer: http://thalasoft.com
@@ -31,10 +31,10 @@ security.jwt:
   refreshTokenExpirationTime: 10080 # Expressed in minutes
   allowedClockSkewSeconds: 300
   checkUserScopes: false
-  sslKeystoreFilename: oauth2/thalasoft.keystore
+  sslKeystoreFilename: classpath:thalasoft-jwt.keystore
   sslKeystorePassword: mydearssl
   sslKeyPair: user-rest.key
-  sslPublicKeyFilename: oauth2/thalasoft.pub
+  sslPublicKeyFilename: classpath:thalasoft-jwt.pub
 
 # security: TODO use this or remove it
   # oauth2:
