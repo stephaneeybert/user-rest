@@ -44,6 +44,7 @@ curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Aut
 ```
 
 Some OAuth2 requests
+The following TOKEN is not a Bearer one but a JWT one
 ```
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" "https://dev.thalasoft.com:8443/api/auth/authorize?client_id=ng-zero&redirect_uri=https%3A%2F%2Fdev.thalasoft.com%3A84%2Fcallback&state=DCEeFWf45A53sdfKef424&response_type=code&scope=read_profile" -X POST
 ```
