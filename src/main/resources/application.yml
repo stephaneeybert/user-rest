@@ -3,7 +3,8 @@ server.port: 8443
 # The format used for the keystore
 server.ssl.key-store-type: PKCS12
 # The path to the keystore containing the certificate
-server.ssl.key-store: classpath:ssl/thalasoft.keystore
+# The path must be in sync with the pom.xml file
+server.ssl.key-store: classpath:thalasoft.keystore
 # The password used to generate the certificate
 server.ssl.key-store-password: mydearssl
 # The alias mapped to the certificate
@@ -31,7 +32,8 @@ security.jwt:
   refreshTokenExpirationTime: 10080 # Expressed in minutes
   allowedClockSkewSeconds: 300
   checkUserScopes: false
-  sslKeystoreFilename: ssl/thalasoft.keystore
+  # The path must be in sync with the pom.xml file
+  sslKeystoreFilename: thalasoft.keystore
   sslKeystorePassword: mydearssl
   sslKeyPair: user-rest.key
 
