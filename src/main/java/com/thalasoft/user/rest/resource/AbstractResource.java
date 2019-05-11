@@ -4,7 +4,6 @@ import org.springframework.hateoas.ResourceSupport;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.thalasoft.user.data.jpa.domain.AbstractEntity;
 
 import lombok.*;
 
@@ -29,9 +28,9 @@ public abstract class AbstractResource extends ResourceSupport {
             return false;
         }
 
-        AbstractEntity that = (AbstractEntity) obj;
+        AbstractResource that = (AbstractResource) obj;
 
-        return this.resourceId.equals(that.getId());
+        return this.resourceId.equals(that.getResourceId());
     }
 
     @Override
