@@ -6,6 +6,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -70,7 +72,7 @@ public class UserController {
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private static final Set<String> nonSortableColumns = new HashSet<String>(Arrays.asList("id", "confirmedEmail"));
-  
+
     @GetMapping(value = RESTConstants.SLASH + "{id}")
     @ResponseBody
     public ResponseEntity<UserResource> findById(@PathVariable Long id, UriComponentsBuilder builder) {
@@ -132,6 +134,30 @@ public class UserController {
         User user = userService.delete(id);
         UserResource userResource = userResourceAssembler.toResource(user);
         return ResponseEntity.ok(userResource);
+    }
+
+    @GetMapping
+    @ResponseBody
+    public ResponseEntity<PagedResources<UserResource>> streamAll(@PageableDefault(sort = { "lastname", "firstname" }, direction = Sort.Direction.ASC) Pageable pageable, Sort sort,
+            PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
+        sort = CommonUtils.stripColumnsFromSorting(sort, nonSortableColumns);
+        userService.addSortToPageable(pageable, sort);
+        Page<User> foundUsers = getPage(userService.streamAll(), pageable, sort);
+        PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
+        userResourceAssembler);
+        UriComponentsBuilder uriComponentsBuilder = builder.path(RESTConstants.SLASH + DomainConstants.USERS);
+        resourceService.addPageableToUri(uriComponentsBuilder, pageable);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(uriComponentsBuilder.buildAndExpand().toUri());
+        return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(userPagedResources);
+    }
+
+    private Page<User> getPage(List<User> users, Pageable pageable, Sort sort) {
+        int start = (int) pageable.getOffset();
+        int end = (int) ((start + pageable.getPageSize()) > users.size() ? users.size()
+            : (start + pageable.getPageSize()));
+        Page<User> page = new PageImpl<User>(users.subList(start, end), pageable, users.size());
+        return page;
     }
 
     @GetMapping
