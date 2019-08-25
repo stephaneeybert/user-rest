@@ -136,13 +136,13 @@ public class UserController {
         return ResponseEntity.ok(userResource);
     }
 
-    @GetMapping
+    @GetMapping(value = DomainConstants.STREAM_ALL)
     @ResponseBody
     public ResponseEntity<PagedResources<UserResource>> streamAll(@PageableDefault(sort = { "lastname", "firstname" }, direction = Sort.Direction.ASC) Pageable pageable, Sort sort,
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         sort = CommonUtils.stripColumnsFromSorting(sort, nonSortableColumns);
         userService.addSortToPageable(pageable, sort);
-        Page<User> foundUsers = getPage(userService.streamAll(), pageable, sort);
+        Page<User> foundUsers = getPage(userService.streamAll(pageable), pageable, sort);
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
         userResourceAssembler);
         UriComponentsBuilder uriComponentsBuilder = builder.path(RESTConstants.SLASH + DomainConstants.USERS);

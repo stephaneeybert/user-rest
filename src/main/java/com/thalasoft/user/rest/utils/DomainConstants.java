@@ -15,6 +15,7 @@ public final class DomainConstants {
     public static final String EMAIL_CONFIRMATION_MAIL = "email-confirmation-mail";
     public static final String LOGIN = "login";
     public static final String LOGOUT = "logout";
+    public static final String STREAM_ALL = "stream-all";
     public static final String ROLES = "roles";
     public static final String ROLE_USER = "USER";
     public static final String ROLE_ADMIN = "ADMIN";
@@ -24,6 +25,5 @@ public final class DomainConstants {
     private DomainConstants() {
         throw new AssertionError();
     }
-    
-}
 
+}
