@@ -142,7 +142,7 @@ public class UserController {
             PagedResourcesAssembler<User> pagedResourcesAssembler, UriComponentsBuilder builder) {
         sort = CommonUtils.stripColumnsFromSorting(sort, nonSortableColumns);
         userService.addSortToPageable(pageable, sort);
-        Page<User> foundUsers = getPage(userService.streamAll(), pageable, sort);
+        Page<User> foundUsers = getPage(userService.streamAll(pageable), pageable, sort);
         PagedResources<UserResource> userPagedResources = pagedResourcesAssembler.toResource(foundUsers,
         userResourceAssembler);
         UriComponentsBuilder uriComponentsBuilder = builder.path(RESTConstants.SLASH + DomainConstants.USERS);
