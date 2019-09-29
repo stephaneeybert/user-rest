@@ -28,4 +28,5 @@
 .vscode/settings.json
 
 thalasoft.keystore
+user-rest.keystore
 logs
