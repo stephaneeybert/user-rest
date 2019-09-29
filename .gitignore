@@ -24,5 +24,8 @@
 /nbdist/
 /.nb-gradle/
 
+### VSCode ###
+.vscode/settings.json
+
 thalasoft.keystore
 logs
