@@ -47,7 +47,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
-
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
@@ -64,7 +63,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-  private JwtProperties jwtProperties;
+	private JwtProperties jwtProperties;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -73,7 +72,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private TokenAuthenticationService tokenAuthenticationService;
 
 	@Autowired
-  @Qualifier("authenticationManagerBean")
+	@Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
 
 	@Bean
