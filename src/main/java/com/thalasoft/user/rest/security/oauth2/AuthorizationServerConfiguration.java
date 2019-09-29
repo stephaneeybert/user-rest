@@ -13,6 +13,8 @@ import com.thalasoft.user.rest.utils.CommonConstants;
 import com.thalasoft.user.rest.utils.DomainConstants;
 import com.thalasoft.user.rest.utils.RESTConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +52,8 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+
+	private static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfiguration.class);
 
 	static final String CLIENT_ID = "ng-zero";
 	static final String CLIENT_SECRET = "secret";
@@ -173,7 +177,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Bean
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
 		JwtAccessTokenConverter jwtAccessTokenConverter = new CustomTokenEnhancer();
-		jwtAccessTokenConverter.setKeyPair(new KeyStoreKeyFactory(new ClassPathResource(jwtProperties.getSslKeystoreFilename()), jwtProperties.getSslKeystorePassword().toCharArray()).getKeyPair(jwtProperties.getSslKeyPair()));
+		ClassPathResource classPathResource = new ClassPathResource(jwtProperties.getSslKeystoreFilename());
+		if (classPathResource.exists()) {
+			logger.debug("The keystore resources file " + classPathResource.getFilename() + " was found");
+		}
+		jwtAccessTokenConverter.setKeyPair(new KeyStoreKeyFactory(classPathResource, jwtProperties.getSslKeystorePassword().toCharArray()).getKeyPair(jwtProperties.getSslKeyPair()));
 		return jwtAccessTokenConverter;
 	}
 
