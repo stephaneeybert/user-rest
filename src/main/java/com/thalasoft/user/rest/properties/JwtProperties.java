@@ -9,9 +9,9 @@ public interface JwtProperties {
     public Integer getAccessTokenExpirationTime();
 
     public Integer getRefreshTokenExpirationTime();
- 
+
     public Integer getAllowedClockSkewSeconds();
-    
+
     public Boolean getCheckUserScopes();
 
     public String getSslKeystoreFilename();
@@ -19,5 +19,5 @@ public interface JwtProperties {
     public String getSslKeystorePassword();
 
     public String getSslKeyPair();
-    
+
 }

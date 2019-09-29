@@ -51,7 +51,7 @@ public abstract class JwtAbstractProperties implements JwtProperties {
     public void setAllowedClockSkewSeconds(Integer allowedClockSkewSeconds) {
         this.allowedClockSkewSeconds = allowedClockSkewSeconds;
     }
-    
+
     public Boolean getCheckUserScopes() {
         return this.checkUserScopes;
     }
