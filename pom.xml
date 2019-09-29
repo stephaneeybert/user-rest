@@ -108,6 +108,7 @@
         <filtering>true</filtering>
         <excludes>
           <exclude>thalasoft.keystore</exclude>
+          <exclude>user-rest.keystore</exclude>
         </excludes>
       </resource>
       <resource>
@@ -115,6 +116,7 @@
         <filtering>false</filtering>
         <includes>
           <include>thalasoft.keystore</include>
+          <include>user-rest.keystore</include>
         </includes>
       </resource>
     </resources>

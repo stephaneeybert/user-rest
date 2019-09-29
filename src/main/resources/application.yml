@@ -33,7 +33,7 @@ security.jwt:
   allowedClockSkewSeconds: 300
   checkUserScopes: false
   # The path must be in sync with the pom.xml file
-  sslKeystoreFilename: thalasoft.keystore
+  sslKeystoreFilename: user-rest.keystore
   sslKeystorePassword: mydearssl
   sslKeyPair: user-rest.key
 
