@@ -4,7 +4,7 @@ server.port: 8443
 server.ssl.key-store-type: PKCS12
 # The path to the keystore containing the certificate
 # The path must be in sync with the pom.xml file
-server.ssl.key-store: classpath:thalasoft.keystore
+server.ssl.key-store: classpath:thalasoft.keystore # TODO try file: thalasoft.keystore to test the one next to the jar archive
 # The password used to generate the certificate
 server.ssl.key-store-password: mydearssl
 # The alias mapped to the certificate
