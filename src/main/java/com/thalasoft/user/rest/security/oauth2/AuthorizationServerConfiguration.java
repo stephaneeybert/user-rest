@@ -1,5 +1,6 @@
 package com.thalasoft.user.rest.security.oauth2;
 
+import java.security.KeyPair;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -180,8 +181,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		ClassPathResource classPathResource = new ClassPathResource(jwtProperties.getSslKeystoreFilename());
 		if (classPathResource.exists()) {
 			logger.debug("The keystore resources file " + classPathResource.getFilename() + " was found");
+			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(classPathResource, jwtProperties.getSslKeystorePassword().toCharArray());
+			KeyPair keyPair = keyStoreKeyFactory.getKeyPair(jwtProperties.getSslKeyPair());
+			logger.debug("The public key: " + keyPair.getPublic());
+			jwtAccessTokenConverter.setKeyPair(keyPair);
 		}
-		jwtAccessTokenConverter.setKeyPair(new KeyStoreKeyFactory(classPathResource, jwtProperties.getSslKeystorePassword().toCharArray()).getKeyPair(jwtProperties.getSslKeyPair()));
 		return jwtAccessTokenConverter;
 	}
 
