@@ -9,6 +9,8 @@ keytool -delete -alias user-rest.key -keystore ~/.ssh/user-rest.keystore
 keytool -genkeypair -alias user-rest.key -keyalg RSA -keysize 4096 -dname "CN=thalasoft.com,OU=MyProduct,O=Thalasoft,L=Aix,S=PACA,C=FR" -storetype pkcs12 -keystore ~/.ssh/user-rest.keystore -storepass my...l
 keytool -list -v -storetype pkcs12 -keystore ~/.ssh/user-rest.keystore
 cp ~/.ssh/user-rest.keystore src/main/resources/
+keytool -list -v -storetype pkcs12 -keystore src/main/resources/thalasoft.keystore
+keytool -list -v -storetype pkcs12 -keystore src/main/resources/user-rest.keystore
 ```
 
 To build and run some integration tests
