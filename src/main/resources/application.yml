@@ -9,7 +9,7 @@ server.ssl.key-store: classpath:thalasoft.keystore # TODO try file: thalasoft.ke
 server.ssl.key-store-password: mydearssl
 # The alias mapped to the certificate
 server.ssl.key-alias: thalasoft.key
-server.ssl.key-password: littlep
+server.ssl.key-password: mydearssl
 
 server.error.whitelabel.enabled: false
 server.servlet.context-path: /api
