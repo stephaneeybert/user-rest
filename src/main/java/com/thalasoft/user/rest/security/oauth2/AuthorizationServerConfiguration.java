@@ -56,7 +56,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	private static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfiguration.class);
 
-	static final String CLIENT_ID = "ng-zero";
+	static final String CLIENT_ID = "musicng";
 	static final String CLIENT_SECRET = "secret";
 	static final String CLIENT_URL = "https://dev.thalasoft.com:84/callback"; // "http://localhost:4200/callback";
 	static final String GRANT_TYPE_PASSWORD = "password";

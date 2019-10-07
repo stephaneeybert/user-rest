@@ -49,17 +49,17 @@ Some example API requests
 curl -i -H "Accept:application/json" https://dev.thalasoft.com:8443/api/error
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" "https://dev.thalasoft.com:8443/api/auth/login" -X POST -d "{ \"email\" : \"mittiprovence@yahoo.se\", \"password\" : \"mignet\" }"
 export TOKEN=...
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "TokenRefresh: Bearer $TOKEN" -H "ClientId: ng-zero" "https://dev.thalasoft.com:8443/api/auth/token-refresh" -X POST
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "TokenRefresh: Bearer $TOKEN" -H "ClientId: musicng" "https://dev.thalasoft.com:8443/api/auth/token-refresh" -X POST
 curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" "https://dev.thalasoft.com:8443/api/users/1/password" -X PUT -d "\"mignet\""
 ```
 
 Some OAuth2 requests
 ```
-curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" "https://dev.thalasoft.com:8443/api/auth/authorize?client_id=ng-zero&redirect_uri=https%3A%2F%2Fdev.thalasoft.com%3A84%2Fcallback&state=DCEeFWf45A53sdfKef424&response_type=code&scope=read_profile" -X POST
+curl -i -H "Accept:application/json" -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" "https://dev.thalasoft.com:8443/api/auth/authorize?client_id=musicng&redirect_uri=https%3A%2F%2Fdev.thalasoft.com%3A84%2Fcallback&state=DCEeFWf45A53sdfKef424&response_type=code&scope=read_profile" -X POST
 ```
 Using httpie
 ```
-http -f POST https://dev.thalasoft.com:8443/api/auth/authorize client_id=="ng-zero" redirect_uri=="https://dev.thalasoft.com:84/callback" state=="DCEeFWf45A53sdfKef424" response_type=="code" scope=="read_profile" "Accept:application/json" "Content-Type:application/json" "Authorization:Bearer $TOKEN" user_oauth_approval="true" authorize="Authorize"
+http -f POST https://dev.thalasoft.com:8443/api/auth/authorize client_id=="musicng" redirect_uri=="https://dev.thalasoft.com:84/callback" state=="DCEeFWf45A53sdfKef424" response_type=="code" scope=="read_profile" "Accept:application/json" "Content-Type:application/json" "Authorization:Bearer $TOKEN" user_oauth_approval="true" authorize="Authorize"
 ```
 
 To do list
