@@ -22,34 +22,35 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 @WebFilter("/*")
 public class MetricsFilter implements Filter {
 
-	private static Logger logger = LoggerFactory.getLogger(MetricsFilter.class);
+  private static Logger logger = LoggerFactory.getLogger(MetricsFilter.class);
 
-	@Autowired
-    private MetricsService metricsService;
+  @Autowired
+  private MetricsService metricsService;
 
-    private FilterConfig config = null;
-    
-    @Override
-    public void init(FilterConfig config) throws ServletException {
-        // Enable autowiring into the filter
-        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
-        this.config = config;
-        config.getServletContext().log("Initializing MetricsFilter");
-    }
-    
-    @Override
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-	    HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-		HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse; 
-        String url = httpServletRequest.getMethod() + " " + httpServletRequest.getRequestURI();
-        int status = (httpServletResponse).getStatus();
-        metricsService.increaseCount(url, status);		
-        filterChain.doFilter(servletRequest, servletResponse);
-	}
+  private FilterConfig config = null;
 
-    @Override
-    public void destroy() {
-        config.getServletContext().log("Destroying MetricsFilter");
-    }
+  @Override
+  public void init(FilterConfig config) throws ServletException {
+    // Enable autowiring into the filter
+    SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+    this.config = config;
+    config.getServletContext().log("Initializing MetricsFilter");
+  }
+
+  @Override
+  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+      throws IOException, ServletException {
+    HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+    HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+    String url = httpServletRequest.getMethod() + " " + httpServletRequest.getRequestURI();
+    int status = (httpServletResponse).getStatus();
+    metricsService.increaseCount(url, status);
+    filterChain.doFilter(servletRequest, servletResponse);
+  }
+
+  @Override
+  public void destroy() {
+    config.getServletContext().log("Destroying MetricsFilter");
+  }
 
 }

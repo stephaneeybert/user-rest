@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "bootstrapsql", havingValue = "true")
 public class BootstrapSQLData implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Autowired
-    private UserFixtureService userFixtureService;
+  @Autowired
+  private UserFixtureService userFixtureService;
 
-    @Override
-    public void onApplicationEvent(final ContextRefreshedEvent event) {
-        userFixtureService.addAuthenticatedUser();
-    }
+  @Override
+  public void onApplicationEvent(final ContextRefreshedEvent event) {
+    userFixtureService.addAuthenticatedUser();
+  }
 
 }

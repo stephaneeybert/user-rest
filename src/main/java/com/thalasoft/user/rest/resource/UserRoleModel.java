@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserRoleResource extends AbstractResource {
+public class UserRoleModel extends AbstractModel {
 
   @NotEmpty
   private String role;

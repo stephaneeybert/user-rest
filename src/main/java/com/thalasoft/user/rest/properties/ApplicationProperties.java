@@ -2,20 +2,20 @@ package com.thalasoft.user.rest.properties;
 
 public interface ApplicationProperties {
 
-    public String getHost();
+  public String getHost();
 
-    public String getPort();
+  public String getPort();
 
-    public String getMailFrom();
+  public String getMailFrom();
 
-    public String getPassword();
+  public String getPassword();
 
-    public String getProtocol();
+  public String getProtocol();
 
-    public String getUsername();
+  public String getUsername();
 
-    public boolean getMailTestConnection();
+  public boolean getMailTestConnection();
 
-    public boolean getMailingEnabled();
-    
+  public boolean getMailingEnabled();
+
 }

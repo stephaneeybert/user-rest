@@ -15,16 +15,17 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RESTAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
-	@Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access. You failed to authenticate.");
-    }
+  @Override
+  public void commence(HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException authenticationException) throws IOException {
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access. You failed to authenticate.");
+  }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        setRealmName("User REST");
-        super.afterPropertiesSet();
-    }
+  @Override
+  public void afterPropertiesSet() {
+    setRealmName("User REST");
+    super.afterPropertiesSet();
+  }
 
 }

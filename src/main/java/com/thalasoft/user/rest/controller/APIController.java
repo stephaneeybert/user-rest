@@ -16,6 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Component
 @RequestMapping("/api")
 public @interface APIController {
-    @AliasFor(annotation = Component.class)
-    String value() default "";
+  @AliasFor(annotation = Component.class)
+  String value() default "";
 }

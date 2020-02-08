@@ -10,7 +10,7 @@ import javax.validation.ValidatorFactory;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import com.thalasoft.user.rest.resource.UserResource;
+import com.thalasoft.user.rest.resource.UserModel;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,47 +18,47 @@ import org.junit.Test;
 
 public class UserTest {
 
-    private Validator validator;
+  private Validator validator;
 
-    private UserResource userResource;
+  private UserModel userModel;
 
-    private Set<ConstraintViolation<UserResource>> constraintViolations;
+  private Set<ConstraintViolation<UserModel>> constraintViolations;
 
-    @Before
-    public void beforeAnyTest() throws Exception {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+  @Before
+  public void beforeAnyTest() throws Exception {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    validator = factory.getValidator();
 
-        userResource = new UserResource();
-        userResource.setFirstname("Marc");
-        userResource.setLastname("Dupuis");
-        userResource.setEmail("marc@yahoo.fr");
-        userResource.setConfirmedEmail(true);
-    }
+    userModel = new UserModel();
+    userModel.setFirstname("Marc");
+    userModel.setLastname("Dupuis");
+    userModel.setEmail("marc@yahoo.fr");
+    userModel.setConfirmedEmail(true);
+  }
 
-    @After
-    public void afterAnyTest() {
-    }
+  @After
+  public void afterAnyTest() {
+  }
 
-    @Test
-    public void testNoValidationViolation() {
-        constraintViolations = validator.validate(userResource);
-        assertThat(constraintViolations.size(), is(0));
-    }
+  @Test
+  public void testNoValidationViolation() {
+    constraintViolations = validator.validate(userModel);
+    assertThat(constraintViolations.size(), is(0));
+  }
 
-    @Test
-    public void testEmptyEmailViolation() {
-        userResource.setEmail(null);
-        constraintViolations = validator.validate(userResource);
-        assertThat(constraintViolations.size(), is(1));
-    }
+  @Test
+  public void testEmptyEmailViolation() {
+    userModel.setEmail(null);
+    constraintViolations = validator.validate(userModel);
+    assertThat(constraintViolations.size(), is(1));
+  }
 
-    @Test
-    public void testEmptyNameViolation() {
-        userResource.setFirstname(null);
-        userResource.setLastname(null);
-        constraintViolations = validator.validate(userResource);
-        assertThat(constraintViolations.size(), is(2));
-    }
+  @Test
+  public void testEmptyNameViolation() {
+    userModel.setFirstname(null);
+    userModel.setLastname(null);
+    constraintViolations = validator.validate(userModel);
+    assertThat(constraintViolations.size(), is(2));
+  }
 
 }

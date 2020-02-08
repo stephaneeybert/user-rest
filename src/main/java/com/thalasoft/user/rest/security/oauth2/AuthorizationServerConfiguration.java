@@ -54,149 +54,147 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-	private static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfiguration.class);
+  private static Logger logger = LoggerFactory.getLogger(AuthorizationServerConfiguration.class);
 
-	static final String CLIENT_ID = "musicng";
-	static final String CLIENT_SECRET = "secret";
-	static final String CLIENT_URL = "https://dev.thalasoft.com:84/callback"; // "http://localhost:4200/callback";
-	static final String GRANT_TYPE_PASSWORD = "password";
-	static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
-	static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
-	static final String RESOURCE_SERVER_ID = "resources-rest";
+  static final String CLIENT_ID = "musicng";
+  static final String CLIENT_SECRET = "secret";
+  static final String CLIENT_URL = "https://dev.thalasoft.com:84/callback"; // "http://localhost:4200/callback";
+  static final String GRANT_TYPE_PASSWORD = "password";
+  static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
+  static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
+  static final String RESOURCE_SERVER_ID = "resources-rest";
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private JwtProperties jwtProperties;
+  @Autowired
+  private JwtProperties jwtProperties;
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+  @Autowired
+  private UserDetailsService userDetailsService;
 
-	@Autowired
-	private TokenAuthenticationService tokenAuthenticationService;
+  @Autowired
+  private TokenAuthenticationService tokenAuthenticationService;
 
-	@Autowired
-	@Qualifier("authenticationManagerBean")
-	private AuthenticationManager authenticationManager;
+  @Autowired
+  @Qualifier("authenticationManagerBean")
+  private AuthenticationManager authenticationManager;
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+  }
 
-	// Define the client applications
-	// TODO The client applications should be defined in a database instead of in memory
-	@Override
-	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory()
-		// The client id and client secret
-		.withClient(CLIENT_ID)
-		.secret(CLIENT_SECRET)
-		// The endpoint at the client application to redirect to
-		.redirectUris(CLIENT_URL)
-		// The type of request the authorization server expects for the client
-		.authorizedGrantTypes(GRANT_TYPE_PASSWORD, GRANT_TYPE_AUTHORIZATION_CODE, GRANT_TYPE_REFRESH_TOKEN)
-		// The permissions the client needs to send requests to the authorization server
-		.authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-		// The resources server id
-		.resourceIds(RESOURCE_SERVER_ID)
-		// The scope of content offered by the resources servers
-		.scopes("read_profile", "write_profile", "read_firstname")
-		// The lifespan of the tokens for the client application
-		.accessTokenValiditySeconds(jwtProperties.getAccessTokenExpirationTime())
-		.refreshTokenValiditySeconds(jwtProperties.getRefreshTokenExpirationTime());
-	}
+  // Define the client applications
+  // TODO The client applications should be defined in a database instead of in
+  // memory
+  @Override
+  public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+    clients.inMemory()
+        // The client id and client secret
+        .withClient(CLIENT_ID).secret(CLIENT_SECRET)
+        // The endpoint at the client application to redirect to
+        .redirectUris(CLIENT_URL)
+        // The type of request the authorization server expects for the client
+        .authorizedGrantTypes(GRANT_TYPE_PASSWORD, GRANT_TYPE_AUTHORIZATION_CODE, GRANT_TYPE_REFRESH_TOKEN)
+        // The permissions the client needs to send requests to the authorization server
+        .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+        // The resources server id
+        .resourceIds(RESOURCE_SERVER_ID)
+        // The scope of content offered by the resources servers
+        .scopes("read_profile", "write_profile", "read_firstname")
+        // The lifespan of the tokens for the client application
+        .accessTokenValiditySeconds(jwtProperties.getAccessTokenExpirationTime())
+        .refreshTokenValiditySeconds(jwtProperties.getRefreshTokenExpirationTime());
+  }
 
-	@Override
-	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		// Spring Security OAuth exposes two endpoints for checking tokens
-		// /oauth/check_token and /oauth/token_key
-		// Those endpoints are not exposed by default as they have access denyAll()
-		// To verify the tokens with these endpoints, add the following configuration
-		security
-		.tokenKeyAccess("permitAll()")
-		.checkTokenAccess("isAuthenticated()")
-		.passwordEncoder(passwordEncoder);
-		// .allowFormAuthenticationForClients();
-		// oauthServer
-		// Allow a client application to request a token and to verify a token only if the client application has the ROLE_TRUSTED_CLIENT authority
-		// .tokenKeyAccess("hasAuthority('ROLE_TRUSTED_CLIENT')")
-		// .checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')");
-	}
+  @Override
+  public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+    // Spring Security OAuth exposes two endpoints for checking tokens
+    // /oauth/check_token and /oauth/token_key
+    // Those endpoints are not exposed by default as they have access denyAll()
+    // To verify the tokens with these endpoints, add the following configuration
+    security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()").passwordEncoder(passwordEncoder);
+    // .allowFormAuthenticationForClients();
+    // oauthServer
+    // Allow a client application to request a token and to verify a token only if
+    // the client application has the ROLE_TRUSTED_CLIENT authority
+    // .tokenKeyAccess("hasAuthority('ROLE_TRUSTED_CLIENT')")
+    // .checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')");
+  }
 
-	@Override
-	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints
-		.authenticationManager(authenticationManager)
-    .tokenServices(tokenServices())
-    .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
-    .tokenEnhancer(jwtAccessTokenConverter())
-    .accessTokenConverter(jwtAccessTokenConverter())
-		.userDetailsService(userDetailsService);
+  @Override
+  public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    endpoints.authenticationManager(authenticationManager).tokenServices(tokenServices())
+        .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST).tokenEnhancer(jwtAccessTokenConverter())
+        .accessTokenConverter(jwtAccessTokenConverter()).userDetailsService(userDetailsService);
 
-		// The URL paths provided by the framework are:
-		// /oauth/authorize (the authorization endpoint)
-		// /oauth/token (the token endpoint)
-		// /oauth/confirm_access (user posts approval for grants here)
-		// /oauth/error (used to render errors in the authorization server)
-		// /oauth/check_token (used by Resource Servers to decode access tokens)
-		// /oauth/token_key (exposes public key for token verification if using JWT tokens)
-		endpoints
-		.pathMapping("/oauth/authorize", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.AUTHORIZE)
-		.pathMapping("/oauth/token", RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN);
+    // The URL paths provided by the framework are:
+    // /oauth/authorize (the authorization endpoint)
+    // /oauth/token (the token endpoint)
+    // /oauth/confirm_access (user posts approval for grants here)
+    // /oauth/error (used to render errors in the authorization server)
+    // /oauth/check_token (used by EntityModel Servers to decode access tokens)
+    // /oauth/token_key (exposes public key for token verification if using JWT
+    // tokens)
+    endpoints
+        .pathMapping("/oauth/authorize",
+            RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.AUTHORIZE)
+        .pathMapping("/oauth/token",
+            RESTConstants.SLASH + DomainConstants.AUTH + RESTConstants.SLASH + DomainConstants.TOKEN);
 
-		// if (jwtProperties.getCheckUserScopes()) {
-		// 	endpoints.requestFactory(requestFactory());
+    // if (jwtProperties.getCheckUserScopes()) {
+    // endpoints.requestFactory(requestFactory());
     // }
-	}
+  }
 
-	// Add user information to the token
-	class CustomTokenEnhancer extends JwtAccessTokenConverter {
+  // Add user information to the token
+  class CustomTokenEnhancer extends JwtAccessTokenConverter {
 
-		@Override
-		public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-			User user = (User) authentication.getPrincipal();
-			Map<String, Object> info = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
+    @Override
+    public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+      User user = (User) authentication.getPrincipal();
+      Map<String, Object> info = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
       info.put("email", user.getEmail());
       info.put(CommonConstants.JWT_CLAIM_USER_EMAIL, user.getEmail().getEmailAddress());
-			info.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
-			info.put("scopes", authentication.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
-			DefaultOAuth2AccessToken customAccessToken = new DefaultOAuth2AccessToken(accessToken);
+      info.put(CommonConstants.JWT_CLAIM_USER_FULLNAME, user.getFirstname() + " " + user.getLastname());
+      info.put("scopes", authentication.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
+      DefaultOAuth2AccessToken customAccessToken = new DefaultOAuth2AccessToken(accessToken);
       customAccessToken.setAdditionalInformation(info);
       customAccessToken.setExpiration(tokenAuthenticationService.getExpirationDate());
-			return super.enhance(customAccessToken, authentication);
-		}
+      return super.enhance(customAccessToken, authentication);
+    }
 
-	}
+  }
 
-	@Bean
-	public TokenStore tokenStore() {
-		return new JwtTokenStore(jwtAccessTokenConverter());
-	}
+  @Bean
+  public TokenStore tokenStore() {
+    return new JwtTokenStore(jwtAccessTokenConverter());
+  }
 
-	@Bean
-	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-		JwtAccessTokenConverter jwtAccessTokenConverter = new CustomTokenEnhancer();
-		ClassPathResource classPathResource = new ClassPathResource(jwtProperties.getSslKeystoreFilename());
-		if (classPathResource.exists()) {
-			logger.debug("The keystore resources file " + classPathResource.getFilename() + " was found");
-			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(classPathResource, jwtProperties.getSslKeystorePassword().toCharArray());
-			KeyPair keyPair = keyStoreKeyFactory.getKeyPair(jwtProperties.getSslKeyPair());
-			logger.debug("The public key: " + keyPair.getPublic());
-			jwtAccessTokenConverter.setKeyPair(keyPair);
-		}
-		return jwtAccessTokenConverter;
-	}
+  @Bean
+  public JwtAccessTokenConverter jwtAccessTokenConverter() {
+    JwtAccessTokenConverter jwtAccessTokenConverter = new CustomTokenEnhancer();
+    ClassPathResource classPathResource = new ClassPathResource(jwtProperties.getSslKeystoreFilename());
+    if (classPathResource.exists()) {
+      logger.debug("The keystore resources file " + classPathResource.getFilename() + " was found");
+      KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(classPathResource,
+          jwtProperties.getSslKeystorePassword().toCharArray());
+      KeyPair keyPair = keyStoreKeyFactory.getKeyPair(jwtProperties.getSslKeyPair());
+      logger.debug("The public key: " + keyPair.getPublic());
+      jwtAccessTokenConverter.setKeyPair(keyPair);
+    }
+    return jwtAccessTokenConverter;
+  }
 
-	@Bean
-	@Primary
-	public DefaultTokenServices tokenServices() {
-		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-		defaultTokenServices.setTokenStore(tokenStore());
-		defaultTokenServices.setSupportRefreshToken(true);
-		defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter());
-		return defaultTokenServices;
-	}
+  @Bean
+  @Primary
+  public DefaultTokenServices tokenServices() {
+    DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+    defaultTokenServices.setTokenStore(tokenStore());
+    defaultTokenServices.setSupportRefreshToken(true);
+    defaultTokenServices.setTokenEnhancer(jwtAccessTokenConverter());
+    return defaultTokenServices;
+  }
 
 }

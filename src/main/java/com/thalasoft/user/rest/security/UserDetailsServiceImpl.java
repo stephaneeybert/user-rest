@@ -15,21 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private CredentialsService credentialsService;
+  @Autowired
+  private CredentialsService credentialsService;
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    	if (username != null && !username.isEmpty()) {
-			try {
-				User user = credentialsService.findByEmail(new EmailAddress(username));
-				return new UserDetailsWrapper(user);
-			} catch (EntityNotFoundException e) {
-				throw new UsernameNotFoundException("The user " + username + " was not found.");
-			}
-    	}
-    	throw new UsernameNotFoundException("The user " + username + " was not found.");
+  @Override
+  @Transactional
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    if (username != null && !username.isEmpty()) {
+      try {
+        User user = credentialsService.findByEmail(new EmailAddress(username));
+        return new UserDetailsWrapper(user);
+      } catch (EntityNotFoundException e) {
+        throw new UsernameNotFoundException("The user " + username + " was not found.");
+      }
     }
+    throw new UsernameNotFoundException("The user " + username + " was not found.");
+  }
 
 }

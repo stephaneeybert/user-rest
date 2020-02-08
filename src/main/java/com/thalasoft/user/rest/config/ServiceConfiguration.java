@@ -2,7 +2,7 @@ package com.thalasoft.user.rest.config;
 
 import com.thalasoft.user.rest.service.CredentialsServiceImpl;
 import com.thalasoft.user.rest.service.MetricsServiceImpl;
-import com.thalasoft.user.rest.service.ResourceServiceImpl;
+import com.thalasoft.user.rest.service.ModelServiceImpl;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -10,19 +10,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceConfiguration {
 
-    @Bean
-    public CredentialsServiceImpl credentialsService() {
-        return new CredentialsServiceImpl();
-    }
+  @Bean
+  public CredentialsServiceImpl credentialsService() {
+    return new CredentialsServiceImpl();
+  }
 
-    @Bean
-    public ResourceServiceImpl resourceService() {
-        return new ResourceServiceImpl();
-    }
+  @Bean
+  public ModelServiceImpl modelService() {
+    return new ModelServiceImpl();
+  }
 
-    @Bean
-    public MetricsServiceImpl metricsService() {
-        return new MetricsServiceImpl();
-    }
+  @Bean
+  public MetricsServiceImpl metricsService() {
+    return new MetricsServiceImpl();
+  }
 
 }

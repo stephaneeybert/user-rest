@@ -16,52 +16,52 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(RESTConstants.SLASH + DomainConstants.ERROR)
 public class CustomErrorController {
 
-    @GetMapping(value = "/cannotEncodePassword")
-    @ResponseBody
-    public void errorCannotEncodePasswordException() {
-    	throw new CannotEncodePasswordException();
-    }
+  @GetMapping(value = "/cannotEncodePassword")
+  @ResponseBody
+  public void errorCannotEncodePasswordException() {
+    throw new CannotEncodePasswordException();
+  }
 
-    @GetMapping(value = "/illegalArgument")
-    @ResponseBody
-    public void errorIllegalArgumentException() {
-    	throw new IllegalArgumentException();
-    }
+  @GetMapping(value = "/illegalArgument")
+  @ResponseBody
+  public void errorIllegalArgumentException() {
+    throw new IllegalArgumentException();
+  }
 
-    @GetMapping(value = "/httpRequestMethodNotSupported")
-    @ResponseBody
-    public void errorHttpRequestMethodNotSupportedException() throws HttpRequestMethodNotSupportedException {
-    	throw new HttpRequestMethodNotSupportedException("");
-    }
+  @GetMapping(value = "/httpRequestMethodNotSupported")
+  @ResponseBody
+  public void errorHttpRequestMethodNotSupportedException() throws HttpRequestMethodNotSupportedException {
+    throw new HttpRequestMethodNotSupportedException("");
+  }
 
-    @GetMapping(value = "/httpBody")
-    @ResponseBody
-    public void errorHTTPInput() {
-    	throw new HttpMessageNotReadableException(null);
-    }
-    
-    @GetMapping(value = "/dao")
-    @ResponseBody
-    public void errorDAO() {
-    	throw new InvalidDataAccessApiUsageException(null);
-    }
-    
-    @GetMapping(value = "/nfe")
-    @ResponseBody
-    public void errorNFE() {
-    	throw new NumberFormatException();
-    }
+  @GetMapping(value = "/httpBody")
+  @ResponseBody
+  public void errorHTTPInput() {
+    throw new HttpMessageNotReadableException(null);
+  }
 
-    @GetMapping(value = "/npe")
-    @ResponseBody
-    public void errorNPE() {
-    	throw new NullPointerException();
-    }
+  @GetMapping(value = "/dao")
+  @ResponseBody
+  public void errorDAO() {
+    throw new InvalidDataAccessApiUsageException(null);
+  }
 
-    @GetMapping(value = "/rte")
-    @ResponseBody
-    public void errorRTE() {
-    	throw new RuntimeException();
-    }
+  @GetMapping(value = "/nfe")
+  @ResponseBody
+  public void errorNFE() {
+    throw new NumberFormatException();
+  }
+
+  @GetMapping(value = "/npe")
+  @ResponseBody
+  public void errorNPE() {
+    throw new NullPointerException();
+  }
+
+  @GetMapping(value = "/rte")
+  @ResponseBody
+  public void errorRTE() {
+    throw new RuntimeException();
+  }
 
 }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ComponentScan(nameGenerator = PackageBeanNameGenerator.class, basePackages = { "com.thalasoft.user.rest.properties",
-        "com.thalasoft.user.rest.service", "com.thalasoft.user.data.config" })
+    "com.thalasoft.user.rest.service", "com.thalasoft.user.data.config" })
 public class ApplicationConfiguration {
 }

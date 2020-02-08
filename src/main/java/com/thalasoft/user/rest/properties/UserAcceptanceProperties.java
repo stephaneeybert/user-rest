@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @PropertySource({ "classpath:user-acceptance.properties" })
 public class UserAcceptanceProperties extends AbstractUserProperties {
 
-	private static Logger logger = LoggerFactory.getLogger(UserAcceptanceProperties.class);
+  private static Logger logger = LoggerFactory.getLogger(UserAcceptanceProperties.class);
 
-	public UserAcceptanceProperties() {
-		logger.debug("Loading the Acceptance properties file");
-	}
+  public UserAcceptanceProperties() {
+    logger.debug("Loading the Acceptance properties file");
+  }
 
 }

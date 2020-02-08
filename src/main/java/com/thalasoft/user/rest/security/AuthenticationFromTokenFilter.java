@@ -18,24 +18,24 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class AuthenticationFromTokenFilter extends AbstractAuthenticationProcessingFilter {
 
-	@Autowired
-	private TokenAuthenticationService tokenAuthenticationService;
+  @Autowired
+  private TokenAuthenticationService tokenAuthenticationService;
 
-	public AuthenticationFromTokenFilter(final RequestMatcher requestMatcher) {
-		super(requestMatcher);
-	}
+  public AuthenticationFromTokenFilter(final RequestMatcher requestMatcher) {
+    super(requestMatcher);
+  }
 
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException {
-		return tokenAuthenticationService.authenticate(request);
-	}
+  @Override
+  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+      throws AuthenticationException {
+    return tokenAuthenticationService.authenticate(request);
+  }
 
-	@Override
-	protected void successfulAuthentication(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
-			FilterChain filterChain, Authentication authentication) throws IOException, ServletException {
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		filterChain.doFilter(httpRequest, httpResponse);
-	}
+  @Override
+  protected void successfulAuthentication(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
+      FilterChain filterChain, Authentication authentication) throws IOException, ServletException {
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    filterChain.doFilter(httpRequest, httpResponse);
+  }
 
 }

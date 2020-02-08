@@ -6,11 +6,12 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 public class BootstrapSQLCondition implements Condition {
 
-    private static final String BOOTSTRAP_SQL = "bootstrapsql";
+  private static final String BOOTSTRAP_SQL = "bootstrapsql";
 
-	@Override
-	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		return context.getEnvironment().getProperty(BOOTSTRAP_SQL) != null && context.getEnvironment().getProperty(BOOTSTRAP_SQL).equals("true");
-	}
+  @Override
+  public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    return context.getEnvironment().getProperty(BOOTSTRAP_SQL) != null
+        && context.getEnvironment().getProperty(BOOTSTRAP_SQL).equals("true");
+  }
 
 }

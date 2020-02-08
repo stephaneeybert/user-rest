@@ -13,57 +13,57 @@ import org.springframework.security.core.userdetails.UserDetails;
 @SuppressWarnings("serial")
 public class UserDetailsWrapper implements UserDetails {
 
-	private User user;
+  private User user;
 
-	public UserDetailsWrapper(User user) {
-		this.user = user;
-	}
-	
-	public User getUser() {
-		return user;
-	}
+  public UserDetailsWrapper(User user) {
+    this.user = user;
+  }
 
-	@Override
-	public String getUsername() {
-		return user.getEmail().toString();
-	}
+  public User getUser() {
+    return user;
+  }
 
-	@Override
-	public String getPassword() {
-		return user.getPassword();
-	}
+  @Override
+  public String getUsername() {
+    return user.getEmail().toString();
+  }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (UserRole userRole : user.getUserRoles()) {
-        	grantedAuthorities.add(new SimpleGrantedAuthority(userRole.getRole()));
-        }
-		return grantedAuthorities;
-	}
+  @Override
+  public String getPassword() {
+    return user.getPassword();
+  }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO user.isAccountNonExpired()
-		return true;
-	}
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+    for (UserRole userRole : user.getUserRoles()) {
+      grantedAuthorities.add(new SimpleGrantedAuthority(userRole.getRole()));
+    }
+    return grantedAuthorities;
+  }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO user.isAccountNonLocked()
-		return true;
-	}
+  @Override
+  public boolean isAccountNonExpired() {
+    // TODO user.isAccountNonExpired()
+    return true;
+  }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO user.isCredentialsNonExpired()
-		return true;
-	}
+  @Override
+  public boolean isAccountNonLocked() {
+    // TODO user.isAccountNonLocked()
+    return true;
+  }
 
-	@Override
-	public boolean isEnabled() {
-		// TODO user.isEnabled()
-		return true;
-	}
+  @Override
+  public boolean isCredentialsNonExpired() {
+    // TODO user.isCredentialsNonExpired()
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    // TODO user.isEnabled()
+    return true;
+  }
 
 }

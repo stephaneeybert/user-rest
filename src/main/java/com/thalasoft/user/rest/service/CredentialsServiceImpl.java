@@ -16,7 +16,7 @@ import com.thalasoft.user.data.jpa.domain.User;
 import com.thalasoft.user.data.jpa.domain.UserRole;
 import com.thalasoft.user.data.service.UserService;
 import com.thalasoft.user.rest.properties.ApplicationProperties;
-import com.thalasoft.user.rest.service.resource.CredentialsResource;
+import com.thalasoft.user.rest.service.resource.CredentialsModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -58,22 +58,20 @@ public class CredentialsServiceImpl implements CredentialsService {
   }
 
   @Override
-  public User checkPassword(CredentialsResource credentialsResource)
-      throws BadCredentialsException, EntityNotFoundException {
+  public User checkPassword(CredentialsModel credentialsModel) throws BadCredentialsException, EntityNotFoundException {
     try {
-      User user = userService.findByEmail(credentialsResource.getEmail());
-      if (checkPassword(user, credentialsResource.getPassword())) {
+      User user = userService.findByEmail(credentialsModel.getEmail());
+      if (checkPassword(user, credentialsModel.getPassword())) {
         if (user.getUserRoles() == null) {
           throw new InsufficientAuthenticationException("The user has not been granted any roles");
         }
         return user;
       } else {
         throw new BadCredentialsException(
-            "The login " + credentialsResource.getEmail() + " and password could not match.");
+            "The login " + credentialsModel.getEmail() + " and password could not match.");
       }
     } catch (EntityNotFoundException e) {
-      throw new BadCredentialsException(
-          "The login " + credentialsResource.getEmail() + " and password could not match.");
+      throw new BadCredentialsException("The login " + credentialsModel.getEmail() + " and password could not match.");
     }
   }
 
@@ -117,8 +115,8 @@ public class CredentialsServiceImpl implements CredentialsService {
   }
 
   @Transactional
-  public Authentication authenticate(CredentialsResource credentialsResource) throws AuthenticationException {
-    return authenticate(credentialsResource.getEmail(), credentialsResource.getPassword());
+  public Authentication authenticate(CredentialsModel credentialsModel) throws AuthenticationException {
+    return authenticate(credentialsModel.getEmail(), credentialsModel.getPassword());
   }
 
   private Authentication authenticate(String email, String password) throws AuthenticationException {

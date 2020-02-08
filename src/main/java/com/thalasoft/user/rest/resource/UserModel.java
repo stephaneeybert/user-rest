@@ -11,7 +11,7 @@ import lombok.*;
 
 import com.thalasoft.user.rest.utils.RESTConstants;
 
-import org.springframework.hateoas.core.Relation;
+import org.springframework.hateoas.server.core.Relation;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ import org.springframework.hateoas.core.Relation;
 @AllArgsConstructor
 @ToString
 @Relation(collectionRelation = RESTConstants.EMBEDDED_COLLECTION_NAME_USER)
-public class UserResource extends AbstractResource {
+public class UserModel extends AbstractModel {
 
   @NotEmpty
   private String firstname;
@@ -32,6 +32,6 @@ public class UserResource extends AbstractResource {
   private String password;
   private String workPhone;
   @Valid
-  private Set<UserRoleResource> userRoleResources = new HashSet<UserRoleResource>();
+  private Set<UserRoleModel> userRoleModels = new HashSet<UserRoleModel>();
 
 }

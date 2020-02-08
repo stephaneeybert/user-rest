@@ -22,37 +22,37 @@ import org.springframework.http.MediaType;
 @SpringBootTest(classes = { ProdSecurityConfiguration.class, TestConfiguration.class, WebConfiguration.class })
 public abstract class SecuredBaseTest extends BaseTest {
 
-	@Autowired
-	private TokenAuthenticationService tokenAuthenticationService;
+  @Autowired
+  private TokenAuthenticationService tokenAuthenticationService;
 
-	@Before
-    public void initFixture() {
-        userFixtureService.addAuthenticatedUser();
-    }
+  @Before
+  public void initFixture() {
+    userFixtureService.addAuthenticatedUser();
+  }
 
-    @After
-    public void cleanFixture() {
-        userFixtureService.removeAuthenticatedUser();
-    }
+  @After
+  public void cleanFixture() {
+    userFixtureService.removeAuthenticatedUser();
+  }
 
-	@Before
-	public void setup() throws Exception {
-		super.setup();
+  @Before
+  public void setup() throws Exception {
+    super.setup();
 
-		addTokenToRequestHeader(httpHeaders, UserFixtureService.USER_EMAIL);
-	}
+    addTokenToRequestHeader(httpHeaders, UserFixtureService.USER_EMAIL);
+  }
 
-	private void addTokenToRequestHeader(HttpHeaders headers, String username) {
-		tokenAuthenticationService.addAccessTokenToResponseHeader(headers, username);
-	}
+  private void addTokenToRequestHeader(HttpHeaders headers, String username) {
+    tokenAuthenticationService.addAccessTokenToResponseHeader(headers, username);
+  }
 
-	private void addBase64UserPasswordHeaders(String username, String password, HttpHeaders httpHeaders) {
-		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-		httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		String usernamePassword = username + ":" + password;
-		String encodedAuthorisation = Base64.getEncoder().encodeToString(usernamePassword.getBytes(UTF_8));
-		httpHeaders.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME,
-				CommonConstants.AUTH_BASIC + " " + new String(encodedAuthorisation));
-	}
+  private void addBase64UserPasswordHeaders(String username, String password, HttpHeaders httpHeaders) {
+    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+    httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+    String usernamePassword = username + ":" + password;
+    String encodedAuthorisation = Base64.getEncoder().encodeToString(usernamePassword.getBytes(UTF_8));
+    httpHeaders.add(CommonConstants.ACCESS_TOKEN_HEADER_NAME,
+        CommonConstants.AUTH_BASIC + " " + new String(encodedAuthorisation));
+  }
 
 }

@@ -1,6 +1,6 @@
 package com.thalasoft.user.rest.resource;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,28 +14,28 @@ import lombok.*;
 @ToString
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class AbstractResource extends ResourceSupport {
+public abstract class AbstractModel extends RepresentationModel<AbstractModel> {
 
     @JsonProperty("id")
-    private Long resourceId;
+    private Long modelId;
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (this.resourceId == null || obj == null || !(this.getClass().equals(obj.getClass()))) {
+        if (this.modelId == null || obj == null || !(this.getClass().equals(obj.getClass()))) {
             return false;
         }
 
-        AbstractResource that = (AbstractResource) obj;
+        AbstractModel that = (AbstractModel) obj;
 
-        return this.resourceId.equals(that.getResourceId());
+        return this.modelId.equals(that.getModelId());
     }
 
     @Override
     public int hashCode() {
-        return resourceId == null ? 0 : resourceId.hashCode();
+        return modelId == null ? 0 : modelId.hashCode();
     }
 
 }

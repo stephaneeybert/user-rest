@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestPropertiesVerifier extends AbstractPropertiesVerifier {
 
-    RestPropertiesVerifier() {
-        super(PropertyNames.class);
-    }
+  RestPropertiesVerifier() {
+    super(PropertyNames.class);
+  }
 
 }

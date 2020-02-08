@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "security.jwt")
 public class JwtProdProperties extends JwtAbstractProperties {
-	
-    private static Logger logger = LoggerFactory.getLogger(JwtProdProperties.class);
 
-    public JwtProdProperties() {
-        logger.debug("Loading the JWT prod properties file");
-    }
+  private static Logger logger = LoggerFactory.getLogger(JwtProdProperties.class);
+
+  public JwtProdProperties() {
+    logger.debug("Loading the JWT prod properties file");
+  }
 
 }

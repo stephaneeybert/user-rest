@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @PropertySource({ "classpath:user-preprod.properties" })
 public class UserPreProdProperties extends AbstractUserProperties {
 
-	private static Logger logger = LoggerFactory.getLogger(UserPreProdProperties.class);
+  private static Logger logger = LoggerFactory.getLogger(UserPreProdProperties.class);
 
-	public UserPreProdProperties() {
-		logger.debug("Loading the Preprod properties file");
-	}
+  public UserPreProdProperties() {
+    logger.debug("Loading the Preprod properties file");
+  }
 
 }

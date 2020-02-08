@@ -8,7 +8,7 @@ public final class RESTConstants {
   public static final String COUNT = "count";
   public static final String DEPENDENCIES = "dependencies";
   public static final String RESOURCES = "resources";
-  public static final String EMBEDDED_COLLECTION_NAME_USER = "userResourceList";
+  public static final String EMBEDDED_COLLECTION_NAME_USER = "userModelList";
 
   public static final String METRICS = "metrics";
   public static final String GRAPH = "graph";

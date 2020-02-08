@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
-    CredentialsService credentialsService;
+  @Autowired
+  CredentialsService credentialsService;
 
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return credentialsService.authenticate(authentication);
-    }
+  @Override
+  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    return credentialsService.authenticate(authentication);
+  }
 
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
-    }
+  @Override
+  public boolean supports(Class<?> authentication) {
+    return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
+  }
 
 }

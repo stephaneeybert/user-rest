@@ -58,15 +58,15 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
   }
 
   @ExceptionHandler(EntityNotFoundException.class)
-	@ResponseBody
-	public ResponseEntity<ErrorInfo> entityNotFoundException(HttpServletRequest request, EntityNotFoundException e) {
+  @ResponseBody
+  public ResponseEntity<ErrorInfo> entityNotFoundException(HttpServletRequest request, EntityNotFoundException e) {
     String url = this.getFullRequestUrl(request).toString();
     String errorMessage = localizeErrorMessage("error.entity.not.found");
-		ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.NOT_FOUND, errorMessage);
-		logger.error(errorMessage);
-		logger.debug(getStackTrace(e));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfo);
-	}
+    ErrorInfo errorInfo = new ErrorInfo(url, HttpStatus.NOT_FOUND, errorMessage);
+    logger.error(errorMessage);
+    logger.debug(getStackTrace(e));
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfo);
+  }
 
   @ExceptionHandler(EntityAlreadyExistsException.class)
   @ResponseBody
@@ -253,7 +253,8 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
   }
 
   private String getFullRequestUrl(HttpServletRequest request) {
-    return (request.getQueryString() != null) ? String.join("", request.getRequestURL(), "?", request.getQueryString()) : request.getRequestURL().toString();
+    return (request.getQueryString() != null) ? String.join("", request.getRequestURL(), "?", request.getQueryString())
+        : request.getRequestURL().toString();
   }
 
 }
