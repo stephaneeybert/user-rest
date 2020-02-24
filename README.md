@@ -3,12 +3,17 @@ To only build the project
 mvn clean install
 ```
 
+The application uses two keystores. The thalasoft.keystore is used to enable https and the user-rest.keystore is used to enable jwt based security.
+
 Generating the ssl keys
 ```
+keytool -delete -alias thalasoft.key -keystore ~/.ssh/thalasoft.keystore
+keytool -genkeypair -alias thalasoft.key -keypass my...l -keyalg RSA -keysize 4096 -dname "CN=thalasoft.com,OU=MyProduct,O=Thalasoft,L=Aix,S=PACA,C=FR" -storetype pkcs12 -keystore ~/.ssh/thalasoft.keystore -storepass my...l
 keytool -delete -alias user-rest.key -keystore ~/.ssh/user-rest.keystore
 keytool -genkeypair -alias user-rest.key -keyalg RSA -keysize 4096 -dname "CN=thalasoft.com,OU=MyProduct,O=Thalasoft,L=Aix,S=PACA,C=FR" -storetype pkcs12 -keystore ~/.ssh/user-rest.keystore -storepass my...l
 keytool -list -v -storetype pkcs12 -keystore ~/.ssh/user-rest.keystore
 cp ~/.ssh/user-rest.keystore src/main/resources/
+cp ~/.ssh/thalasoft.keystore src/main/resources/
 keytool -list -v -storetype pkcs12 -keystore src/main/resources/user-rest.keystore
 keytool -list -v -storetype pkcs12 -keystore src/main/resources/thalasoft.keystore
 ```
