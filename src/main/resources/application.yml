@@ -1,4 +1,5 @@
 # Enabling HTTPS
+server.ssl.enabled: false
 server.port: 8443
 # The format used for the keystore
 server.ssl.key-store-type: PKCS12
