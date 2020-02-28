@@ -58,7 +58,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
   static final String CLIENT_ID = "musicng";
   static final String CLIENT_SECRET = "secret";
-  static final String CLIENT_URL = "https://dev.thalasoft.com:84/callback"; // "http://localhost:4200/callback";
+  // static final String CLIENT_URL = "https://dev.musicng.thalasoft.com:84/callback";
+  static final String CLIENT_URL = "http://localhost:4200/callback"; // TODO Have this in an environment property
   static final String GRANT_TYPE_PASSWORD = "password";
   static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
   static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
