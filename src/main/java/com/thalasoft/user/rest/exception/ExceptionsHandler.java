@@ -252,7 +252,7 @@ public class ExceptionsHandler extends AbstractExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorInfo);
   }
 
-  private String getFullRequestUrl(HttpServletRequest request) {
+  protected String getFullRequestUrl(HttpServletRequest request) {
     return (request.getQueryString() != null) ? String.join("", request.getRequestURL(), "?", request.getQueryString())
         : request.getRequestURL().toString();
   }

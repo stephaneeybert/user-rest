@@ -20,7 +20,6 @@ import com.thalasoft.user.rest.utils.DomainConstants;
 import com.thalasoft.user.rest.utils.RESTConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
