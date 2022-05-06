@@ -1,4 +1,4 @@
-To only build the project
+Building the project
 ```
 mvn clean install
 ```
@@ -18,7 +18,7 @@ keytool -list -v -storetype pkcs12 -keystore src/main/resources/user-rest.keysto
 keytool -list -v -storetype pkcs12 -keystore src/main/resources/thalasoft.keystore
 ```
 
-To build and run some integration tests
+Building and running the integration tests
 ```
 mvn clean install -Denv="test" -Ddb="h2"
 ```
@@ -33,15 +33,22 @@ The data layer is compatible with MySQL and Oracle
 -Ddb="h2"
 ```
 
-To run the application
+Running the application
 ```
 mvn clean spring-boot:run
 ```
 
-Running with the debugger
+Running the application with the debugger
 ```
 mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
-mvn clean install -Denv="test" -Ddb="h2" -Dmaven.surefire.debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -Xnoagent -Djava.compiler=NONE"
+```
+
+Running the the integration tests with the debugger
+```
+mvn clean install \
+  -Denv="test" \
+  -Ddb="h2" \
+  -Dmaven.surefire.debug="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 -Xnoagent -Djava.compiler=NONE"
 ```
 
 Some HTTPS request(s)
